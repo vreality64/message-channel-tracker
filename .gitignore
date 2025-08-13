@@ -1,5 +1,2 @@
-# Node, macOS, Chrome Extension build artifacts
 .DS_Store
-/dist
-/build
-*.zip
+*.log

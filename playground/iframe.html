@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>MCT Iframe</title>
+    <style>
+      body { margin: 0; padding: 8px; font: 13px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      .label { color: #64748b; margin-bottom: 6px; }
+      button { padding: 6px 8px; border-radius: 6px; border: 1px solid #d1d5db; background: #f8fafc; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <div class="label">I am an iframe.</div>
+    <button id="btn-reply">Reply parent</button>
+
+    <script>
+      window.addEventListener('message', (e) => {
+        // Just echo back with extra info
+        window.parent.postMessage({ from: 'iframe', received: e.data }, '*');
+      });
+      document.getElementById('btn-reply').addEventListener('click', () => {
+        window.parent.postMessage({ from: 'iframe', click: true, t: Date.now() }, '*');
+      });
+    </script>
+  </body>
+</html>
