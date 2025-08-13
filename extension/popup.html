@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Message Channel Tracker</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="title">Message Channel Tracker</div>
+      </div>
+      <div class="row">
+        <label class="switch">
+          <input type="checkbox" id="enabledToggle" />
+          <span class="slider"></span>
+        </label>
+        <span id="statusLabel" class="status">Off</span>
+      </div>
+      <div class="row hint">
+        Toggle pretty logging of window, ports, broadcast channels, and workers.
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
