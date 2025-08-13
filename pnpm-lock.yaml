@@ -14,6 +14,9 @@ importers:
       happy-dom:
         specifier: ^18.0.1
         version: 18.0.1
+      husky:
+        specifier: ^9.1.6
+        version: 9.1.7
       vitest:
         specifier: ^1.6.0
         version: 1.6.1(@types/node@20.19.10)(happy-dom@18.0.1)
@@ -427,6 +430,11 @@ packages:
   human-signals@5.0.0:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
     engines: {node: '>=16.17.0'}
+
+  husky@9.1.7:
+    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   is-stream@3.0.0:
     resolution: {integrity: sha512-LnQR4bZ9IADDRSkvpqMGvt/tEJWclzklNgSw48V5EAaAeDd6qGvN8ei6k5p0tvxSR171VmGyHuTiAOfxAbr8kA==}
@@ -960,6 +968,8 @@ snapshots:
       whatwg-mimetype: 3.0.0
 
   human-signals@5.0.0: {}
+
+  husky@9.1.7: {}
 
   is-stream@3.0.0: {}
 
