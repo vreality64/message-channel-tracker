@@ -1,5 +1,4 @@
 (() => {
-
   /**
    * Injects the page hook script into the page context, so we can safely
    * wrap built-ins without the Chrome content-script sandbox getting in the way.

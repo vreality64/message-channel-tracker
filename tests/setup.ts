@@ -3,12 +3,12 @@
 const noop = () => {};
 
 beforeAll(() => {
-  vi.spyOn(console, 'log').mockImplementation(noop);
-  vi.spyOn(console, 'info').mockImplementation(noop);
-  vi.spyOn(console, 'debug').mockImplementation(noop);
-  vi.spyOn(console, 'group').mockImplementation(noop);
-  vi.spyOn(console, 'groupCollapsed').mockImplementation(noop);
-  vi.spyOn(console, 'groupEnd').mockImplementation(noop);
+  vi.spyOn(console, "log").mockImplementation(noop);
+  vi.spyOn(console, "info").mockImplementation(noop);
+  vi.spyOn(console, "debug").mockImplementation(noop);
+  vi.spyOn(console, "group").mockImplementation(noop);
+  vi.spyOn(console, "groupCollapsed").mockImplementation(noop);
+  vi.spyOn(console, "groupEnd").mockImplementation(noop);
 });
 
 afterAll(() => {

@@ -1,8 +1,8 @@
-import { readFileSync } from 'node:fs';
-import { runInNewContext } from 'node:vm';
+import { readFileSync } from "node:fs";
+import { runInNewContext } from "node:vm";
 
 function loadPageHookIntoHappydom() {
-  const code = readFileSync('extension/pageHook.js', 'utf-8');
+  const code = readFileSync("extension/pageHook.js", "utf-8");
   // Provide minimal globals used by the script
   const contextConsole = {
     // Forward groups to outer console so spies still work
@@ -28,23 +28,25 @@ function loadPageHookIntoHappydom() {
   runInNewContext(`(function(){ ${code} })()`, context);
 }
 
-describe('pageHook console title formatting', () => {
+describe("pageHook console title formatting", () => {
   let groupSpy;
 
   beforeEach(() => {
-    groupSpy = vi.spyOn(console, 'groupCollapsed').mockImplementation(() => {});
+    groupSpy = vi.spyOn(console, "groupCollapsed").mockImplementation(() => {});
   });
 
   afterEach(() => {
     groupSpy.mockRestore();
-    try { console.groupEnd(); } catch {}
+    try {
+      console.groupEnd();
+    } catch {}
   });
 
-  it('does not insert space before outbound arrow (→) in window.postMessage logs', () => {
+  it("does not insert space before outbound arrow (→) in window.postMessage logs", () => {
     loadPageHookIntoHappydom();
 
     // invoke wrapped window.postMessage
-    window.postMessage({ test: true }, '*');
+    window.postMessage({ test: true }, "*");
 
     const calls = groupSpy.mock.calls;
     expect(calls.length).toBeGreaterThan(0);
@@ -56,11 +58,11 @@ describe('pageHook console title formatting', () => {
     expect(fmt).not.toMatch(/\s→/);
   });
 
-  it('does not insert space before inbound arrow (←) in window.message logs', () => {
+  it("does not insert space before inbound arrow (←) in window.message logs", () => {
     loadPageHookIntoHappydom();
 
     // dispatch an inbound message event
-    const ev = new window.MessageEvent('message', { data: 'x', origin: 'null' });
+    const ev = new window.MessageEvent("message", { data: "x", origin: "null" });
     window.dispatchEvent(ev);
 
     const calls = groupSpy.mock.calls;

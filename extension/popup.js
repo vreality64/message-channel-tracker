@@ -1,5 +1,4 @@
 (() => {
-
   const enabledToggle = document.getElementById("enabledToggle");
   const statusLabel = document.getElementById("statusLabel");
 

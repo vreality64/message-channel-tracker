@@ -1,28 +1,36 @@
 (() => {
-
   // Guard to avoid double-installation
   if (window.__MCT_INSTALLED__) return;
-  Object.defineProperty(window, "__MCT_INSTALLED__", { value: true, configurable: false, enumerable: false, writable: false });
+  Object.defineProperty(window, "__MCT_INSTALLED__", {
+    value: true,
+    configurable: false,
+    enumerable: false,
+    writable: false,
+  });
 
   // State management
   const state = {
-    enabled: true
+    enabled: true,
   };
 
   // Receive enable/disable messages from the content script
-  window.addEventListener("message", (event) => {
-    try {
-      if (event?.source !== window) return;
-      const data = event?.data;
-      if (!data || typeof data !== "object") return;
-      if (data.type === "MCT:SET_ENABLED") {
-        state.enabled = Boolean(data.enabled);
-        logInternalInfo(state.enabled ? "Tracking enabled" : "Tracking disabled");
+  window.addEventListener(
+    "message",
+    (event) => {
+      try {
+        if (event?.source !== window) return;
+        const data = event?.data;
+        if (!data || typeof data !== "object") return;
+        if (data.type === "MCT:SET_ENABLED") {
+          state.enabled = Boolean(data.enabled);
+          logInternalInfo(state.enabled ? "Tracking enabled" : "Tracking disabled");
+        }
+      } catch (_) {
+        // Swallow
       }
-    } catch (_) {
-      // Swallow
-    }
-  }, true);
+    },
+    true,
+  );
 
   // Utility: timestamp
   function nowIso() {
@@ -41,7 +49,8 @@
       }
       if (value === null) return "null";
       if (typeof value === "undefined") return "undefined";
-      if (typeof value === "number" || typeof value === "boolean" || typeof value === "bigint") return String(value);
+      if (typeof value === "number" || typeof value === "boolean" || typeof value === "bigint")
+        return String(value);
       if (typeof value === "symbol") return String(value);
       if (Array.isArray(value)) return `Array(${value.length})`;
       if (value instanceof MessagePort) return "MessagePort";
@@ -54,12 +63,17 @@
 
   // Console formatting helpers
   const styles = {
-    badgeBase: "display:inline-block;padding:1px 5px;border-radius:10px;background:#3b82f6;color:white;font-weight:600;",
-    badgeWarn: "display:inline-block;padding:1px 5px;border-radius:10px;background:#f59e0b;color:black;font-weight:700;",
+    badgeBase:
+      "display:inline-block;padding:1px 5px;border-radius:10px;background:#3b82f6;color:white;font-weight:600;",
+    badgeWarn:
+      "display:inline-block;padding:1px 5px;border-radius:10px;background:#f59e0b;color:black;font-weight:700;",
     // Improve arrow visibility with a light chip background (no leading gap)
-    arrowOut: "color:#22c55e;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
-    arrowIn: "color:#ef4444;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
-    arrowPort: "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
+    arrowOut:
+      "color:#22c55e;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
+    arrowIn:
+      "color:#ef4444;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
+    arrowPort:
+      "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
     meta: "color:#64748b;",
   };
 
@@ -90,11 +104,15 @@
       const fmt = fmtParts.join("");
       console.groupCollapsed(fmt, ...params);
     } catch (_) {
-      try { console.groupCollapsed("[MCT]", nowIso()); } catch (_) {}
+      try {
+        console.groupCollapsed("[MCT]", nowIso());
+      } catch (_) {}
     }
   }
   function endGroup() {
-    try { console.groupEnd(); } catch (_) {}
+    try {
+      console.groupEnd();
+    } catch (_) {}
   }
   function logInternalInfo(message) {
     try {
@@ -103,26 +121,30 @@
   }
 
   // Attach a capturing listener to log inbound window messages non-invasively
-  window.addEventListener("message", (event) => {
-    if (!state.enabled) return;
-    try {
-      // Ignore our own control messages
-      const t = event?.data?.type;
-      if (typeof t === "string" && t.startsWith("MCT:")) return;
-      const titlePairs = [
-        ["%cMCT", styles.badgeBase],
-        ["%c←", styles.arrowIn],
-        ["%cwindow.message", styles.meta],
-        [`%c${nowIso()}`, styles.meta],
-      ];
-      logGroupCollapsedStyled(titlePairs);
-      console.log("event:", event);
-      if (event?.data !== undefined) console.log("data:", event.data);
-      if (event?.origin !== undefined) console.log("origin:", event.origin);
-      if (event?.source !== undefined) console.log("source:", event.source);
-      endGroup();
-    } catch (_) {}
-  }, true);
+  window.addEventListener(
+    "message",
+    (event) => {
+      if (!state.enabled) return;
+      try {
+        // Ignore our own control messages
+        const t = event?.data?.type;
+        if (typeof t === "string" && t.startsWith("MCT:")) return;
+        const titlePairs = [
+          ["%cMCT", styles.badgeBase],
+          ["%c←", styles.arrowIn],
+          ["%cwindow.message", styles.meta],
+          [`%c${nowIso()}`, styles.meta],
+        ];
+        logGroupCollapsedStyled(titlePairs);
+        console.log("event:", event);
+        if (event?.data !== undefined) console.log("data:", event.data);
+        if (event?.origin !== undefined) console.log("origin:", event.origin);
+        if (event?.source !== undefined) console.log("source:", event.source);
+        endGroup();
+      } catch (_) {}
+    },
+    true,
+  );
 
   // Wrap window.postMessage
   (function wrapPostMessage() {
@@ -148,14 +170,22 @@
       return original.apply(this, [message, targetOrigin, transfer]);
     }
 
-    try { Object.defineProperty(wrappedPostMessage, "name", { value: "postMessage" }); } catch (_) {}
+    try {
+      Object.defineProperty(wrappedPostMessage, "name", { value: "postMessage" });
+    } catch (_) {}
     Object.defineProperty(wrappedPostMessage, "__MCT_WRAPPED__", { value: true });
 
     try {
-      Object.defineProperty(window, "postMessage", { configurable: true, writable: true, value: wrappedPostMessage });
+      Object.defineProperty(window, "postMessage", {
+        configurable: true,
+        writable: true,
+        value: wrappedPostMessage,
+      });
     } catch (_) {
       // If defineProperty fails, fall back to direct assignment
-      try { window.postMessage = wrappedPostMessage; } catch (_) {}
+      try {
+        window.postMessage = wrappedPostMessage;
+      } catch (_) {}
     }
   })();
 
@@ -186,13 +216,21 @@
       return originalPostMessage.apply(this, [message, transfer]);
     }
 
-    try { Object.defineProperty(wrappedPortPostMessage, "name", { value: "postMessage" }); } catch (_) {}
+    try {
+      Object.defineProperty(wrappedPortPostMessage, "name", { value: "postMessage" });
+    } catch (_) {}
     Object.defineProperty(wrappedPortPostMessage, "__MCT_WRAPPED__", { value: true });
 
     try {
-      Object.defineProperty(PortProto, "postMessage", { configurable: true, writable: true, value: wrappedPortPostMessage });
+      Object.defineProperty(PortProto, "postMessage", {
+        configurable: true,
+        writable: true,
+        value: wrappedPortPostMessage,
+      });
     } catch (_) {
-      try { PortProto.postMessage = wrappedPortPostMessage; } catch (_) {}
+      try {
+        PortProto.postMessage = wrappedPortPostMessage;
+      } catch (_) {}
     }
 
     // Capture incoming messages on ports without interfering
@@ -227,11 +265,19 @@
         return origAddEventListener.apply(this, [type, listener, options]);
       }
 
-      try { Object.defineProperty(wrappedAddEventListener, "name", { value: "addEventListener" }); } catch (_) {}
       try {
-        Object.defineProperty(PortProto, "addEventListener", { configurable: true, writable: true, value: wrappedAddEventListener });
+        Object.defineProperty(wrappedAddEventListener, "name", { value: "addEventListener" });
+      } catch (_) {}
+      try {
+        Object.defineProperty(PortProto, "addEventListener", {
+          configurable: true,
+          writable: true,
+          value: wrappedAddEventListener,
+        });
       } catch (_) {
-        try { PortProto.addEventListener = wrappedAddEventListener; } catch (_) {}
+        try {
+          PortProto.addEventListener = wrappedAddEventListener;
+        } catch (_) {}
       }
     } catch (_) {}
   })();
@@ -261,14 +307,22 @@
       return channel;
     }
 
-    try { Object.defineProperty(WrappedMessageChannel, "name", { value: "MessageChannel" }); } catch (_) {}
+    try {
+      Object.defineProperty(WrappedMessageChannel, "name", { value: "MessageChannel" });
+    } catch (_) {}
     Object.defineProperty(WrappedMessageChannel, "__MCT_WRAPPED__", { value: true });
     WrappedMessageChannel.prototype = OriginalMC.prototype;
 
     try {
-      Object.defineProperty(window, "MessageChannel", { configurable: true, writable: true, value: WrappedMessageChannel });
+      Object.defineProperty(window, "MessageChannel", {
+        configurable: true,
+        writable: true,
+        value: WrappedMessageChannel,
+      });
     } catch (_) {
-      try { window.MessageChannel = WrappedMessageChannel; } catch (_) {}
+      try {
+        window.MessageChannel = WrappedMessageChannel;
+      } catch (_) {}
     }
   })();
 
@@ -300,41 +354,57 @@
         }
         return originalPostMessage.apply(this, [message]);
       }
-      try { Object.defineProperty(wrappedBCPostMessage, "name", { value: "postMessage" }); } catch (_) {}
-      try { bc.postMessage = wrappedBCPostMessage; } catch (_) {}
+      try {
+        Object.defineProperty(wrappedBCPostMessage, "name", { value: "postMessage" });
+      } catch (_) {}
+      try {
+        bc.postMessage = wrappedBCPostMessage;
+      } catch (_) {}
 
       // Capture incoming messages
       try {
-        bc.addEventListener("message", (event) => {
-          if (!state.enabled) return;
-          try {
-            const titlePairs = [
-              ["%cMCT", styles.badgeBase],
-              ["%c←", styles.arrowIn],
-              ["%cBroadcastChannel.message", styles.meta],
-              [`%c${nowIso()}`, styles.meta],
-            ];
-            logGroupCollapsedStyled(titlePairs);
-            console.log("channel:", bc);
-            console.log("name:", name);
-            console.log("event:", event);
-            if (event?.data !== undefined) console.log("data:", event.data);
-            endGroup();
-          } catch (_) {}
-        }, { capture: true });
+        bc.addEventListener(
+          "message",
+          (event) => {
+            if (!state.enabled) return;
+            try {
+              const titlePairs = [
+                ["%cMCT", styles.badgeBase],
+                ["%c←", styles.arrowIn],
+                ["%cBroadcastChannel.message", styles.meta],
+                [`%c${nowIso()}`, styles.meta],
+              ];
+              logGroupCollapsedStyled(titlePairs);
+              console.log("channel:", bc);
+              console.log("name:", name);
+              console.log("event:", event);
+              if (event?.data !== undefined) console.log("data:", event.data);
+              endGroup();
+            } catch (_) {}
+          },
+          { capture: true },
+        );
       } catch (_) {}
 
       return bc;
     }
 
-    try { Object.defineProperty(WrappedBroadcastChannel, "name", { value: "BroadcastChannel" }); } catch (_) {}
+    try {
+      Object.defineProperty(WrappedBroadcastChannel, "name", { value: "BroadcastChannel" });
+    } catch (_) {}
     Object.defineProperty(WrappedBroadcastChannel, "__MCT_WRAPPED__", { value: true });
     WrappedBroadcastChannel.prototype = OriginalBC.prototype;
 
     try {
-      Object.defineProperty(window, "BroadcastChannel", { configurable: true, writable: true, value: WrappedBroadcastChannel });
+      Object.defineProperty(window, "BroadcastChannel", {
+        configurable: true,
+        writable: true,
+        value: WrappedBroadcastChannel,
+      });
     } catch (_) {
-      try { window.BroadcastChannel = WrappedBroadcastChannel; } catch (_) {}
+      try {
+        window.BroadcastChannel = WrappedBroadcastChannel;
+      } catch (_) {}
     }
   })();
 
@@ -370,34 +440,44 @@
             }
             return originalPostMessage.apply(this, [message, transfer]);
           }
-          try { Object.defineProperty(wrappedWorkerPostMessage, "name", { value: "postMessage" }); } catch (_) {}
-          try { worker.postMessage = wrappedWorkerPostMessage; } catch (_) {}
+          try {
+            Object.defineProperty(wrappedWorkerPostMessage, "name", { value: "postMessage" });
+          } catch (_) {}
+          try {
+            worker.postMessage = wrappedWorkerPostMessage;
+          } catch (_) {}
         } catch (_) {}
 
         // Inbound messages
         try {
-          worker.addEventListener("message", (event) => {
-            if (!state.enabled) return;
-            try {
-              const titlePairs = [
-                ["%cMCT", styles.badgeBase],
-                ["%c←", styles.arrowIn],
-                [`%c${label}.message`, styles.meta],
-                [`%c${nowIso()}`, styles.meta],
-              ];
-              logGroupCollapsedStyled(titlePairs);
-              console.log("worker:", worker);
-              console.log("event:", event);
-              if (event?.data !== undefined) console.log("data:", event.data);
-              endGroup();
-            } catch (_) {}
-          }, { capture: true });
+          worker.addEventListener(
+            "message",
+            (event) => {
+              if (!state.enabled) return;
+              try {
+                const titlePairs = [
+                  ["%cMCT", styles.badgeBase],
+                  ["%c←", styles.arrowIn],
+                  [`%c${label}.message`, styles.meta],
+                  [`%c${nowIso()}`, styles.meta],
+                ];
+                logGroupCollapsedStyled(titlePairs);
+                console.log("worker:", worker);
+                console.log("event:", event);
+                if (event?.data !== undefined) console.log("data:", event.data);
+                endGroup();
+              } catch (_) {}
+            },
+            { capture: true },
+          );
         } catch (_) {}
 
         return worker;
       }
 
-      try { Object.defineProperty(WrappedWorker, "name", { value: label }); } catch (_) {}
+      try {
+        Object.defineProperty(WrappedWorker, "name", { value: label });
+      } catch (_) {}
       Object.defineProperty(WrappedWorker, "__MCT_WRAPPED__", { value: true });
       WrappedWorker.prototype = Original.prototype;
 
@@ -406,12 +486,32 @@
 
     const MaybeWrappedWorker = wrapWorkerConstructor(OriginalWorker, "Worker");
     if (MaybeWrappedWorker && MaybeWrappedWorker !== OriginalWorker) {
-      try { Object.defineProperty(window, "Worker", { configurable: true, writable: true, value: MaybeWrappedWorker }); } catch (_) { try { window.Worker = MaybeWrappedWorker; } catch (_) {} }
+      try {
+        Object.defineProperty(window, "Worker", {
+          configurable: true,
+          writable: true,
+          value: MaybeWrappedWorker,
+        });
+      } catch (_) {
+        try {
+          window.Worker = MaybeWrappedWorker;
+        } catch (_) {}
+      }
     }
 
     const MaybeWrappedSharedWorker = wrapWorkerConstructor(OriginalSharedWorker, "SharedWorker");
     if (MaybeWrappedSharedWorker && MaybeWrappedSharedWorker !== OriginalSharedWorker) {
-      try { Object.defineProperty(window, "SharedWorker", { configurable: true, writable: true, value: MaybeWrappedSharedWorker }); } catch (_) { try { window.SharedWorker = MaybeWrappedSharedWorker; } catch (_) {} }
+      try {
+        Object.defineProperty(window, "SharedWorker", {
+          configurable: true,
+          writable: true,
+          value: MaybeWrappedSharedWorker,
+        });
+      } catch (_) {
+        try {
+          window.SharedWorker = MaybeWrappedSharedWorker;
+        } catch (_) {}
+      }
     }
   })();
 
@@ -439,45 +539,65 @@
           }
           return originalSWPost.apply(this, [message, transfer]);
         }
-        try { Object.defineProperty(wrappedSWPostMessage, "name", { value: "postMessage" }); } catch (_) {}
+        try {
+          Object.defineProperty(wrappedSWPostMessage, "name", { value: "postMessage" });
+        } catch (_) {}
         Object.defineProperty(wrappedSWPostMessage, "__MCT_WRAPPED__", { value: true });
-        try { Object.defineProperty(SWProto, "postMessage", { configurable: true, writable: true, value: wrappedSWPostMessage }); } catch (_) { try { SWProto.postMessage = wrappedSWPostMessage; } catch (_) {} }
+        try {
+          Object.defineProperty(SWProto, "postMessage", {
+            configurable: true,
+            writable: true,
+            value: wrappedSWPostMessage,
+          });
+        } catch (_) {
+          try {
+            SWProto.postMessage = wrappedSWPostMessage;
+          } catch (_) {}
+        }
       }
     } catch (_) {}
 
     try {
       const swc = navigator.serviceWorker;
       if (!swc) return;
-      swc.addEventListener("message", (event) => {
-        if (!state.enabled) return;
-        try {
-          const titlePairs = [
-            ["%cMCT", styles.badgeBase],
-            ["%c←", styles.arrowIn],
-            ["%cServiceWorker.message", styles.meta],
-            [`%c${nowIso()}`, styles.meta],
-          ];
-          logGroupCollapsedStyled(titlePairs);
-          console.log("event:", event);
-          if (event?.data !== undefined) console.log("data:", event.data);
-          endGroup();
-        } catch (_) {}
-      }, { capture: true });
+      swc.addEventListener(
+        "message",
+        (event) => {
+          if (!state.enabled) return;
+          try {
+            const titlePairs = [
+              ["%cMCT", styles.badgeBase],
+              ["%c←", styles.arrowIn],
+              ["%cServiceWorker.message", styles.meta],
+              [`%c${nowIso()}`, styles.meta],
+            ];
+            logGroupCollapsedStyled(titlePairs);
+            console.log("event:", event);
+            if (event?.data !== undefined) console.log("data:", event.data);
+            endGroup();
+          } catch (_) {}
+        },
+        { capture: true },
+      );
 
-      swc.addEventListener("messageerror", (event) => {
-        if (!state.enabled) return;
-        try {
-          const titlePairs = [
-            ["%cMCT", styles.badgeBase],
-            ["%c←", styles.arrowIn],
-            ["%cServiceWorker.messageerror", styles.meta],
-            [`%c${nowIso()}`, styles.meta],
-          ];
-          logGroupCollapsedStyled(titlePairs);
-          console.log("event:", event);
-          endGroup();
-        } catch (_) {}
-      }, { capture: true });
+      swc.addEventListener(
+        "messageerror",
+        (event) => {
+          if (!state.enabled) return;
+          try {
+            const titlePairs = [
+              ["%cMCT", styles.badgeBase],
+              ["%c←", styles.arrowIn],
+              ["%cServiceWorker.messageerror", styles.meta],
+              [`%c${nowIso()}`, styles.meta],
+            ];
+            logGroupCollapsedStyled(titlePairs);
+            console.log("event:", event);
+            endGroup();
+          } catch (_) {}
+        },
+        { capture: true },
+      );
     } catch (_) {}
   })();
 })();
