@@ -57,17 +57,38 @@
   const styles = {
     badgeBase: "display:inline-block;padding:1px 5px;border-radius:10px;background:#3b82f6;color:white;font-weight:600;",
     badgeWarn: "display:inline-block;padding:1px 5px;border-radius:10px;background:#f59e0b;color:black;font-weight:700;",
-    arrowOut: "color:#22c55e;font-weight:700;",
-    arrowIn: "color:#ef4444;font-weight:700;",
-    arrowPort: "color:#a855f7;font-weight:700;",
+    // Improve arrow visibility with a light chip background (no leading gap)
+    arrowOut: "color:#22c55e;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
+    arrowIn: "color:#ef4444;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
+    arrowPort: "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
     meta: "color:#64748b;",
   };
 
-  // titleParts must be an array of [fmtWithPercentC, styleString] pairs
+  // titlePairs must be an array of [fmtWithPercentC, styleString] pairs
+  // Insert a neutral space AFTER tokens except when the next token is an arrow.
+  // This keeps no space before arrows while preventing background bleed.
   function logGroupCollapsedStyled(titlePairs) {
     try {
-      const fmt = titlePairs.map((p) => p && p[0] ? p[0] : "").join(" ");
-      const params = titlePairs.map((p) => p && p[1] ? p[1] : "");
+      const fmtParts = [];
+      const params = [];
+      for (let i = 0; i < titlePairs.length; i++) {
+        const pair = titlePairs[i] || ["", ""];
+        const rawFmt = String(pair[0] || "");
+        const style = String(pair[1] || "");
+        fmtParts.push(rawFmt);
+        params.push(style);
+
+        const hasNext = i < titlePairs.length - 1;
+        if (hasNext) {
+          const nextRawFmt = String((titlePairs[i + 1] && titlePairs[i + 1][0]) || "");
+          const nextIsArrow = /[←→↔]/.test(nextRawFmt);
+          if (!nextIsArrow) {
+            fmtParts.push("%c ");
+            params.push("");
+          }
+        }
+      }
+      const fmt = fmtParts.join("");
       console.groupCollapsed(fmt, ...params);
     } catch (_) {
       try { console.groupCollapsed("[MCT]", nowIso()); } catch (_) {}
@@ -114,7 +135,7 @@
         try {
           const titlePairs = [
             ["%cMCT", styles.badgeBase],
-            ["%c→", styles.arrowOut],
+            ["%c→%c", styles.arrowOut],
             ["%cwindow.postMessage", styles.meta],
             [`%c${nowIso()}`, styles.meta],
           ];
@@ -337,7 +358,7 @@
               try {
                 const titlePairs = [
                   ["%cMCT", styles.badgeBase],
-                  ["%c→", styles.arrowOut],
+                  ["%c→%c", styles.arrowOut],
                   [`%c${label}.postMessage`, styles.meta],
                   [`%c${nowIso()}`, styles.meta],
                 ];
