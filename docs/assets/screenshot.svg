@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <style>
+      .bg{fill:#0b1020}
+      .panel{fill:#0f1629;stroke:#1f2a44;stroke-width:2}
+      .title{fill:#e6edf3;font:700 20px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+      .mono{fill:#a6b3c2;font:500 16px SFMono-Regular,ui-monospace,Menlo,monospace}
+      .tag{fill:#0f1629;stroke:url(#g);stroke-width:2}
+      .tagText{fill:#e6edf3;font:700 14px ui-sans-serif,system-ui}
+      .chip{fill:url(#g)}
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1200" height="675"/>
+  <g transform="translate(80,60)">
+    <rect class="panel" x="0" y="0" rx="16" ry="16" width="1040" height="555"/>
+    <text class="title" x="24" y="46">Message Channel Tracker · Console</text>
+
+    <g transform="translate(24,80)">
+      <rect class="tag" x="0" y="-20" rx="10" ry="10" width="200" height="32"/>
+      <text class="tagText" x="12" y="2">window.postMessage</text>
+      <circle class="chip" cx="186" cy="-4" r="6"/>
+      <text class="mono" x="0" y="24">"hello from MCT" → target: *</text>
+    </g>
+
+    <g transform="translate(24,150)">
+      <rect class="tag" x="0" y="-20" rx="10" ry="10" width="230" height="32"/>
+      <text class="tagText" x="12" y="2">MessageChannel / Port</text>
+      <circle class="chip" cx="216" cy="-4" r="6"/>
+      <text class="mono" x="0" y="24">port.postMessage({type: "PING"})</text>
+    </g>
+
+    <g transform="translate(24,220)">
+      <rect class="tag" x="0" y="-20" rx="10" ry="10" width="210" height="32"/>
+      <text class="tagText" x="12" y="2">BroadcastChannel</text>
+      <circle class="chip" cx="196" cy="-4" r="6"/>
+      <text class="mono" x="0" y="24">channel.postMessage("update:ready")</text>
+    </g>
+
+    <g transform="translate(24,290)">
+      <rect class="tag" x="0" y="-20" rx="10" ry="10" width="200" height="32"/>
+      <text class="tagText" x="12" y="2">Worker / SW</text>
+      <circle class="chip" cx="186" cy="-4" r="6"/>
+      <text class="mono" x="0" y="24">worker.postMessage({event: "start"})</text>
+    </g>
+
+    <g transform="translate(24,360)">
+      <text class="mono" x="0" y="0">…</text>
+    </g>
+  </g>
+</svg>

@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Message Channel Tracker · Chrome 확장</title>
     <meta name="description" content="브라우저의 메시지 흐름(window.postMessage, MessageChannel, BroadcastChannel, Worker 등)을 콘솔에 예쁘게 시각화하는 Chrome 확장." />
+    <link rel="canonical" href="https://message-channel-tracker.vreality.dev/" />
     <meta property="og:title" content="Message Channel Tracker" />
     <meta property="og:description" content="브라우저의 메시지 흐름을 깨뜨리지 않고 관찰하세요." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://message-channel-tracker.vreality.dev/" />
+    <meta property="og:image" content="https://message-channel-tracker.vreality.dev/assets/og.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Message Channel Tracker" />
+    <meta name="twitter:description" content="브라우저의 메시지 흐름을 깨뜨리지 않고 관찰하세요." />
+    <meta name="twitter:image" content="https://message-channel-tracker.vreality.dev/assets/og.svg" />
     <meta name="theme-color" content="#0ea5e9" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230ea5e9'/%3E%3Cpath d='M14 24h36M14 32h28M14 40h20' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="./styles.css" />
@@ -29,7 +36,7 @@
     </header>
 
     <main>
-      <section class="hero container">
+      <section class="hero container reveal">
         <h1>브라우저 메시지 흐름을 <span class="accent">깨뜨리지 않고</span> 관찰하세요</h1>
         <p class="lead">
           window.postMessage, MessageChannel, BroadcastChannel, Worker/ServiceWorker 등 다양한 채널의 메시지를 DevTools 콘솔에
@@ -39,9 +46,12 @@
           <a class="button primary" href="#install">빠르게 설치하기</a>
           <a class="button" href="https://github.com/vreality64/message-channel-tracker" target="_blank" rel="noopener">GitHub 보기</a>
         </div>
+        <figure class="hero-visual">
+          <img src="./assets/screenshot.svg" alt="Message Channel Tracker 콘솔 시각화 스크린샷" width="960" height="540" loading="eager" />
+        </figure>
       </section>
 
-      <section id="features" class="section container">
+      <section id="features" class="section container reveal">
         <h2>기능</h2>
         <ul class="feature-list">
           <li><strong>다양한 메시지 채널 로깅</strong>: window.postMessage, MessageChannel/MessagePort, BroadcastChannel, Worker/SharedWorker, ServiceWorker</li>
@@ -51,7 +61,7 @@
         </ul>
       </section>
 
-      <section id="install" class="section container">
+      <section id="install" class="section container reveal">
         <h2>설치</h2>
         <ol class="steps">
           <li>Chrome 주소창에 <code>chrome://extensions</code> 입력 후 이동</li>
@@ -62,7 +72,7 @@
         <p class="note">저장소 클론과 로컬 로드는 개발 버전에 적합합니다. 웹스토어 배포 전에는 수동 로드 방식으로 사용하세요.</p>
       </section>
 
-      <section id="usage" class="section container">
+      <section id="usage" class="section container reveal">
         <h2>사용법</h2>
         <p>아무 페이지의 DevTools 콘솔에서 아래를 실행해 보세요. 콘솔에 MCT 로그가 출력됩니다.</p>
         <pre class="code"><code>window.postMessage("hello from MCT", "*");</code></pre>
@@ -70,7 +80,7 @@
           로컬 서버를 띄우고 <code>/playground/</code>에 접속하세요.</p>
       </section>
 
-      <section id="how-it-works" class="section container">
+      <section id="how-it-works" class="section container reveal">
         <h2>동작 원리</h2>
         <ul>
           <li><code>content.js</code>가 페이지에 <code>pageHook.js</code>를 삽입하여 페이지 컨텍스트에서 안전하게 내장 객체를 래핑</li>
@@ -80,7 +90,7 @@
         <p class="small">필요 권한: <code>storage</code>, <code>tabs</code></p>
       </section>
 
-      <section id="faq" class="section container">
+      <section id="faq" class="section container reveal">
         <h2>FAQ</h2>
         <details>
           <summary>성능에 영향이 있나요?</summary>
@@ -101,7 +111,19 @@
       <p>© <span id="year"></span> Message Channel Tracker · <a href="https://github.com/vreality64/message-channel-tracker" target="_blank" rel="noopener">GitHub</a></p>
     </footer>
     <script>
+      // Copyright year
       document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Reveal on scroll
+      const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        }
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
   </body>
 </html>

@@ -7,6 +7,7 @@ body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI
 
 .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
 .section { padding: 56px 0; }
+.section h2 { margin-top: 0; }
 
 /* Header */
 .site-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; position: sticky; top: 0; background: color-mix(in oklab, var(--bg) 85%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); z-index: 10; }
@@ -25,6 +26,8 @@ body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI
 .button.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: none; color: white; }
 .button:hover { transform: translateY(-1px); }
 .accent { color: var(--accent-2); font-weight: 800; }
+.hero-visual { margin-top: 22px; border-radius: 14px; overflow: clip; border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow); }
+.hero-visual img { display: block; width: 100%; height: auto; }
 
 /* Features */
 .feature-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; padding: 0; list-style: none; margin: 16px 0 0; }
@@ -44,3 +47,7 @@ pre.code { background: #0a0f1e; color: #d6e9ff; border: 1px solid #17203a; borde
 
 /* Utilities */
 .small { font-size: 14px; color: var(--muted); }
+
+/* Reveal on scroll */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.is-visible { opacity: 1; transform: none; }
