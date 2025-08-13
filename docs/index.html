@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Message Channel Tracker · Chrome 확장</title>
+    <meta name="description" content="브라우저의 메시지 흐름(window.postMessage, MessageChannel, BroadcastChannel, Worker 등)을 콘솔에 예쁘게 시각화하는 Chrome 확장." />
+    <meta property="og:title" content="Message Channel Tracker" />
+    <meta property="og:description" content="브라우저의 메시지 흐름을 깨뜨리지 않고 관찰하세요." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0ea5e9" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230ea5e9'/%3E%3Cpath d='M14 24h36M14 32h28M14 40h20' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header container">
+      <a class="brand" href="#">
+        <span class="logo" aria-hidden="true">MCT</span>
+        <span class="brand-text">Message Channel Tracker</span>
+      </a>
+      <nav class="nav">
+        <a href="#features">기능</a>
+        <a href="#install">설치</a>
+        <a href="#usage">사용법</a>
+        <a href="#how-it-works">동작 원리</a>
+        <a href="#faq">FAQ</a>
+        <a class="github" href="https://github.com/vreality64/message-channel-tracker" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero container">
+        <h1>브라우저 메시지 흐름을 <span class="accent">깨뜨리지 않고</span> 관찰하세요</h1>
+        <p class="lead">
+          window.postMessage, MessageChannel, BroadcastChannel, Worker/ServiceWorker 등 다양한 채널의 메시지를 DevTools 콘솔에
+          컬러와 그룹으로 <strong>가독성 높게</strong> 보여주는 Chrome 확장입니다.
+        </p>
+        <div class="cta">
+          <a class="button primary" href="#install">빠르게 설치하기</a>
+          <a class="button" href="https://github.com/vreality64/message-channel-tracker" target="_blank" rel="noopener">GitHub 보기</a>
+        </div>
+      </section>
+
+      <section id="features" class="section container">
+        <h2>기능</h2>
+        <ul class="feature-list">
+          <li><strong>다양한 메시지 채널 로깅</strong>: window.postMessage, MessageChannel/MessagePort, BroadcastChannel, Worker/SharedWorker, ServiceWorker</li>
+          <li><strong>읽기 쉬운 콘솔 출력</strong>: 콘솔 그룹/색상으로 흐름을 직관적으로 파악</li>
+          <li><strong>토글 가능</strong>: 팝업에서 On/Off 전환, 전역 상태는 <code>chrome.storage.sync</code>의 <code>mctEnabled</code>로 보존</li>
+          <li><strong>비침투적</strong>: 원래 동작을 바꾸지 않고 <em>관찰만</em> 하도록 설계</li>
+        </ul>
+      </section>
+
+      <section id="install" class="section container">
+        <h2>설치</h2>
+        <ol class="steps">
+          <li>Chrome 주소창에 <code>chrome://extensions</code> 입력 후 이동</li>
+          <li>오른쪽 상단의 <strong>Developer mode</strong> 활성화</li>
+          <li><strong>Load unpacked</strong>를 클릭하고 저장소의 <code>extension/</code> 폴더를 선택</li>
+          <li>확장을 고정(pin)한 뒤 아이콘을 눌러 로깅을 On/Off</li>
+        </ol>
+        <p class="note">저장소 클론과 로컬 로드는 개발 버전에 적합합니다. 웹스토어 배포 전에는 수동 로드 방식으로 사용하세요.</p>
+      </section>
+
+      <section id="usage" class="section container">
+        <h2>사용법</h2>
+        <p>아무 페이지의 DevTools 콘솔에서 아래를 실행해 보세요. 콘솔에 MCT 로그가 출력됩니다.</p>
+        <pre class="code"><code>window.postMessage("hello from MCT", "*");</code></pre>
+        <p>내장 <strong>Playground</strong>로 여러 채널을 한 번에 시험할 수 있습니다. 저장소의 <code>scripts/serve.sh</code>로
+          로컬 서버를 띄우고 <code>/playground/</code>에 접속하세요.</p>
+      </section>
+
+      <section id="how-it-works" class="section container">
+        <h2>동작 원리</h2>
+        <ul>
+          <li><code>content.js</code>가 페이지에 <code>pageHook.js</code>를 삽입하여 페이지 컨텍스트에서 안전하게 내장 객체를 래핑</li>
+          <li>메시지는 컬러/그룹으로 정리되어 콘솔에 출력되고, 토글 이벤트(<code>MCT:SET_ENABLED</code>)로 로깅을 제어</li>
+          <li>로깅은 읽기 전용이며 원래 동작을 변경하지 않도록 설계</li>
+        </ul>
+        <p class="small">필요 권한: <code>storage</code>, <code>tabs</code></p>
+      </section>
+
+      <section id="faq" class="section container">
+        <h2>FAQ</h2>
+        <details>
+          <summary>성능에 영향이 있나요?</summary>
+          <p>일반적인 개발/디버깅 시나리오에서 영향을 최소화하도록 구현했습니다. 대량 메시지 환경에서는 토글을 Off하여 부하를 줄일 수 있습니다.</p>
+        </details>
+        <details>
+          <summary>프로덕션 페이지에 사용해도 되나요?</summary>
+          <p>개발/테스트 용도로 권장됩니다. 프로덕션 환경에서는 필요 시점에만 On으로 전환하세요.</p>
+        </details>
+        <details>
+          <summary>무엇을 로깅하나요?</summary>
+          <p>window.postMessage, MessageChannel/MessagePort, BroadcastChannel, Worker/SharedWorker, ServiceWorker의 postMessage/수신 메시지 이벤트를 다룹니다.</p>
+        </details>
+      </section>
+    </main>
+
+    <footer class="site-footer container">
+      <p>© <span id="year"></span> Message Channel Tracker · <a href="https://github.com/vreality64/message-channel-tracker" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
