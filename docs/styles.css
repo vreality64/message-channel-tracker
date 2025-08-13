@@ -35,7 +35,7 @@ body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI
 
 /* Steps */
 .steps { counter-reset: step; display: grid; gap: 10px; padding-left: 0; list-style: none; }
-.steps li { position: relative; padding-left: 40px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px 14px 44px; }
+.steps li { position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px 14px 44px; }
 .steps li::before { counter-increment: step; content: counter(step); position: absolute; left: 12px; top: 12px; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; }
 .note { color: var(--muted); margin-top: 10px; }
 
