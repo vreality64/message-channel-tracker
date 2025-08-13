@@ -1,6 +1,6 @@
 const connections = new Set();
 
-onconnect = (e) => {
+self.addEventListener('connect', (e) => {
   const port = e.ports[0];
   connections.add(port);
   port.addEventListener('message', (ev) => {
@@ -13,4 +13,4 @@ onconnect = (e) => {
     }
   });
   port.start();
-};
+});

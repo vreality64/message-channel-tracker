@@ -1,17 +1,16 @@
-(function() {
-  "use strict";
+(() => {
 
   const enabledToggle = document.getElementById("enabledToggle");
   const statusLabel = document.getElementById("statusLabel");
 
-  function setUi(enabled) {
+  const setUi = (enabled) => {
     enabledToggle.checked = Boolean(enabled);
     statusLabel.textContent = enabled ? "On" : "Off";
     statusLabel.classList.toggle("on", enabled);
     statusLabel.classList.toggle("off", !enabled);
-  }
+  };
 
-  function sendToggleToActiveTab(enabled) {
+  const sendToggleToActiveTab = (enabled) => {
     try {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const tab = Array.isArray(tabs) ? tabs[0] : null;
@@ -23,7 +22,7 @@
       // Non-fatal in popup
       console.warn("[MCT] Failed to message active tab", error);
     }
-  }
+  };
 
   document.addEventListener("DOMContentLoaded", () => {
     chrome.storage.sync.get({ mctEnabled: true }, ({ mctEnabled }) => {

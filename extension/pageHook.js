@@ -1,5 +1,4 @@
-(function() {
-  "use strict";
+(() => {
 
   // Guard to avoid double-installation
   if (window.__MCT_INSTALLED__) return;
@@ -38,7 +37,7 @@
   function preview(value) {
     try {
       if (typeof value === "string") {
-        return value.length > 80 ? value.slice(0, 77) + "..." : value;
+        return value.length > 80 ? `${value.slice(0, 77)}...` : value;
       }
       if (value === null) return "null";
       if (typeof value === "undefined") return "undefined";
@@ -46,7 +45,7 @@
       if (typeof value === "symbol") return String(value);
       if (Array.isArray(value)) return `Array(${value.length})`;
       if (value instanceof MessagePort) return "MessagePort";
-      if (value && value.constructor && value.constructor.name) return value.constructor.name;
+      if (value?.constructor?.name) return value.constructor.name;
       return Object.prototype.toString.call(value);
     } catch (_) {
       return typeof value;
@@ -80,7 +79,7 @@
 
         const hasNext = i < titlePairs.length - 1;
         if (hasNext) {
-          const nextRawFmt = String((titlePairs[i + 1] && titlePairs[i + 1][0]) || "");
+          const nextRawFmt = String(titlePairs[i + 1]?.[0] || "");
           const nextIsArrow = /[←→↔]/.test(nextRawFmt);
           if (!nextIsArrow) {
             fmtParts.push("%c ");
@@ -104,11 +103,11 @@
   }
 
   // Attach a capturing listener to log inbound window messages non-invasively
-  window.addEventListener("message", function onWindowMessage(event) {
+  window.addEventListener("message", (event) => {
     if (!state.enabled) return;
     try {
       // Ignore our own control messages
-      const t = event && event.data && event.data.type;
+      const t = event?.data?.type;
       if (typeof t === "string" && t.startsWith("MCT:")) return;
       const titlePairs = [
         ["%cMCT", styles.badgeBase],
@@ -146,7 +145,7 @@
           endGroup();
         } catch (_) {}
       }
-      return original.apply(this, arguments);
+      return original.apply(this, [message, targetOrigin, transfer]);
     }
 
     try { Object.defineProperty(wrappedPostMessage, "name", { value: "postMessage" }); } catch (_) {}
@@ -162,9 +161,9 @@
 
   // MessagePort instrumentation (covers MessageChannel ports and ports from worker/bc)
   (function wrapMessagePort() {
-    const PortProto = window.MessagePort && window.MessagePort.prototype;
+    const PortProto = window.MessagePort?.prototype;
     if (!PortProto) return;
-    if (PortProto.postMessage && PortProto.postMessage.__MCT_WRAPPED__) return;
+    if (PortProto.postMessage?.__MCT_WRAPPED__) return;
 
     const originalPostMessage = PortProto.postMessage;
 
@@ -184,7 +183,7 @@
           endGroup();
         } catch (_) {}
       }
-      return originalPostMessage.apply(this, arguments);
+      return originalPostMessage.apply(this, [message, transfer]);
     }
 
     try { Object.defineProperty(wrappedPortPostMessage, "name", { value: "postMessage" }); } catch (_) {}
@@ -200,7 +199,7 @@
     try {
       const origAddEventListener = PortProto.addEventListener;
       const listenerSet = new WeakMap();
-      const captureLogger = function(event) {
+      const captureLogger = (event) => {
         if (!state.enabled) return;
         try {
           const titlePairs = [
@@ -225,7 +224,7 @@
             listenerSet.set(this, true);
           } catch (_) {}
         }
-        return origAddEventListener.apply(this, arguments);
+        return origAddEventListener.apply(this, [type, listener, options]);
       }
 
       try { Object.defineProperty(wrappedAddEventListener, "name", { value: "addEventListener" }); } catch (_) {}
@@ -299,14 +298,14 @@
             endGroup();
           } catch (_) {}
         }
-        return originalPostMessage.apply(this, arguments);
+        return originalPostMessage.apply(this, [message]);
       }
       try { Object.defineProperty(wrappedBCPostMessage, "name", { value: "postMessage" }); } catch (_) {}
       try { bc.postMessage = wrappedBCPostMessage; } catch (_) {}
 
       // Capture incoming messages
       try {
-        bc.addEventListener("message", function(event) {
+        bc.addEventListener("message", (event) => {
           if (!state.enabled) return;
           try {
             const titlePairs = [
@@ -369,7 +368,7 @@
                 endGroup();
               } catch (_) {}
             }
-            return originalPostMessage.apply(this, arguments);
+            return originalPostMessage.apply(this, [message, transfer]);
           }
           try { Object.defineProperty(wrappedWorkerPostMessage, "name", { value: "postMessage" }); } catch (_) {}
           try { worker.postMessage = wrappedWorkerPostMessage; } catch (_) {}
@@ -377,7 +376,7 @@
 
         // Inbound messages
         try {
-          worker.addEventListener("message", function(event) {
+          worker.addEventListener("message", (event) => {
             if (!state.enabled) return;
             try {
               const titlePairs = [
@@ -419,8 +418,8 @@
   // Service Worker: wrap postMessage on ServiceWorker instances and log inbound messages
   (function wrapServiceWorkers() {
     try {
-      const SWProto = window.ServiceWorker && window.ServiceWorker.prototype;
-      if (SWProto && SWProto.postMessage && !SWProto.postMessage.__MCT_WRAPPED__) {
+      const SWProto = window.ServiceWorker?.prototype;
+      if (SWProto?.postMessage && !SWProto.postMessage.__MCT_WRAPPED__) {
         const originalSWPost = SWProto.postMessage;
         function wrappedSWPostMessage(message, transfer) {
           if (state.enabled) {
@@ -438,7 +437,7 @@
               endGroup();
             } catch (_) {}
           }
-          return originalSWPost.apply(this, arguments);
+          return originalSWPost.apply(this, [message, transfer]);
         }
         try { Object.defineProperty(wrappedSWPostMessage, "name", { value: "postMessage" }); } catch (_) {}
         Object.defineProperty(wrappedSWPostMessage, "__MCT_WRAPPED__", { value: true });
@@ -449,7 +448,7 @@
     try {
       const swc = navigator.serviceWorker;
       if (!swc) return;
-      swc.addEventListener("message", function(event) {
+      swc.addEventListener("message", (event) => {
         if (!state.enabled) return;
         try {
           const titlePairs = [
@@ -465,7 +464,7 @@
         } catch (_) {}
       }, { capture: true });
 
-      swc.addEventListener("messageerror", function(event) {
+      swc.addEventListener("messageerror", (event) => {
         if (!state.enabled) return;
         try {
           const titlePairs = [
