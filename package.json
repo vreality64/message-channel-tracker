@@ -10,7 +10,10 @@
     "lint:fix": "biome lint --fix .",
     "format": "biome format --write .",
     "prepush": "pnpm run lint && pnpm run test",
-    "prepare": "husky"
+    "prepare": "husky",
+    "docs:serve": "python3 -m http.server 5174 --directory docs --bind 127.0.0.1",
+    "docs:open": "open http://localhost:5174/",
+    "docs": "pnpm run docs:serve"
   },
   "devDependencies": {
     "happy-dom": "^18.0.1",

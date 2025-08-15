@@ -25,7 +25,7 @@
         <span class="logo" aria-hidden="true">MCT</span>
         <span class="brand-text">Message Channel Tracker</span>
       </a>
-      <nav class="nav">
+      <nav class="nav" id="site-nav">
         <a href="#features">기능</a>
         <a href="#install">설치</a>
         <a href="#usage">사용법</a>
@@ -33,10 +33,15 @@
         <a href="#faq">FAQ</a>
         <a class="github" href="https://github.com/vreality64/message-channel-tracker" target="_blank" rel="noopener">GitHub</a>
       </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환" title="테마 전환">🌓</button>
+        <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기" title="메뉴">☰</button>
+      </div>
     </header>
 
     <main>
       <section class="hero container reveal">
+        <span class="kicker">Chrome 확장</span>
         <h1>브라우저 메시지 흐름을 <span class="accent">깨뜨리지 않고</span> 관찰하세요</h1>
         <p class="lead">
           window.postMessage, MessageChannel, BroadcastChannel, Worker/ServiceWorker 등 다양한 채널의 메시지를 DevTools 콘솔에
@@ -75,7 +80,10 @@
       <section id="usage" class="section container reveal">
         <h2>사용법</h2>
         <p>아무 페이지의 DevTools 콘솔에서 아래를 실행해 보세요. 콘솔에 MCT 로그가 출력됩니다.</p>
-        <pre class="code"><code>window.postMessage("hello from MCT", "*");</code></pre>
+        <div class="code-block">
+          <button class="copy-btn" data-copy="#demo-code">복사</button>
+          <pre class="code"><code id="demo-code">window.postMessage("hello from MCT", "*");</code></pre>
+        </div>
         <p>내장 <strong>Playground</strong>로 여러 채널을 한 번에 시험할 수 있습니다. 저장소의 <code>scripts/serve.sh</code>로
           로컬 서버를 띄우고 <code>/playground/</code>에 접속하세요.</p>
       </section>
@@ -124,6 +132,42 @@
         }
       }, { threshold: 0.12 });
       document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+      // Theme toggle with localStorage preference
+      const root = document.documentElement;
+      const themeToggle = document.getElementById('theme-toggle');
+      const savedTheme = localStorage.getItem('mct:theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        root.setAttribute('data-theme', savedTheme);
+      }
+      themeToggle?.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('mct:theme', next);
+      });
+
+      // Mobile nav toggle
+      const nav = document.getElementById('site-nav');
+      const navToggle = document.getElementById('nav-toggle');
+      navToggle?.addEventListener('click', () => {
+        nav?.classList.toggle('open');
+      });
+
+      // Copy to clipboard for code block
+      document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target && target.matches('.copy-btn')) {
+          const selector = target.getAttribute('data-copy');
+          const code = selector ? document.querySelector(selector)?.textContent : '';
+          if (code) {
+            navigator.clipboard.writeText(code).then(() => {
+              const prev = target.textContent;
+              target.textContent = '복사됨!';
+              setTimeout(() => target.textContent = prev, 1200);
+            });
+          }
+        }
+      });
     </script>
   </body>
 </html>
