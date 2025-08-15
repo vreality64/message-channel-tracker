@@ -1,54 +1,130 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="DevTools 콘솔에서 다양한 메시지 채널 로그가 그룹으로 정리된 모습">
   <defs>
-    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+    <linearGradient id="g-accent" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0%" stop-color="#0ea5e9"/>
       <stop offset="100%" stop-color="#22d3ee"/>
     </linearGradient>
+    <linearGradient id="g-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#0a0d1a"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
     <style>
-      .bg{fill:#0b1020}
+      .bg{fill:url(#g-bg)}
       .panel{fill:#0f1629;stroke:#1f2a44;stroke-width:2}
-      .title{fill:#e6edf3;font:700 20px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
-      .mono{fill:#a6b3c2;font:500 16px SFMono-Regular,ui-monospace,Menlo,monospace}
-      .tag{fill:#0f1629;stroke:url(#g);stroke-width:2}
-      .tagText{fill:#e6edf3;font:700 14px ui-sans-serif,system-ui}
-      .chip{fill:url(#g)}
+      .header{fill:#0f1629}
+      .title{fill:#e6edf3;font:800 18px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+      .tabs{fill:#a6b3c2;font:700 13px ui-sans-serif,system-ui}
+      .mono{fill:#c9d4e5;font:500 15px SFMono-Regular,ui-monospace,Menlo,monospace}
+      .muted{fill:#8ea0b8;font:500 14px SFMono-Regular,ui-monospace,Menlo,monospace}
+      .groupTitle{fill:#e6edf3;font:800 14px ui-sans-serif,system-ui}
+      .barPost{fill:#22d3ee}
+      .barChan{fill:#0ea5e9}
+      .barBroad{fill:#6ee7b7}
+      .barWorker{fill:#f59e0b}
+      .badge{fill:transparent;stroke:url(#g-accent);stroke-width:2}
+      .badgeText{fill:#e6edf3;font:800 12px ui-sans-serif,system-ui}
+      .chip{fill:url(#g-accent)}
+      .divider{stroke:#1f2a44;stroke-width:1}
     </style>
   </defs>
   <rect class="bg" x="0" y="0" width="1200" height="675"/>
-  <g transform="translate(80,60)">
+  <!-- subtle accent glows -->
+  <g opacity="0.55">
+    <ellipse cx="220" cy="120" rx="240" ry="80" fill="#0ea5e9" filter="url(#shadow)" opacity="0.12"/>
+    <ellipse cx="1020" cy="80" rx="220" ry="70" fill="#22d3ee" filter="url(#shadow)" opacity="0.1"/>
+  </g>
+
+  <g transform="translate(80,60)" filter="url(#shadow)">
+    <!-- console window -->
     <rect class="panel" x="0" y="0" rx="16" ry="16" width="1040" height="555"/>
-    <text class="title" x="24" y="46">Message Channel Tracker · Console</text>
-
-    <g transform="translate(24,80)">
-      <rect class="tag" x="0" y="-20" rx="10" ry="10" width="200" height="32"/>
-      <text class="tagText" x="12" y="2">window.postMessage</text>
-      <circle class="chip" cx="186" cy="-4" r="6"/>
-      <text class="mono" x="0" y="24">"hello from MCT" → target: *</text>
+    <!-- top bar -->
+    <g transform="translate(0,0)">
+      <rect class="header" x="0" y="0" rx="16" ry="16" width="1040" height="48"/>
+      <circle cx="24" cy="24" r="6" fill="#ef4444"/>
+      <circle cx="42" cy="24" r="6" fill="#f59e0b"/>
+      <circle cx="60" cy="24" r="6" fill="#10b981"/>
+      <text class="title" x="92" y="29">DevTools · Console</text>
+      <g transform="translate(820,18)">
+        <text class="tabs" x="0" y="0">Elements</text>
+        <text class="tabs" x="78" y="0" fill="#e6edf3">Console</text>
+        <text class="tabs" x="146" y="0">Network</text>
+      </g>
     </g>
 
-    <g transform="translate(24,150)">
-      <rect class="tag" x="0" y="-20" rx="10" ry="10" width="230" height="32"/>
-      <text class="tagText" x="12" y="2">MessageChannel / Port</text>
-      <circle class="chip" cx="216" cy="-4" r="6"/>
-      <text class="mono" x="0" y="24">port.postMessage({type: "PING"})</text>
-    </g>
+    <!-- body content -->
+    <g transform="translate(0,56)">
+      <!-- postMessage group -->
+      <g transform="translate(24,10)">
+        <rect x="0" y="0" width="8" height="88" rx="4" class="barPost"/>
+        <g transform="translate(18,0)">
+          <rect x="0" y="-6" width="176" height="28" rx="10" class="badge"/>
+          <text class="badgeText" x="12" y="12">window.postMessage</text>
+        </g>
+        <g transform="translate(18,30)">
+          <text class="mono" x="0" y="0">"hello from MCT"</text>
+          <text class="muted" x="220" y="0">target: *</text>
+        </g>
+        <g transform="translate(18,58)">
+          <text class="muted" x="0" y="0">at page → window</text>
+        </g>
+      </g>
 
-    <g transform="translate(24,220)">
-      <rect class="tag" x="0" y="-20" rx="10" ry="10" width="210" height="32"/>
-      <text class="tagText" x="12" y="2">BroadcastChannel</text>
-      <circle class="chip" cx="196" cy="-4" r="6"/>
-      <text class="mono" x="0" y="24">channel.postMessage("update:ready")</text>
-    </g>
+      <line class="divider" x1="24" y1="112" x2="1016" y2="112"/>
 
-    <g transform="translate(24,290)">
-      <rect class="tag" x="0" y="-20" rx="10" ry="10" width="200" height="32"/>
-      <text class="tagText" x="12" y="2">Worker / SW</text>
-      <circle class="chip" cx="186" cy="-4" r="6"/>
-      <text class="mono" x="0" y="24">worker.postMessage({event: "start"})</text>
-    </g>
+      <!-- MessageChannel group -->
+      <g transform="translate(24,128)">
+        <rect x="0" y="0" width="8" height="102" rx="4" class="barChan"/>
+        <g transform="translate(18,0)">
+          <rect x="0" y="-6" width="210" height="28" rx="10" class="badge"/>
+          <text class="badgeText" x="12" y="12">MessageChannel / Port</text>
+        </g>
+        <g transform="translate(18,30)">
+          <text class="mono" x="0" y="0">port.postMessage({type: "PING"})</text>
+        </g>
+        <g transform="translate(18,58)">
+          <text class="muted" x="0" y="0">port.onmessage → { type: "PONG" }</text>
+        </g>
+        <g transform="translate(18,86)">
+          <text class="muted" x="0" y="0">channel: demo</text>
+        </g>
+      </g>
 
-    <g transform="translate(24,360)">
-      <text class="mono" x="0" y="0">…</text>
+      <line class="divider" x1="24" y1="246" x2="1016" y2="246"/>
+
+      <!-- BroadcastChannel group -->
+      <g transform="translate(24,262)">
+        <rect x="0" y="0" width="8" height="86" rx="4" class="barBroad"/>
+        <g transform="translate(18,0)">
+          <rect x="0" y="-6" width="168" height="28" rx="10" class="badge"/>
+          <text class="badgeText" x="12" y="12">BroadcastChannel</text>
+        </g>
+        <g transform="translate(18,30)">
+          <text class="mono" x="0" y="0">channel.postMessage("update:ready")</text>
+        </g>
+        <g transform="translate(18,58)">
+          <text class="muted" x="0" y="0">name: app:sync</text>
+        </g>
+      </g>
+
+      <line class="divider" x1="24" y1="360" x2="1016" y2="360"/>
+
+      <!-- Worker / SW group -->
+      <g transform="translate(24,376)">
+        <rect x="0" y="0" width="8" height="98" rx="4" class="barWorker"/>
+        <g transform="translate(18,0)">
+          <rect x="0" y="-6" width="138" height="28" rx="10" class="badge"/>
+          <text class="badgeText" x="12" y="12">Worker / SW</text>
+        </g>
+        <g transform="translate(18,30)">
+          <text class="mono" x="0" y="0">worker.postMessage({ event: "start" })</text>
+        </g>
+        <g transform="translate(18,58)">
+          <text class="muted" x="0" y="0">sw.onmessage → { event: "ready" }</text>
+        </g>
+      </g>
     </g>
   </g>
 </svg>
