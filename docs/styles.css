@@ -57,6 +57,8 @@ p { margin: 0.5em 0 1em; }
 .hero::before { content: ""; position: absolute; inset: -120px 0 auto; height: 340px; pointer-events: none; background: radial-gradient(1200px 300px at 20% 20%, color-mix(in oklab, var(--accent) 25%, transparent), transparent 60%), radial-gradient(1000px 240px at 80% 10%, color-mix(in oklab, var(--accent-2) 25%, transparent), transparent 60%); filter: blur(20px); opacity: 0.55; }
 .hero-visual { margin: 28px auto 0; max-width: 960px; border-radius: 16px; overflow: clip; border: 1px solid var(--outline); background: var(--card); box-shadow: 0 30px 60px rgba(0,0,0,0.35), var(--shadow); }
 .hero-visual img { display: block; width: 100%; height: auto; }
+.hero-visual picture { display: block; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 1px, 1px); white-space: nowrap; border: 0; }
 
 /* Features */
 .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; padding: 0; list-style: none; margin: 16px 0 0; }

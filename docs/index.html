@@ -62,7 +62,12 @@
           </div>
         </div>
         <figure class="hero-visual">
-          <img src="./assets/screenshot.svg" alt="Message Channel Tracker 콘솔 시각화 스크린샷" width="960" height="540" loading="eager" />
+          <picture>
+            <source srcset="./assets/hero.webp" type="image/webp" />
+            <source srcset="./assets/hero.gif" type="image/gif" />
+            <img src="./assets/screenshot.svg" alt="DevTools 콘솔에서 메시지가 색상/그룹으로 정리되어 흐름을 보여주는 장면" width="960" height="540" loading="eager" />
+          </picture>
+          <figcaption class="visually-hidden">콘솔에 window.postMessage, MessageChannel, BroadcastChannel, Worker 메시지가 스레드처럼 그룹되어 출력되는 모습을 보여줍니다.</figcaption>
         </figure>
       </section>
 
