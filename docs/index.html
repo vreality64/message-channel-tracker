@@ -41,15 +41,25 @@
 
     <main>
       <section class="hero container reveal">
-        <span class="kicker">Chrome 확장</span>
-        <h1>브라우저 메시지 흐름을 <span class="accent">깨뜨리지 않고</span> 관찰하세요</h1>
-        <p class="lead">
-          window.postMessage, MessageChannel, BroadcastChannel, Worker/ServiceWorker 등 다양한 채널의 메시지를 DevTools 콘솔에
-          컬러와 그룹으로 <strong>가독성 높게</strong> 보여주는 Chrome 확장입니다.
-        </p>
-        <div class="cta">
-          <a class="button primary" href="#install">빠르게 설치하기</a>
-          <a class="button" href="https://github.com/vreality64/message-channel-tracker" target="_blank" rel="noopener">GitHub 보기</a>
+        <div class="hero-inner">
+          <span class="kicker">Chrome 확장</span>
+          <h1>
+            메시지 채널을 <span class="gradient-text">깨뜨리지 않고</span>
+            관찰하세요
+          </h1>
+          <p class="lead">
+            window.postMessage · MessageChannel · BroadcastChannel · Worker/ServiceWorker의 메시지를
+            <strong>색상과 그룹</strong>으로 정리해 DevTools 콘솔에서 한눈에.
+          </p>
+          <div class="badges">
+            <span class="badge">비침투적</span>
+            <span class="badge">토글 가능</span>
+            <span class="badge">읽기 전용</span>
+          </div>
+          <div class="cta">
+            <a class="button primary" href="#install">빠르게 설치하기</a>
+            <a class="button" href="https://github.com/vreality64/message-channel-tracker" target="_blank" rel="noopener">GitHub 보기</a>
+          </div>
         </div>
         <figure class="hero-visual">
           <img src="./assets/screenshot.svg" alt="Message Channel Tracker 콘솔 시각화 스크린샷" width="960" height="540" loading="eager" />
@@ -57,45 +67,73 @@
       </section>
 
       <section id="features" class="section container reveal">
-        <h2>기능</h2>
-        <ul class="feature-list">
-          <li><strong>다양한 메시지 채널 로깅</strong>: window.postMessage, MessageChannel/MessagePort, BroadcastChannel, Worker/SharedWorker, ServiceWorker</li>
-          <li><strong>읽기 쉬운 콘솔 출력</strong>: 콘솔 그룹/색상으로 흐름을 직관적으로 파악</li>
-          <li><strong>토글 가능</strong>: 팝업에서 On/Off 전환, 전역 상태는 <code>chrome.storage.sync</code>의 <code>mctEnabled</code>로 보존</li>
-          <li><strong>비침투적</strong>: 원래 동작을 바꾸지 않고 <em>관찰만</em> 하도록 설계</li>
+        <h2>왜 MCT인가요?</h2>
+        <ul class="feature-grid">
+          <li class="card">
+            <div class="card-title">채널 전반 관측</div>
+            <p class="card-desc">window.postMessage, MessageChannel/MessagePort, BroadcastChannel, Worker/SharedWorker, ServiceWorker까지 한번에.</p>
+          </li>
+          <li class="card">
+            <div class="card-title">콘솔에 최적화</div>
+            <p class="card-desc">색상/그룹으로 스레드처럼 묶어서 흐름을 따라가기 쉽습니다.</p>
+          </li>
+          <li class="card">
+            <div class="card-title">안전한 읽기 전용</div>
+            <p class="card-desc">원래 동작을 바꾸지 않는 비침투적 래핑으로 신뢰도 높음.</p>
+          </li>
+          <li class="card">
+            <div class="card-title">상태 토글</div>
+            <p class="card-desc">팝업에서 On/Off, 전역 상태는 <code>chrome.storage.sync</code>에 보존됩니다.</p>
+          </li>
         </ul>
       </section>
 
       <section id="install" class="section container reveal">
-        <h2>설치</h2>
+        <h2>빠른 시작</h2>
         <ol class="steps">
-          <li>Chrome 주소창에 <code>chrome://extensions</code> 입력 후 이동</li>
-          <li>오른쪽 상단의 <strong>Developer mode</strong> 활성화</li>
-          <li><strong>Load unpacked</strong>를 클릭하고 저장소의 <code>extension/</code> 폴더를 선택</li>
-          <li>확장을 고정(pin)한 뒤 아이콘을 눌러 로깅을 On/Off</li>
+          <li>주소창에 <code>chrome://extensions</code> 입력</li>
+          <li><strong>Developer mode</strong> 활성화</li>
+          <li><strong>Load unpacked</strong> → 저장소의 <code>extension/</code> 선택</li>
+          <li>확장 아이콘을 고정하고 On/Off로 로깅 제어</li>
         </ol>
-        <p class="note">저장소 클론과 로컬 로드는 개발 버전에 적합합니다. 웹스토어 배포 전에는 수동 로드 방식으로 사용하세요.</p>
+        <p class="note">웹스토어 배포 전까지는 수동 로드로 사용하세요.</p>
       </section>
 
       <section id="usage" class="section container reveal">
         <h2>사용법</h2>
-        <p>아무 페이지의 DevTools 콘솔에서 아래를 실행해 보세요. 콘솔에 MCT 로그가 출력됩니다.</p>
-        <div class="code-block">
-          <button class="copy-btn" data-copy="#demo-code">복사</button>
-          <pre class="code"><code id="demo-code">window.postMessage("hello from MCT", "*");</code></pre>
+        <div class="usage-grid">
+          <div>
+            <p>아무 페이지의 DevTools 콘솔에서 실행해 보세요. 콘솔에 MCT 로그가 출력됩니다.</p>
+            <div class="code-block">
+              <button class="copy-btn" data-copy="#demo-code">복사</button>
+              <pre class="code"><code id="demo-code">window.postMessage("hello from MCT", "*");</code></pre>
+            </div>
+            <p class="small">여러 채널을 한 번에 시험하려면 로컬 <strong>Playground</strong>를 사용하세요. <code>pnpm run docs</code>로
+              정적 서버를 띄운 뒤 <code>/playground/</code>에 접속.</p>
+          </div>
+          <figure class="usage-visual">
+            <img src="./assets/screenshot.svg" alt="MCT 콘솔 미리보기" width="640" height="360" loading="lazy" />
+          </figure>
         </div>
-        <p>내장 <strong>Playground</strong>로 여러 채널을 한 번에 시험할 수 있습니다. 저장소의 <code>scripts/serve.sh</code>로
-          로컬 서버를 띄우고 <code>/playground/</code>에 접속하세요.</p>
       </section>
 
       <section id="how-it-works" class="section container reveal">
         <h2>동작 원리</h2>
-        <ul>
-          <li><code>content.js</code>가 페이지에 <code>pageHook.js</code>를 삽입하여 페이지 컨텍스트에서 안전하게 내장 객체를 래핑</li>
-          <li>메시지는 컬러/그룹으로 정리되어 콘솔에 출력되고, 토글 이벤트(<code>MCT:SET_ENABLED</code>)로 로깅을 제어</li>
-          <li>로깅은 읽기 전용이며 원래 동작을 변경하지 않도록 설계</li>
-        </ul>
-        <p class="small">필요 권한: <code>storage</code>, <code>tabs</code></p>
+        <div class="split">
+          <div>
+            <ul>
+              <li><code>content.js</code>가 <code>pageHook.js</code>를 삽입해 페이지 컨텍스트에서 안전하게 내장 객체를 래핑합니다.</li>
+              <li>메시지는 색상/그룹으로 정리되어 콘솔에 출력됩니다.</li>
+              <li>토글 이벤트(<code>MCT:SET_ENABLED</code>)로 로깅을 제어합니다.</li>
+              <li>원래 동작을 바꾸지 않는 <em>읽기 전용</em> 설계입니다.</li>
+            </ul>
+            <p class="small">필요 권한: <code>storage</code>, <code>tabs</code></p>
+          </div>
+          <div class="callout">
+            <div class="callout-title">주의</div>
+            <p>대량 메시지 환경에서는 성능을 위해 필요 시에만 On으로 전환하거나, 콘솔 필터링을 함께 사용하세요.</p>
+          </div>
+        </div>
       </section>
 
       <section id="faq" class="section container reveal">
