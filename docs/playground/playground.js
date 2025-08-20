@@ -50,8 +50,10 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   let indent = 0;
   let mctDepth = 0;
   const groupStack = [];
+  const groupBodies = [];
   const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\[?MCT\]?|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
   const append = (parts) => {
+    const root = groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
     const container = document.createElement("div");
     const time = new Date().toLocaleTimeString();
     const prefix = document.createElement("p");
@@ -90,8 +92,8 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
       }
     }
 
-    uiLogRoot.appendChild(container);
-    uiLogRoot.scrollTop = uiLogRoot.scrollHeight;
+    root.appendChild(container);
+    root.scrollTop = root.scrollHeight;
   };
 
   function renderJson(value) {
@@ -126,28 +128,39 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     arrow.textContent = "▾";
     const title = document.createElement("span");
     title.className = "group-title";
-    title.textContent = titleParts.map((p) => (typeof p === "string" ? p : "")).join(" ");
+    const joined = titleParts.map((p) => (typeof p === "string" ? p : "")).join(" ");
+    if (/\bMCT\b/i.test(joined)) {
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = "MCT";
+      const meta = document.createElement("span");
+      meta.className = "meta";
+      const iso = joined.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)?.[0] || new Date().toLocaleTimeString();
+      meta.textContent = ` — ${iso}`;
+      title.replaceChildren(badge, meta);
+    } else {
+      title.textContent = joined;
+    }
     header.append(arrow, title);
     const body = document.createElement("div");
     body.className = "group-body";
     group.append(header, body);
     header.addEventListener("click", () => group.classList.toggle("collapsed"));
-    uiLogRoot.appendChild(group);
-    uiLogRoot.scrollTop = uiLogRoot.scrollHeight;
+    const root = groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
+    root.appendChild(group);
+    root.scrollTop = root.scrollHeight;
     return { group, body };
   }
 
   if (orig.group) console.group = (...args) => {
     const isMct = isMctArgs(args) || mctDepth > 0;
-    groupStack.push(isMctArgs(args));
+    groupStack.push({ isMct: isMctArgs(args) });
     if (isMct) {
       const { body } = createGroup(["[group]", ...args], false);
-      // Redirect subsequent lines to latest group body by temporarily switching root
-      const prevRoot = uiLogRoot;
-      uiLogRoot = body;
+      groupBodies.push(body);
       indent++;
       const ret = orig.group(...args);
-      uiLogRoot = prevRoot;
+      // groupEnd will pop
       if (isMctArgs(args)) mctDepth++;
       return ret;
     }
@@ -155,21 +168,22 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   };
   if (orig.groupCollapsed) console.groupCollapsed = (...args) => {
     const isMct = isMctArgs(args) || mctDepth > 0;
-    groupStack.push(isMctArgs(args));
+    groupStack.push({ isMct: isMctArgs(args) });
     if (isMct) {
       const { body } = createGroup(["[group]", ...args], true);
-      const prevRoot = uiLogRoot;
-      uiLogRoot = body;
+      groupBodies.push(body);
       indent++;
       const ret = orig.groupCollapsed(...args);
-      uiLogRoot = prevRoot;
+      // groupEnd will pop
       if (isMctArgs(args)) mctDepth++;
       return ret;
     }
     return orig.groupCollapsed(...args);
   };
   if (orig.groupEnd) console.groupEnd = () => {
-    const wasMctGroup = groupStack.pop() === true;
+    const popped = groupStack.pop();
+    const wasMctGroup = Boolean(popped?.isMct);
+    if (groupBodies.length) groupBodies.pop();
     if (mctDepth > 0) indent = Math.max(0, indent - 1);
     if (wasMctGroup) mctDepth = Math.max(0, mctDepth - 1);
     return orig.groupEnd();
