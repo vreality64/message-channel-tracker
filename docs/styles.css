@@ -356,6 +356,7 @@ p {
   border-radius: 14px;
   padding: 16px;
   transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  min-width: 0;
 }
 .card:hover {
   transform: translateY(-2px);
@@ -367,6 +368,10 @@ p {
 }
 .card-desc {
   color: var(--muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .steps {
@@ -398,6 +403,7 @@ p {
   color: #fff;
   font-size: 12px;
   font-weight: 800;
+  transform: translateY(25%);
 }
 .note {
   color: var(--muted);
