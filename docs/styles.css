@@ -69,7 +69,6 @@ body {
   --ring: 0 0 0 3px color-mix(in oklab, var(--accent) 45%, transparent);
 }
 
-
 main {
   padding: 24px;
 }

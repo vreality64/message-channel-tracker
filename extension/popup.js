@@ -25,10 +25,13 @@
   };
 
   document.addEventListener("DOMContentLoaded", () => {
-    chrome.storage.sync.get({ mctEnabled: true, mctPrettyJson: false }, ({ mctEnabled, mctPrettyJson }) => {
-      setUi(Boolean(mctEnabled));
-      if (prettyToggle) prettyToggle.checked = Boolean(mctPrettyJson);
-    });
+    chrome.storage.sync.get(
+      { mctEnabled: true, mctPrettyJson: false },
+      ({ mctEnabled, mctPrettyJson }) => {
+        setUi(Boolean(mctEnabled));
+        if (prettyToggle) prettyToggle.checked = Boolean(mctPrettyJson);
+      },
+    );
 
     enabledToggle.addEventListener("change", (e) => {
       const enabled = Boolean(enabledToggle.checked);

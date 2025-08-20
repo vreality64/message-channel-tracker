@@ -17,84 +17,149 @@ const mctStyles = {
 };
 function mctGroup(op) {
   const iso = new Date().toISOString();
-  if (op === "window.postMessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c→", mctStyles.arrowOut,
-    "%cwindow.postMessage", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "window.message") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c←", mctStyles.arrowIn,
-    "%cwindow.message", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "MessagePort.postMessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c↔", mctStyles.arrowPort,
-    "%cMessagePort.postMessage", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "MessagePort.onmessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c←", mctStyles.arrowIn,
-    "%cMessagePort.message", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "BroadcastChannel.postMessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c↔", mctStyles.arrowPort,
-    "%cBroadcastChannel.postMessage", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "BroadcastChannel.onmessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c←", mctStyles.arrowIn,
-    "%cBroadcastChannel.message", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "Worker.postMessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c→", mctStyles.arrowOut,
-    "%cWorker.postMessage", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "Worker.onmessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c←", mctStyles.arrowIn,
-    "%cWorker.message", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "SharedWorker.postMessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c→", mctStyles.arrowOut,
-    "%cSharedWorker.postMessage", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "SharedWorker.onmessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c←", mctStyles.arrowIn,
-    "%cSharedWorker.message", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "ServiceWorker.register") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%cnew", mctStyles.meta,
-    "%cServiceWorker.register", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "ServiceWorker.postMessage") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c→", mctStyles.arrowOut,
-    "%cServiceWorker.postMessage", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
-  if (op === "ServiceWorker.message") return [
-    "%cMCT", mctStyles.badgeBase,
-    "%c←", mctStyles.arrowIn,
-    "%cServiceWorker.message", mctStyles.meta,
-    `%c${iso}`, mctStyles.meta,
-  ];
+  if (op === "window.postMessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c→",
+      mctStyles.arrowOut,
+      "%cwindow.postMessage",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "window.message")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c←",
+      mctStyles.arrowIn,
+      "%cwindow.message",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "MessagePort.postMessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c↔",
+      mctStyles.arrowPort,
+      "%cMessagePort.postMessage",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "MessagePort.onmessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c←",
+      mctStyles.arrowIn,
+      "%cMessagePort.message",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "BroadcastChannel.postMessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c↔",
+      mctStyles.arrowPort,
+      "%cBroadcastChannel.postMessage",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "BroadcastChannel.onmessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c←",
+      mctStyles.arrowIn,
+      "%cBroadcastChannel.message",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "Worker.postMessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c→",
+      mctStyles.arrowOut,
+      "%cWorker.postMessage",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "Worker.onmessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c←",
+      mctStyles.arrowIn,
+      "%cWorker.message",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "SharedWorker.postMessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c→",
+      mctStyles.arrowOut,
+      "%cSharedWorker.postMessage",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "SharedWorker.onmessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c←",
+      mctStyles.arrowIn,
+      "%cSharedWorker.message",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "ServiceWorker.register")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%cnew",
+      mctStyles.meta,
+      "%cServiceWorker.register",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "ServiceWorker.postMessage")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c→",
+      mctStyles.arrowOut,
+      "%cServiceWorker.postMessage",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
+  if (op === "ServiceWorker.message")
+    return [
+      "%cMCT",
+      mctStyles.badgeBase,
+      "%c←",
+      mctStyles.arrowIn,
+      "%cServiceWorker.message",
+      mctStyles.meta,
+      `%c${iso}`,
+      mctStyles.meta,
+    ];
   return ["%cMCT", mctStyles.badgeBase, `%c${iso}`, mctStyles.meta];
 }
 function mctOpenGroup(op) {
@@ -204,9 +269,13 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   let mctDepth = 0;
   const groupBodies = [];
   const groupStack = [];
-  const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\[?MCT\]?|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
+  const isMctArgs = (args) =>
+    args.some(
+      (a) => typeof a === "string" && /(\[?MCT\]?|Message\s*Channel\s*Tracker|MCT:)/i.test(a),
+    );
   const append = (parts) => {
-    const root = mctDepth > 0 && groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
+    const root =
+      mctDepth > 0 && groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
     const container = document.createElement("div");
     const time = new Date().toLocaleTimeString();
     const prefix = document.createElement("p");
@@ -273,7 +342,9 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
 
   function syntaxHighlightJSON(value, space = 2) {
     const json = JSON.stringify(value, null, space)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
     return json
       .replace(/\n/g, "\n")
       .replace(/(\s*)(\".*?\")(?=\s*:)/g, (m, s, k) => `${s}<span class=\"json-key\">${k}</span>`) // keys
@@ -386,10 +457,22 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     }
     return { node: frag, consumed: cursor };
   }
-  console.log = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.log.apply(console, args); };
-  console.info = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.info.apply(console, args); };
-  console.warn = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(["[warn]", ...args]); return orig.warn.apply(console, args); };
-  console.error = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(["[error]", ...args]); return orig.error.apply(console, args); };
+  console.log = (...args) => {
+    if (mctDepth > 0 || isMctArgs(args)) append(args);
+    return orig.log.apply(console, args);
+  };
+  console.info = (...args) => {
+    if (mctDepth > 0 || isMctArgs(args)) append(args);
+    return orig.info.apply(console, args);
+  };
+  console.warn = (...args) => {
+    if (mctDepth > 0 || isMctArgs(args)) append(["[warn]", ...args]);
+    return orig.warn.apply(console, args);
+  };
+  console.error = (...args) => {
+    if (mctDepth > 0 || isMctArgs(args)) append(["[error]", ...args]);
+    return orig.error.apply(console, args);
+  };
   function createGroup(titleParts, collapsed) {
     const group = document.createElement("div");
     group.className = `group${collapsed ? " collapsed" : ""}`;
@@ -401,7 +484,11 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     const title = document.createElement("span");
     title.className = "group-title";
     // If first argument is a styled format, render styled header using its styles
-    if (Array.isArray(titleParts) && typeof titleParts[0] === "string" && /%[cso]/.test(titleParts[0])) {
+    if (
+      Array.isArray(titleParts) &&
+      typeof titleParts[0] === "string" &&
+      /%[cso]/.test(titleParts[0])
+    ) {
       const { node } = renderStyledInline(String(titleParts[0]), titleParts.slice(1));
       title.replaceChildren(node);
     } else {
@@ -419,53 +506,56 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     return { body };
   }
 
-  if (orig.group) console.group = (...args) => {
-    const isTopLevelMct = isMctArgs(args);
-    if (!isTopLevelMct && mctDepth === 0 && groupBodies.length) {
-      // Defensive: ensure no residual group body captures root-level logs
-      groupBodies.length = 0;
-      indent = 0;
-    }
-    if (isTopLevelMct) {
-      // Always isolate each new MCT message into its own top-level UI group
-      groupBodies.length = 0;
-      indent = 0;
-      mctDepth = 0;
-      const created = createGroup(args, false);
-      groupBodies.push(created.body);
-      indent = 1;
-      mctDepth = 1;
-    }
-    groupStack.push(isTopLevelMct);
-    return orig.group(...args);
-  };
-  if (orig.groupCollapsed) console.groupCollapsed = (...args) => {
-    const isTopLevelMct = isMctArgs(args);
-    if (!isTopLevelMct && mctDepth === 0 && groupBodies.length) {
-      groupBodies.length = 0;
-      indent = 0;
-    }
-    if (isTopLevelMct) {
-      groupBodies.length = 0;
-      indent = 0;
-      mctDepth = 0;
-      const created = createGroup(args, true);
-      groupBodies.push(created.body);
-      indent = 1;
-      mctDepth = 1;
-    }
-    groupStack.push(isTopLevelMct);
-    return orig.groupCollapsed(...args);
-  };
-  if (orig.groupEnd) console.groupEnd = () => {
-    const isTopLevelMct = Boolean(groupStack.pop());
-    if (isTopLevelMct && mctDepth > 0) {
-      if (groupBodies.length) groupBodies.pop();
-      indent = Math.max(0, indent - 1);
-      mctDepth = Math.max(0, mctDepth - 1);
-    }
-    return orig.groupEnd();
-  };
+  if (orig.group)
+    console.group = (...args) => {
+      const isTopLevelMct = isMctArgs(args);
+      if (!isTopLevelMct && mctDepth === 0 && groupBodies.length) {
+        // Defensive: ensure no residual group body captures root-level logs
+        groupBodies.length = 0;
+        indent = 0;
+      }
+      if (isTopLevelMct) {
+        // Always isolate each new MCT message into its own top-level UI group
+        groupBodies.length = 0;
+        indent = 0;
+        mctDepth = 0;
+        const created = createGroup(args, false);
+        groupBodies.push(created.body);
+        indent = 1;
+        mctDepth = 1;
+      }
+      groupStack.push(isTopLevelMct);
+      return orig.group(...args);
+    };
+  if (orig.groupCollapsed)
+    console.groupCollapsed = (...args) => {
+      const isTopLevelMct = isMctArgs(args);
+      if (!isTopLevelMct && mctDepth === 0 && groupBodies.length) {
+        groupBodies.length = 0;
+        indent = 0;
+      }
+      if (isTopLevelMct) {
+        groupBodies.length = 0;
+        indent = 0;
+        mctDepth = 0;
+        const created = createGroup(args, true);
+        groupBodies.push(created.body);
+        indent = 1;
+        mctDepth = 1;
+      }
+      groupStack.push(isTopLevelMct);
+      return orig.groupCollapsed(...args);
+    };
+  if (orig.groupEnd)
+    console.groupEnd = () => {
+      const isTopLevelMct = Boolean(groupStack.pop());
+      if (isTopLevelMct && mctDepth > 0) {
+        if (groupBodies.length) groupBodies.pop();
+        indent = Math.max(0, indent - 1);
+        mctDepth = Math.max(0, mctDepth - 1);
+      }
+      return orig.groupEnd();
+    };
 })();
 
 // Emit a demo line so users immediately see output without clicking
@@ -522,8 +612,12 @@ btnMcInit.addEventListener("click", () => {
   portB = channel.port2;
 
   // mirror suppressed for port events
-  portA.addEventListener("message", (e) => mctDemoLog("MessagePort.onmessage", { port: "A", data: e.data }));
-  portB.addEventListener("message", (e) => mctDemoLog("MessagePort.onmessage", { port: "B", data: e.data }));
+  portA.addEventListener("message", (e) =>
+    mctDemoLog("MessagePort.onmessage", { port: "A", data: e.data }),
+  );
+  portB.addEventListener("message", (e) =>
+    mctDemoLog("MessagePort.onmessage", { port: "B", data: e.data }),
+  );
   portA.start();
   portB.start();
 
@@ -551,8 +645,12 @@ btnBcOpen.addEventListener("click", () => {
   bc1 = new BroadcastChannel("mct-demo");
   bc2 = new BroadcastChannel("mct-demo");
   // mirror suppressed for bc message handlers
-  bc1.addEventListener("message", (e) => mctDemoLog("BroadcastChannel.onmessage", { ch: 1, data: e.data }));
-  bc2.addEventListener("message", (e) => mctDemoLog("BroadcastChannel.onmessage", { ch: 2, data: e.data }));
+  bc1.addEventListener("message", (e) =>
+    mctDemoLog("BroadcastChannel.onmessage", { ch: 1, data: e.data }),
+  );
+  bc2.addEventListener("message", (e) =>
+    mctDemoLog("BroadcastChannel.onmessage", { ch: 2, data: e.data }),
+  );
 });
 
 btnBcSend.addEventListener("click", () => {
@@ -613,7 +711,9 @@ const btnSwRegister = document.getElementById("btn-sw-register");
 const btnSwPing = document.getElementById("btn-sw-ping");
 
 btnSwRegister.addEventListener("click", async () => {
-  if (!("serviceWorker" in navigator)) { return; }
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
   const reg = await navigator.serviceWorker.register("./sw.js");
   // mirror suppressed
   mctDemoLog("ServiceWorker.register", { scope: reg.scope });

@@ -174,7 +174,7 @@
           [`%c${nowIso()}`, styles.meta],
         ];
         logGroupCollapsedStyled(titlePairs);
-      if (event?.data !== undefined) logData("data:", event.data);
+        if (event?.data !== undefined) logData("data:", event.data);
         endGroup();
       } catch (_) {}
     },
@@ -372,7 +372,7 @@
               [`%c${nowIso()}`, styles.meta],
             ];
             logGroupCollapsedStyled(titlePairs);
-          logData("message:", message);
+            logData("message:", message);
             endGroup();
           } catch (_) {}
         }
