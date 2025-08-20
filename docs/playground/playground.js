@@ -124,23 +124,63 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   }
 
   function renderStyledLine(fmt, rest) {
+    // Parses tokens in order: %c (style), %s (string), %o (object)
+    // Uses a single cursor into rest, matching native console formatting order
+    let cursor = 0;
+    let currentStyle = "";
+    const container = document.createElement("div");
     const p = document.createElement("p");
     p.className = "log-line";
-    const segments = fmt.split("%c");
-    let styleIdx = 0;
-    segments.forEach((seg, i) => {
-      if (seg.length) {
-        const span = document.createElement("span");
-        span.textContent = seg;
-        // Apply style for all segments after the first (each %c adds a style)
-        if (i > 0 && typeof rest[styleIdx] === "string") {
-          span.setAttribute("style", rest[styleIdx]);
-        }
-        p.appendChild(span);
+    container.appendChild(p);
+
+    const pushText = (text) => {
+      if (!text) return;
+      const span = document.createElement("span");
+      span.textContent = text;
+      if (currentStyle) span.setAttribute("style", String(currentStyle));
+      p.appendChild(span);
+    };
+
+    let i = 0;
+    while (i < fmt.length) {
+      const percent = fmt.indexOf("%", i);
+      if (percent === -1 || percent === fmt.length - 1) {
+        pushText(fmt.slice(i));
+        break;
       }
-      if (i > 0) styleIdx++;
-    });
-    return { line: p, consumed: styleIdx };
+      // flush literal up to token
+      if (percent > i) pushText(fmt.slice(i, percent));
+      const token = fmt[percent + 1];
+      if (token === "c") {
+        // style switch
+        currentStyle = rest[cursor++] ?? "";
+        i = percent + 2;
+        continue;
+      }
+      if (token === "s") {
+        const val = rest[cursor++];
+        pushText(String(val ?? ""));
+        i = percent + 2;
+        continue;
+      }
+      if (token === "o") {
+        const val = rest[cursor++];
+        try {
+          const pre = document.createElement("pre");
+          pre.className = "json-block";
+          pre.innerHTML = syntaxHighlightJSON(val, 2);
+          container.appendChild(pre);
+        } catch {
+          pushText(String(val));
+        }
+        i = percent + 2;
+        continue;
+      }
+      // unknown token, print as-is
+      pushText(fmt.slice(percent, percent + 2));
+      i = percent + 2;
+    }
+    return { line: container, consumed: cursor };
   }
   console.log = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.log.apply(console, args); };
   console.info = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.info.apply(console, args); };
