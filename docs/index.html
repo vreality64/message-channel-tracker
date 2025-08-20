@@ -206,6 +206,29 @@
           }
         }
       });
+
+      // Prefer animated hero if asset exists (webp > gif)
+      (async () => {
+        try {
+          const heroImg = document.querySelector('.hero-visual img');
+          if (!heroImg) return;
+          const candidates = [
+            './assets/hero.webp',
+            './assets/hero.gif',
+          ];
+          for (const url of candidates) {
+            try {
+              const res = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+              if (res.ok) {
+                heroImg.src = url;
+                heroImg.decoding = 'async';
+                heroImg.loading = 'eager';
+                break;
+              }
+            } catch {}
+          }
+        } catch {}
+      })();
     </script>
   </body>
 </html>
