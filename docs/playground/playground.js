@@ -386,7 +386,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     title.className = "group-title";
     // If first argument is a styled format, render styled header using its styles
     if (Array.isArray(titleParts) && typeof titleParts[0] === "string" && /%[cso]/.test(titleParts[0])) {
-      const { node } = renderStyledInline(String(titleParts[0]), titleParts.slice(1));
+      const { node } = renderStyledInline(String(titleParts[0]).replace(/%[cso]/g, ""), titleParts.slice(1));
       title.replaceChildren(node);
     } else {
       const joined = titleParts.map((p) => (typeof p === "string" ? p : "")).join(" ");
