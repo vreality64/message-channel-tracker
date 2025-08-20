@@ -276,68 +276,72 @@
 
 <body>
   <header>
-    <h1>Message Channel Tracker — Playground</h1>
+    <h1 data-i18n="header.h1">Message Channel Tracker — Playground</h1>
     <div class="actions">
-      <button id="theme-toggle">🌓 Theme</button>
-      <button id="clear-log">Clear log</button>
+      <select id="lang-select" title="Language">
+        <option value="en">English</option>
+        <option value="ko">한국어</option>
+      </select>
+      <button id="theme-toggle">🌓 <span data-i18n="header.theme">Theme</span></button>
+      <button id="clear-log"><span data-i18n="header.clear">Clear</span></button>
     </div>
   </header>
-  <div class="desc">아래 콘솔 영역에서 메시지를 바로 확인할 수 있습니다. 확장 팝업으로 로깅을 켜기/끄기 할 수 있습니다.</div>
+  <div class="desc" data-i18n="header.desc">아래 콘솔 영역에서 메시지를 바로 확인할 수 있습니다. 확장 팝업으로 로깅을 켜기/끄기 할 수 있습니다.</div>
 
   <div class="grid">
     <div class="card">
       <h2>window.postMessage</h2>
       <div class="row">
-        <button id="btn-post-self">Post to self</button>
-        <button id="btn-post-iframe">Post to iframe</button>
-        <button id="btn-post-xorigin">Post to cross-origin</button>
+        <button id="btn-post-self" data-i18n="btn.post_self">Post to self</button>
+        <button id="btn-post-iframe" data-i18n="btn.post_iframe">Post to iframe</button>
+        <button id="btn-post-xorigin" data-i18n="btn.post_xorigin">Post to cross-origin</button>
       </div>
-      <div class="note">Uses <code>window.postMessage</code> and listens for <code>message</code> events.</div>
+      <div class="note" data-i18n="note.post">Uses <code>window.postMessage</code> and listens for <code>message</code> events.</div>
     </div>
 
     <div class="card">
       <h2>MessageChannel / MessagePort</h2>
       <div class="row">
-        <button id="btn-mc-init">Init channel</button>
-        <button id="btn-mc-ping">Ping via ports</button>
+        <button id="btn-mc-init" data-i18n="btn.mc_init">Init channel</button>
+        <button id="btn-mc-ping" data-i18n="btn.mc_ping">Ping via ports</button>
       </div>
-      <div class="note">Creates a channel, transfers ports, and bounces messages.</div>
+      <div class="note" data-i18n="note.mc">Creates a channel, transfers ports, and bounces messages.</div>
     </div>
 
     <div class="card">
       <h2>BroadcastChannel</h2>
       <div class="row">
-        <button id="btn-bc-open">Open channels</button>
-        <button id="btn-bc-send">Send broadcast</button>
+        <button id="btn-bc-open" data-i18n="btn.bc_open">Open channels</button>
+        <button id="btn-bc-send" data-i18n="btn.bc_send">Send broadcast</button>
       </div>
-      <div class="note">Opens two channels with the same name and exchanges messages.</div>
+      <div class="note" data-i18n="note.bc">Opens two channels with the same name and exchanges messages.</div>
     </div>
 
     <div class="card">
       <h2>Worker</h2>
       <div class="row">
-        <button id="btn-worker-start">Start worker</button>
-        <button id="btn-worker-ping">Ping worker</button>
+        <button id="btn-worker-start" data-i18n="btn.worker_start">Start worker</button>
+        <button id="btn-worker-ping" data-i18n="btn.worker_ping">Ping worker</button>
       </div>
-      <div class="note">Spawns a dedicated worker, sends/receives messages.</div>
+      <div class="note" data-i18n="note.worker">Spawns a dedicated worker, sends/receives messages.</div>
     </div>
 
     <div class="card">
       <h2>SharedWorker</h2>
       <div class="row">
-        <button id="btn-shared-start">Start SharedWorker</button>
-        <button id="btn-shared-ping">Ping SharedWorker</button>
+        <button id="btn-shared-start" data-i18n="btn.shared_start">Start SharedWorker</button>
+        <button id="btn-shared-ping" data-i18n="btn.shared_ping">Ping SharedWorker</button>
       </div>
-      <div class="note">Connects to a shared worker via <code>MessagePort</code>.</div>
+      <div class="note" data-i18n="note.shared">Connects to a shared worker via <code>MessagePort</code>.</div>
     </div>
 
     <div class="card">
       <h2>Service Worker</h2>
       <div class="row">
-        <button id="btn-sw-register">Register SW</button>
-        <button id="btn-sw-ping">Ping SW</button>
+        <button id="btn-sw-register" data-i18n="btn.sw_register">Register SW</button>
+        <button id="btn-sw-ping" data-i18n="btn.sw_ping">Ping SW</button>
       </div>
-      <div class="note">Registers a service worker and exchanges messages.</div>
+      <div class="note" data-i18n="note.sw">Registers a service worker and exchanges messages.</div>
     </div>
 
     <div class="card">
@@ -348,7 +352,7 @@
 
   <div class="console">
     <div class="console-header">
-      <span>Console</span>
+      <span data-i18n="console.title">Console</span>
       <div class="toolbar">
         <label><input type="checkbox" id="show-window" checked /> window</label>
         <label><input type="checkbox" id="show-mc" checked /> MessageChannel</label>
@@ -360,6 +364,8 @@
     <div id="console-log" class="console-body" aria-live="polite"></div>
   </div>
 
+  <script src="../assets/site.js"></script>
+  <script src="../assets/i18n.js"></script>
   <script type="module" src="./playground.js"></script>
 </body>
 
