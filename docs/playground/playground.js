@@ -63,13 +63,15 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
 
     // Support styled console logs with %c segments
     let remaining = parts;
-    if (typeof remaining[0] === "string" && remaining[0].includes("%c")) {
-      const { line, consumed } = renderStyledLine(remaining[0], remaining.slice(1));
-      container.appendChild(line);
-      remaining = remaining.slice(1 + consumed);
-    }
-
-    for (const item of remaining) {
+    let idx = 0;
+    while (idx < remaining.length) {
+      const item = remaining[idx];
+      if (typeof item === "string" && /%[cso]/.test(item)) {
+        const { line, consumed } = renderStyledLine(item, remaining.slice(idx + 1));
+        container.appendChild(line);
+        idx += 1 + consumed;
+        continue;
+      }
       if (typeof item === "string") {
         // Render simple keys like "event:" "data:" with color separator
         const m = item.match(/^(\w+):$/);
@@ -84,6 +86,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
           sep.textContent = ":";
           p.append(k, sep);
           container.appendChild(p);
+          idx += 1;
           continue;
         }
         const p = document.createElement("p");
@@ -91,13 +94,16 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
         const cleaned = item.includes("%c") ? item.replace(/%c/g, "") : item;
         p.textContent = cleaned;
         container.appendChild(p);
+        idx += 1;
       } else if (typeof item === "object" && item != null) {
         container.appendChild(renderJson(item));
+        idx += 1;
       } else {
         const p = document.createElement("p");
         p.className = "log-line";
         p.textContent = String(item);
         container.appendChild(p);
+        idx += 1;
       }
     }
 
