@@ -62,7 +62,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     container.appendChild(prefix);
 
     // Support styled console logs with %c segments
-    let remaining = parts;
+    const remaining = parts;
     let idx = 0;
     while (idx < remaining.length) {
       const item = remaining[idx];
