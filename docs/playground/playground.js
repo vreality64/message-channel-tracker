@@ -326,6 +326,50 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     }
     return { line: container, consumed: cursor };
   }
+
+  function renderStyledInline(fmt, rest) {
+    // Similar to renderStyledLine but returns an inline fragment for headers
+    let cursor = 0;
+    let currentStyle = "";
+    const frag = document.createDocumentFragment();
+    const pushText = (text) => {
+      if (!text) return;
+      const span = document.createElement("span");
+      span.textContent = text;
+      if (currentStyle) span.setAttribute("style", String(currentStyle));
+      frag.appendChild(span);
+    };
+    let i = 0;
+    while (i < fmt.length) {
+      const percent = fmt.indexOf("%", i);
+      if (percent === -1 || percent === fmt.length - 1) {
+        pushText(fmt.slice(i));
+        break;
+      }
+      if (percent > i) pushText(fmt.slice(i, percent));
+      const token = fmt[percent + 1];
+      if (token === "c") {
+        currentStyle = rest[cursor++] ?? "";
+        i = percent + 2;
+        continue;
+      }
+      if (token === "s") {
+        const val = rest[cursor++];
+        pushText(String(val ?? ""));
+        i = percent + 2;
+        continue;
+      }
+      if (token === "o") {
+        const val = rest[cursor++];
+        pushText(typeof val === "string" ? val : JSON.stringify(val));
+        i = percent + 2;
+        continue;
+      }
+      pushText(fmt.slice(percent, percent + 2));
+      i = percent + 2;
+    }
+    return { node: frag, consumed: cursor };
+  }
   console.log = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.log.apply(console, args); };
   console.info = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.info.apply(console, args); };
   console.warn = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(["[warn]", ...args]); return orig.warn.apply(console, args); };
@@ -340,35 +384,12 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     arrow.textContent = "▾";
     const title = document.createElement("span");
     title.className = "group-title";
-    const joined = titleParts.map((p) => (typeof p === "string" ? p : "")).join(" ");
-    if (/\bMCT\b/i.test(joined)) {
-      const badge = document.createElement("span");
-      badge.className = "badge";
-      badge.textContent = "MCT";
-      // detect arrow and op
-      const arrowChar = joined.match(/[←→↔]/)?.[0] || "";
-      const opMatch = joined.match(/(window\.(postMessage|message)|MessagePort\.(postMessage|message)|BroadcastChannel\.(postMessage|message)|Worker\.(postMessage|message)|SharedWorker\.(postMessage|message)|ServiceWorker\.(postMessage|message|register))/);
-      const opText = opMatch ? opMatch[0] : "";
-      const iso = joined.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)?.[0] || new Date().toISOString();
-
-      const arrowSpan = document.createElement("span");
-      arrowSpan.className = `mct-arrow ${arrowChar === "→" ? "out" : arrowChar === "←" ? "in" : arrowChar === "↔" ? "port" : ""}`.trim();
-      arrowSpan.textContent = arrowChar || "";
-
-      const opSpan = document.createElement("span");
-      opSpan.className = "meta";
-      opSpan.textContent = opText;
-
-      const timeSpan = document.createElement("span");
-      timeSpan.className = "meta";
-      timeSpan.textContent = ` — ${iso}`;
-
-      const fragments = [badge];
-      if (arrowChar) fragments.push(arrowSpan);
-      if (opText) fragments.push(opSpan);
-      fragments.push(timeSpan);
-      title.replaceChildren(...fragments);
+    // If first argument is a styled format, render styled header using its styles
+    if (Array.isArray(titleParts) && typeof titleParts[0] === "string" && /%[cso]/.test(titleParts[0])) {
+      const { node } = renderStyledInline(String(titleParts[0]), titleParts.slice(1));
+      title.replaceChildren(node);
     } else {
+      const joined = titleParts.map((p) => (typeof p === "string" ? p : "")).join(" ");
       title.textContent = joined;
     }
     header.append(arrow, title);
