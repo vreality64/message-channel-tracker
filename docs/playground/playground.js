@@ -61,6 +61,13 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     prefix.textContent = `${"  ".repeat(indent)}${time} —`;
     container.appendChild(prefix);
 
+    // Support styled console logs with %c segments
+    if (typeof parts[0] === "string" && parts[0].includes("%c")) {
+      const { line, consumed } = renderStyledLine(parts[0], parts.slice(1));
+      container.appendChild(line);
+      parts = parts.slice(1 + consumed);
+    }
+
     for (const item of parts) {
       if (typeof item === "string") {
         // Render simple keys like "event:" "data:" with color separator
@@ -113,6 +120,26 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
       .replace(/:\s*(\d+\.?\d*)/g, (m, v) => `: <span class=\"json-number\">${v}</span>`) // numbers
       .replace(/:\s*(true|false)/g, (m, v) => `: <span class=\"json-bool\">${v}</span>`) // bools
       .replace(/:\s*(null)/g, (m, v) => `: <span class=\"json-null\">${v}</span>`); // null
+  }
+
+  function renderStyledLine(fmt, rest) {
+    const p = document.createElement("p");
+    p.className = "log-line";
+    const segments = fmt.split("%c");
+    let styleIdx = 0;
+    segments.forEach((seg, i) => {
+      if (seg.length) {
+        const span = document.createElement("span");
+        span.textContent = seg;
+        // Apply style for all segments after the first (each %c adds a style)
+        if (i > 0 && typeof rest[styleIdx] === "string") {
+          span.setAttribute("style", rest[styleIdx]);
+        }
+        p.appendChild(span);
+      }
+      if (i > 0) styleIdx++;
+    });
+    return { line: p, consumed: styleIdx };
   }
   console.log = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.log.apply(console, args); };
   console.info = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.info.apply(console, args); };
