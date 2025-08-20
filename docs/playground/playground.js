@@ -50,6 +50,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   let indent = 0;
   let mctDepth = 0;
   const groupBodies = [];
+  const groupStack = [];
   const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\[?MCT\]?|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
   const append = (parts) => {
     const root = groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
@@ -163,6 +164,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
       indent = 1;
       mctDepth = 1;
     }
+    groupStack.push(isTopLevelMct);
     return orig.group(...args);
   };
   if (orig.groupCollapsed) console.groupCollapsed = (...args) => {
@@ -176,10 +178,12 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
       indent = 1;
       mctDepth = 1;
     }
+    groupStack.push(isTopLevelMct);
     return orig.groupCollapsed(...args);
   };
   if (orig.groupEnd) console.groupEnd = () => {
-    if (mctDepth > 0) {
+    const isTopLevelMct = Boolean(groupStack.pop());
+    if (isTopLevelMct && mctDepth > 0) {
       if (groupBodies.length) groupBodies.pop();
       indent = Math.max(0, indent - 1);
       mctDepth = Math.max(0, mctDepth - 1);
