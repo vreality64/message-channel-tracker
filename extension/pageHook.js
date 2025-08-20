@@ -11,6 +11,7 @@
   // State management
   const state = {
     enabled: true,
+    prettyJson: false,
   };
 
   // Receive enable/disable messages from the content script
@@ -24,6 +25,9 @@
         if (data.type === "MCT:SET_ENABLED") {
           state.enabled = Boolean(data.enabled);
           logInternalInfo(state.enabled ? "Tracking enabled" : "Tracking disabled");
+        } else if (data.type === "MCT:SET_PRETTY_JSON") {
+          state.prettyJson = Boolean(data.pretty);
+          logInternalInfo(state.prettyJson ? "Pretty JSON: On" : "Pretty JSON: Off");
         }
       } catch (_) {
         // Swallow
@@ -76,6 +80,22 @@
       "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
     meta: "color:#64748b;",
   };
+
+  function logData(label, value) {
+    try {
+      if (state.prettyJson && (typeof value === "object" && value !== null)) {
+        try {
+          const pretty = JSON.stringify(value, null, 2);
+          console.log(label);
+          console.log(pretty);
+          return;
+        } catch (_) {
+          // fall through to default
+        }
+      }
+      console.log(label, value);
+    } catch (_) {}
+  }
 
   // titlePairs must be an array of [fmtWithPercentC, styleString] pairs
   // Insert a neutral space AFTER tokens except when the next token is an arrow.
@@ -136,8 +156,8 @@
           [`%c${nowIso()}`, styles.meta],
         ];
         logGroupCollapsedStyled(titlePairs);
-        console.log("event:", event);
-        if (event?.data !== undefined) console.log("data:", event.data);
+      console.log("event:", event);
+      if (event?.data !== undefined) logData("data:", event.data);
         if (event?.origin !== undefined) console.log("origin:", event.origin);
         if (event?.source !== undefined) console.log("source:", event.source);
         endGroup();
@@ -161,7 +181,7 @@
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
-          console.log("message:", message);
+          logData("message:", message);
           console.log("targetOrigin:", targetOrigin);
           if (transfer !== undefined) console.log("transfer:", transfer);
           endGroup();
@@ -208,7 +228,7 @@
           ];
           logGroupCollapsedStyled(titlePairs);
           console.log("port:", this);
-          console.log("message:", message);
+          logData("message:", message);
           if (transfer !== undefined) console.log("transfer:", transfer);
           endGroup();
         } catch (_) {}
@@ -249,7 +269,7 @@
           logGroupCollapsedStyled(titlePairs);
           console.log("port:", this);
           console.log("event:", event);
-          if (event?.data !== undefined) console.log("data:", event.data);
+          if (event?.data !== undefined) logData("data:", event.data);
           endGroup();
         } catch (_) {}
       };
@@ -346,9 +366,9 @@
               [`%c${nowIso()}`, styles.meta],
             ];
             logGroupCollapsedStyled(titlePairs);
-            console.log("channel:", bc);
-            console.log("name:", name);
-            console.log("message:", message);
+          console.log("channel:", bc);
+          console.log("name:", name);
+          logData("message:", message);
             endGroup();
           } catch (_) {}
         }
@@ -378,7 +398,7 @@
               console.log("channel:", bc);
               console.log("name:", name);
               console.log("event:", event);
-              if (event?.data !== undefined) console.log("data:", event.data);
+              if (event?.data !== undefined) logData("data:", event.data);
               endGroup();
             } catch (_) {}
           },
@@ -433,7 +453,7 @@
                 ];
                 logGroupCollapsedStyled(titlePairs);
                 console.log("worker:", worker);
-                console.log("message:", message);
+                logData("message:", message);
                 if (transfer !== undefined) console.log("transfer:", transfer);
                 endGroup();
               } catch (_) {}
@@ -464,7 +484,7 @@
                 logGroupCollapsedStyled(titlePairs);
                 console.log("worker:", worker);
                 console.log("event:", event);
-                if (event?.data !== undefined) console.log("data:", event.data);
+                if (event?.data !== undefined) logData("data:", event.data);
                 endGroup();
               } catch (_) {}
             },
@@ -532,7 +552,7 @@
               ];
               logGroupCollapsedStyled(titlePairs);
               console.log("serviceWorker:", this);
-              console.log("message:", message);
+              logData("message:", message);
               if (transfer !== undefined) console.log("transfer:", transfer);
               endGroup();
             } catch (_) {}
@@ -573,7 +593,7 @@
             ];
             logGroupCollapsedStyled(titlePairs);
             console.log("event:", event);
-            if (event?.data !== undefined) console.log("data:", event.data);
+            if (event?.data !== undefined) logData("data:", event.data);
             endGroup();
           } catch (_) {}
         },

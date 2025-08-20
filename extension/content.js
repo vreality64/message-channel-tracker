@@ -36,6 +36,8 @@
   chrome.runtime.onMessage.addListener((message) => {
     if (message && message.type === "MCT:SET_ENABLED") {
       window.postMessage({ type: "MCT:SET_ENABLED", enabled: Boolean(message.enabled) }, "*");
+    } else if (message && message.type === "MCT:SET_PRETTY_JSON") {
+      window.postMessage({ type: "MCT:SET_PRETTY_JSON", pretty: Boolean(message.pretty) }, "*");
     }
   });
 
