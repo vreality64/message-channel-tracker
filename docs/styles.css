@@ -2,8 +2,8 @@
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Apple SD Gothic Neo, Arial, "Apple Color Emoji", "Segoe UI Emoji"; line-height: 1.7; color: var(--fg); background: var(--bg); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
-:root { --bg: #0b1020; --fg: #e6edf3; --muted: #a6b3c2; --card: #0f1629; --border: #213052; --outline: color-mix(in oklab, var(--fg) 14%, transparent); --accent: #0ea5e9; --accent-2: #22d3ee; --shadow: 0 10px 30px rgba(0,0,0,0.35); --ring: 0 0 0 3px color-mix(in oklab, var(--accent) 40%, transparent); --gutter: clamp(12px, 4vw, 20px); }
-@media (prefers-color-scheme: light) { :root { --bg: #ffffff; --fg: #0b1220; --muted: #4b5563; --card: #f7fafc; --border: #e5e7eb; --outline: color-mix(in oklab, var(--fg) 8%, transparent); --accent: #0284c7; --accent-2: #06b6d4; --shadow: 0 10px 20px rgba(2,8,23,0.08); --ring: 0 0 0 3px color-mix(in oklab, var(--accent) 45%, transparent); --gutter: clamp(12px, 4vw, 20px); } }
+:root { --bg: #0b1020; --fg: #e6edf3; --muted: #a6b3c2; --card: #0f1629; --border: #213052; --outline: color-mix(in oklab, var(--fg) 14%, transparent); --accent: #0ea5e9; --accent-2: #22d3ee; --shadow: 0 10px 30px rgba(0,0,0,0.35); --ring: 0 0 0 3px color-mix(in oklab, var(--accent) 40%, transparent); --gutter: clamp(24px, 4vw, 32px); }
+@media (prefers-color-scheme: light) { :root { --bg: #ffffff; --fg: #0b1220; --muted: #4b5563; --card: #f7fafc; --border: #e5e7eb; --outline: color-mix(in oklab, var(--fg) 8%, transparent); --accent: #0284c7; --accent-2: #06b6d4; --shadow: 0 10px 20px rgba(2,8,23,0.08); --ring: 0 0 0 3px color-mix(in oklab, var(--accent) 45%, transparent); --gutter: clamp(24px, 4vw, 32px); } }
 
 /* Explicit theme override */
 [data-theme="dark"] { --bg: #0b1020; --fg: #e6edf3; --muted: #a6b3c2; --card: #0f1629; --border: #1f2a44; --accent: #0ea5e9; --accent-2: #22d3ee; --shadow: 0 10px 30px rgba(0,0,0,0.35); --ring: 0 0 0 3px color-mix(in oklab, var(--accent) 40%, transparent); }
