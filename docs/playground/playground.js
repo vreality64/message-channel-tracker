@@ -1,29 +1,8 @@
 /* global SharedWorker */
 
 const uiLogRoot = document.getElementById("console-log");
-const filters = {
-  window: document.getElementById("show-window"),
-  mc: document.getElementById("show-mc"),
-  bc: document.getElementById("show-bc"),
-  worker: document.getElementById("show-worker"),
-  sw: document.getElementById("show-sw"),
-};
 const log = (tag, payload) => {
-  const enabled = (
-    (tag === "window" && filters.window.checked) ||
-    (tag === "mc" && filters.mc.checked) ||
-    (tag === "bc" && filters.bc.checked) ||
-    (tag === "worker" && filters.worker.checked) ||
-    (tag === "sw" && filters.sw.checked)
-  );
-  if (!enabled) return;
-  const line = document.createElement("p");
-  line.className = "log-line";
-  const time = new Date().toLocaleTimeString();
-  line.innerHTML = `<span class="tag">[${tag}]</span> ${time} — ${typeof payload === "string" ? payload : JSON.stringify(payload)}`;
-  uiLogRoot.appendChild(line);
-  uiLogRoot.scrollTop = uiLogRoot.scrollHeight;
-  // mirror to real console for devs
+  // mirror only for dev; UI console is filled by MCT logs capture below
   // eslint-disable-next-line no-console
   console.log("[PG]", tag, payload);
 };
@@ -37,6 +16,40 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
   root.setAttribute("data-theme", next);
 });
+
+// Capture only MCT-tagged console logs and mirror to UI console
+(function setupMctConsoleCapture() {
+  const orig = {
+    log: console.log,
+    info: console.info,
+    warn: console.warn,
+    error: console.error,
+    group: console.group?.bind(console),
+    groupCollapsed: console.groupCollapsed?.bind(console),
+    groupEnd: console.groupEnd?.bind(console),
+  };
+  let indent = 0;
+  const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\bMCT\b|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
+  const append = (parts) => {
+    const line = document.createElement("p");
+    line.className = "log-line";
+    const time = new Date().toLocaleTimeString();
+    const text = parts.map((p) => {
+      if (typeof p === "string") return p;
+      try { return JSON.stringify(p); } catch { return String(p); }
+    }).join(" ");
+    line.textContent = `${"  ".repeat(indent)}${time} — ${text}`;
+    uiLogRoot.appendChild(line);
+    uiLogRoot.scrollTop = uiLogRoot.scrollHeight;
+  };
+  console.log = (...args) => { if (isMctArgs(args)) append(args); return orig.log.apply(console, args); };
+  console.info = (...args) => { if (isMctArgs(args)) append(args); return orig.info.apply(console, args); };
+  console.warn = (...args) => { if (isMctArgs(args)) append(["[warn]", ...args]); return orig.warn.apply(console, args); };
+  console.error = (...args) => { if (isMctArgs(args)) append(["[error]", ...args]); return orig.error.apply(console, args); };
+  if (orig.group) console.group = (...args) => { if (isMctArgs(args)) append(["[group]", ...args]); indent++; return orig.group(...args); };
+  if (orig.groupCollapsed) console.groupCollapsed = (...args) => { if (isMctArgs(args)) append(["[group]", ...args]); indent++; return orig.groupCollapsed(...args); };
+  if (orig.groupEnd) console.groupEnd = () => { indent = Math.max(0, indent - 1); return orig.groupEnd(); };
+})();
 
 // window.postMessage
 const btnPostSelf = document.getElementById("btn-post-self");
