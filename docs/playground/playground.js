@@ -1,11 +1,7 @@
 /* global SharedWorker */
 
 const uiLogRoot = document.getElementById("console-log");
-const log = (tag, payload) => {
-  // mirror only for dev; UI console is filled by MCT logs capture below
-  // eslint-disable-next-line no-console
-  console.log("[PG]", tag, payload);
-};
+const log = () => {};
 
 const hasMct = Boolean(window.__MCT_INSTALLED__);
 const mctDemoLog = (kind, payload) => {
