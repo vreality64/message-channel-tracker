@@ -83,16 +83,34 @@
 
   function logData(label, value) {
     try {
-      if (state.prettyJson && (typeof value === "object" && value !== null)) {
-        try {
-          const pretty = JSON.stringify(value, null, 2);
-          console.log(label);
-          console.log(pretty);
-          return;
-        } catch (_) {
-          // fall through to default
+      if (state.prettyJson) {
+        // If the payload is a JSON string, parse it first
+        if (typeof value === "string") {
+          try {
+            const parsed = JSON.parse(value);
+            if (parsed && typeof parsed === "object") {
+              const prettyParsed = JSON.stringify(parsed, null, 2);
+              console.log(label);
+              console.log(prettyParsed);
+              return;
+            }
+          } catch (_) {
+            // not a JSON string; fall through
+          }
+        }
+        // If the payload is an object/array, pretty print directly
+        if (value && typeof value === "object") {
+          try {
+            const prettyObj = JSON.stringify(value, null, 2);
+            console.log(label);
+            console.log(prettyObj);
+            return;
+          } catch (_) {
+            // fall through to default
+          }
         }
       }
+      // Default: log inline
       console.log(label, value);
     } catch (_) {}
   }
