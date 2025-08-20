@@ -4,21 +4,162 @@ const uiLogRoot = document.getElementById("console-log");
 const log = () => {};
 
 const hasMct = Boolean(window.__MCT_INSTALLED__);
-const mctDemoLog = (kind, payload) => {
-  if (hasMct) return; // real MCT will print its own logs
+const mctStyles = {
+  badgeBase:
+    "display:inline-block;padding:1px 5px;border-radius:10px;background:#3b82f6;color:white;font-weight:600;",
+  arrowOut:
+    "color:#22c55e;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px;border-radius:6px;",
+  arrowIn:
+    "color:#ef4444;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px;border-radius:6px;",
+  arrowPort:
+    "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px;border-radius:6px;",
+  meta: "color:#64748b;",
+};
+function mctGroup(op) {
+  const iso = new Date().toISOString();
+  if (op === "window.postMessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c→", mctStyles.arrowOut,
+    "%cwindow.postMessage", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "window.message") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c←", mctStyles.arrowIn,
+    "%cwindow.message", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "MessagePort.postMessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c↔", mctStyles.arrowPort,
+    "%cMessagePort.postMessage", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "MessagePort.onmessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c←", mctStyles.arrowIn,
+    "%cMessagePort.message", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "BroadcastChannel.postMessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c↔", mctStyles.arrowPort,
+    "%cBroadcastChannel.postMessage", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "BroadcastChannel.onmessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c←", mctStyles.arrowIn,
+    "%cBroadcastChannel.message", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "Worker.postMessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c→", mctStyles.arrowOut,
+    "%cWorker.postMessage", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "Worker.onmessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c←", mctStyles.arrowIn,
+    "%cWorker.message", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "SharedWorker.postMessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c→", mctStyles.arrowOut,
+    "%cSharedWorker.postMessage", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "SharedWorker.onmessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c←", mctStyles.arrowIn,
+    "%cSharedWorker.message", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "ServiceWorker.register") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%cnew", mctStyles.meta,
+    "%cServiceWorker.register", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "ServiceWorker.postMessage") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c→", mctStyles.arrowOut,
+    "%cServiceWorker.postMessage", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  if (op === "ServiceWorker.message") return [
+    "%cMCT", mctStyles.badgeBase,
+    "%c←", mctStyles.arrowIn,
+    "%cServiceWorker.message", mctStyles.meta,
+    `%c${iso}`, mctStyles.meta,
+  ];
+  return ["%cMCT", mctStyles.badgeBase, `%c${iso}`, mctStyles.meta];
+}
+function mctOpenGroup(op) {
+  const pairs = mctGroup(op);
+  const fmt = pairs.filter((_, i) => i % 2 === 0).join("%c ");
+  const styles = pairs.filter((_, i) => i % 2 === 1);
+  // eslint-disable-next-line no-console
+  console.groupCollapsed(fmt, ...styles);
+}
+function mctCloseGroup() {
+  // eslint-disable-next-line no-console
+  console.groupEnd?.();
+}
+const mctDemoLog = (op, data) => {
+  if (hasMct) return;
   try {
-    // Mimic MCT style: group and key/value lines
-    // eslint-disable-next-line no-console
-    console.groupCollapsed("[MCT]", new Date().toISOString());
-    // eslint-disable-next-line no-console
-    console.log("kind:", kind);
-    if (payload !== undefined) {
-      // eslint-disable-next-line no-console
-      console.log("data:", payload);
+    mctOpenGroup(op);
+    switch (op) {
+      case "window.message":
+        if (data?.data !== undefined) console.log("data:", data.data);
+        if (data?.origin !== undefined) console.log("origin:", data.origin);
+        break;
+      case "window.postMessage":
+        console.log("message:", data?.message ?? { posted: data?.posted ?? true });
+        console.log("targetOrigin:", data?.targetOrigin ?? "*");
+        break;
+      case "MessagePort.onmessage":
+        if (data?.data !== undefined) console.log("data:", data.data);
+        break;
+      case "MessagePort.postMessage":
+        console.log("message:", data?.message ?? { ping: true });
+        break;
+      case "BroadcastChannel.onmessage":
+        if (data?.name !== undefined) console.log("name:", data.name);
+        if (data?.data !== undefined) console.log("data:", data.data);
+        break;
+      case "BroadcastChannel.postMessage":
+        console.log("message:", data?.message ?? { sent: true });
+        break;
+      case "Worker.onmessage":
+        if (data !== undefined) console.log("data:", data);
+        break;
+      case "Worker.postMessage":
+        console.log("message:", data?.message ?? { ping: true });
+        break;
+      case "SharedWorker.onmessage":
+        if (data !== undefined) console.log("data:", data);
+        break;
+      case "SharedWorker.postMessage":
+        console.log("message:", data?.message ?? { ping: true });
+        break;
+      case "ServiceWorker.register":
+        if (data?.scope) console.log("scope:", data.scope);
+        break;
+      case "ServiceWorker.postMessage":
+        console.log("message:", data?.message ?? { ping: true });
+        break;
+      case "ServiceWorker.message":
+        if (data?.data !== undefined) console.log("data:", data.data);
+        break;
+      default:
+        if (data !== undefined) console.log("data:", data);
     }
   } finally {
-    // eslint-disable-next-line no-console
-    console.groupEnd?.();
+    mctCloseGroup();
   }
 };
 
