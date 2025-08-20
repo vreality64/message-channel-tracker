@@ -53,7 +53,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   const groupStack = [];
   const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\[?MCT\]?|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
   const append = (parts) => {
-    const root = groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
+    const root = mctDepth > 0 && groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
     const container = document.createElement("div");
     const time = new Date().toLocaleTimeString();
     const prefix = document.createElement("p");
