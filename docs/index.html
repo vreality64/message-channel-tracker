@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Message Channel Tracker · Chrome 확장</title>
-    <meta name="description" content="브라우저의 메시지 흐름(window.postMessage, MessageChannel, BroadcastChannel, Worker 등)을 콘솔에 예쁘게 시각화하는 Chrome 확장." />
+    <meta name="description" content="브라우저의 메시지 흐름(window.postMessage, MessageChannel, BroadcastChannel, Worker 등)을 콘솔에 가독성 높게 시각화하는 Chrome 확장." />
     <link rel="canonical" href="https://message-channel-tracker.vreality.dev/" />
     <meta property="og:title" content="Message Channel Tracker" />
     <meta property="og:description" content="브라우저의 메시지 흐름을 깨뜨리지 않고 관찰하세요." />
@@ -44,25 +44,25 @@
         <div class="hero-inner">
           <span class="kicker">Chrome 확장</span>
           <h1>
-            메시지 채널을 <span class="gradient-text">깨뜨리지 않고</span>
-            관찰하세요
+            메시지 채널 <span class="gradient-text">흐름을</span>
+            깨뜨리지 않고 관찰하세요
           </h1>
           <p class="lead">
             window.postMessage · MessageChannel · BroadcastChannel · Worker/ServiceWorker의 메시지를
-            <strong>색상과 그룹</strong>으로 정리해 DevTools 콘솔에서 한눈에.
+            <strong>색상과 그룹</strong>으로 정리해 DevTools 콘솔에서 한눈에 확인할 수 있습니다.
           </p>
           <div class="badges">
-            <span class="badge">비침투적</span>
+            <span class="badge">비침투적(Non‑intrusive)</span>
             <span class="badge">토글 가능</span>
             <span class="badge">읽기 전용</span>
           </div>
           <div class="cta">
-            <a class="button primary" href="#install">빠르게 설치하기</a>
+            <a class="button primary" href="#install">빠르게 시작하기</a>
             <a class="button" href="https://github.com/vreality64/message-channel-tracker" target="_blank" rel="noopener">GitHub 보기</a>
           </div>
         </div>
         <figure class="hero-visual">
-          <img src="./assets/screenshot.svg" alt="DevTools 콘솔에서 메시지가 색상/그룹으로 정리되어 흐름을 보여주는 장면" width="960" height="540" loading="eager" />
+          <img src="./assets/screenshot.png" alt="DevTools 콘솔에서 메시지가 색상/그룹으로 정리되어 흐름을 보여주는 장면" width="960" height="540" loading="eager" />
         </figure>
       </section>
 
@@ -70,8 +70,8 @@
         <h2>왜 MCT인가요?</h2>
         <ul class="feature-grid">
           <li class="card">
-            <div class="card-title">채널 전반 관측</div>
-            <p class="card-desc">window.postMessage, MessageChannel/MessagePort, BroadcastChannel, Worker/SharedWorker, ServiceWorker까지 한번에.</p>
+            <div class="card-title">다양한 채널 관찰</div>
+            <p class="card-desc">window.postMessage, MessageChannel/MessagePort, BroadcastChannel, Worker/SharedWorker, ServiceWorker까지 한 번에.</p>
           </li>
           <li class="card">
             <div class="card-title">콘솔에 최적화</div>
@@ -79,11 +79,11 @@
           </li>
           <li class="card">
             <div class="card-title">안전한 읽기 전용</div>
-            <p class="card-desc">원래 동작을 바꾸지 않는 비침투적 래핑으로 신뢰도 높음.</p>
+            <p class="card-desc">원래 동작을 변경하지 않는 비침투적 래핑으로 신뢰성을 높였습니다.</p>
           </li>
           <li class="card">
-            <div class="card-title">상태 토글</div>
-            <p class="card-desc">팝업에서 On/Off, 전역 상태는 <code>chrome.storage.sync</code>에 보존됩니다.</p>
+            <div class="card-title">상태 전환</div>
+            <p class="card-desc">팝업에서 켜기/끄기 전환, 전역 상태는 <code>chrome.storage.sync</code>에 보존됩니다.</p>
           </li>
         </ul>
       </section>
@@ -94,7 +94,7 @@
           <li>주소창에 <code>chrome://extensions</code> 입력</li>
           <li><strong>Developer mode</strong> 활성화</li>
           <li><strong>Load unpacked</strong> → 저장소의 <code>extension/</code> 선택</li>
-          <li>확장 아이콘을 고정하고 On/Off로 로깅 제어</li>
+          <li>확장 아이콘을 고정한 뒤, 켜기/끄기로 로깅을 제어합니다.</li>
         </ol>
         <p class="note">웹스토어 배포 전까지는 수동 로드로 사용하세요.</p>
       </section>
@@ -109,10 +109,10 @@
               <pre class="code"><code id="demo-code">window.postMessage("hello from MCT", "*");</code></pre>
             </div>
             <p class="small">여러 채널을 한 번에 시험하려면 로컬 <strong>Playground</strong>를 사용하세요. <code>pnpm run docs</code>로
-              정적 서버를 띄운 뒤 <code>/playground/</code>에 접속.</p>
+              정적 서버를 실행한 뒤 <code>/playground/</code>에 접속하세요.</p>
           </div>
           <figure class="usage-visual">
-            <img src="./assets/console-detail.svg" alt="MCT 콘솔 상세 미리보기" width="640" height="360" loading="lazy" />
+            <img src="./assets/screenshot.png" alt="MCT 콘솔 상세 미리보기" width="640" height="360" loading="lazy" />
           </figure>
         </div>
       </section>
@@ -123,7 +123,7 @@
           <div>
             <ul>
               <li><code>content.js</code>가 <code>pageHook.js</code>를 삽입해 페이지 컨텍스트에서 안전하게 내장 객체를 래핑합니다.</li>
-              <li>메시지는 색상/그룹으로 정리되어 콘솔에 출력됩니다.</li>
+              <li>메시지는 색상/그룹으로 정리되어 콘솔에 출력되며,</li>
               <li>토글 이벤트(<code>MCT:SET_ENABLED</code>)로 로깅을 제어합니다.</li>
               <li>원래 동작을 바꾸지 않는 <em>읽기 전용</em> 설계입니다.</li>
             </ul>
@@ -131,7 +131,7 @@
           </div>
           <div class="callout">
             <div class="callout-title">주의</div>
-            <p>대량 메시지 환경에서는 성능을 위해 필요 시에만 On으로 전환하거나, 콘솔 필터링을 함께 사용하세요.</p>
+            <p>대량 메시지 환경에서는 성능을 위해 필요할 때만 켜거나, 콘솔 필터링을 함께 사용하세요.</p>
           </div>
         </div>
       </section>
@@ -140,11 +140,11 @@
         <h2>FAQ</h2>
         <details>
           <summary>성능에 영향이 있나요?</summary>
-          <p>일반적인 개발/디버깅 시나리오에서 영향을 최소화하도록 구현했습니다. 대량 메시지 환경에서는 토글을 Off하여 부하를 줄일 수 있습니다.</p>
+          <p>일반적인 개발/디버깅 시나리오에서 영향을 최소화하도록 구현했습니다. 대량 메시지 환경에서는 로깅을 꺼 부하를 줄일 수 있습니다.</p>
         </details>
         <details>
           <summary>프로덕션 페이지에 사용해도 되나요?</summary>
-          <p>개발/테스트 용도로 권장됩니다. 프로덕션 환경에서는 필요 시점에만 On으로 전환하세요.</p>
+          <p>개발/테스트 용도로 권장됩니다. 프로덕션 환경에서는 필요한 시점에만 켜 주세요.</p>
         </details>
         <details>
           <summary>무엇을 로깅하나요?</summary>
