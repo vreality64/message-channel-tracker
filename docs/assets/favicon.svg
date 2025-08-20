@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Message Channel Tracker 아이콘">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <style>
+      .bg{fill:url(#g)}
+      .fg{fill:#ffffff}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="64" height="64" rx="12" class="bg"/>
+  <path class="fg" d="M14 22h36a2 2 0 0 1 0 4H14a2 2 0 0 1 0-4Zm0 10h30a2 2 0 0 1 0 4H14a2 2 0 0 1 0-4Zm0 10h24a2 2 0 0 1 0 4H14a2 2 0 0 1 0-4Z"/>
+  <circle cx="48" cy="24" r="2.5" class="fg"/>
+  <circle cx="42" cy="34" r="2.5" class="fg"/>
+  <circle cx="36" cy="44" r="2.5" class="fg"/>
+</svg>
