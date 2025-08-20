@@ -48,6 +48,8 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     groupEnd: console.groupEnd?.bind(console),
   };
   let indent = 0;
+  let mctDepth = 0;
+  const groupStack = [];
   const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\bMCT\b|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
   const append = (parts) => {
     const line = document.createElement("p");
@@ -61,13 +63,32 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     uiLogRoot.appendChild(line);
     uiLogRoot.scrollTop = uiLogRoot.scrollHeight;
   };
-  console.log = (...args) => { if (isMctArgs(args)) append(args); return orig.log.apply(console, args); };
-  console.info = (...args) => { if (isMctArgs(args)) append(args); return orig.info.apply(console, args); };
-  console.warn = (...args) => { if (isMctArgs(args)) append(["[warn]", ...args]); return orig.warn.apply(console, args); };
-  console.error = (...args) => { if (isMctArgs(args)) append(["[error]", ...args]); return orig.error.apply(console, args); };
-  if (orig.group) console.group = (...args) => { if (isMctArgs(args)) append(["[group]", ...args]); indent++; return orig.group(...args); };
-  if (orig.groupCollapsed) console.groupCollapsed = (...args) => { if (isMctArgs(args)) append(["[group]", ...args]); indent++; return orig.groupCollapsed(...args); };
-  if (orig.groupEnd) console.groupEnd = () => { indent = Math.max(0, indent - 1); return orig.groupEnd(); };
+  console.log = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.log.apply(console, args); };
+  console.info = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.info.apply(console, args); };
+  console.warn = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(["[warn]", ...args]); return orig.warn.apply(console, args); };
+  console.error = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(["[error]", ...args]); return orig.error.apply(console, args); };
+  if (orig.group) console.group = (...args) => {
+    const isMct = isMctArgs(args) || mctDepth > 0;
+    groupStack.push(isMctArgs(args));
+    if (isMct) append(["[group]", ...args]);
+    if (isMctArgs(args)) mctDepth++;
+    if (isMct) indent++;
+    return orig.group(...args);
+  };
+  if (orig.groupCollapsed) console.groupCollapsed = (...args) => {
+    const isMct = isMctArgs(args) || mctDepth > 0;
+    groupStack.push(isMctArgs(args));
+    if (isMct) append(["[group]", ...args]);
+    if (isMctArgs(args)) mctDepth++;
+    if (isMct) indent++;
+    return orig.groupCollapsed(...args);
+  };
+  if (orig.groupEnd) console.groupEnd = () => {
+    const wasMctGroup = groupStack.pop() === true;
+    if (mctDepth > 0) indent = Math.max(0, indent - 1);
+    if (wasMctGroup) mctDepth = Math.max(0, mctDepth - 1);
+    return orig.groupEnd();
+  };
 })();
 
 // window.postMessage
