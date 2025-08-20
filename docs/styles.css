@@ -113,6 +113,17 @@ p {
   align-items: center;
   gap: 8px;
 }
+.lang-select,
+#lang-select {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
 .theme-toggle,
 .nav-toggle {
   appearance: none;
