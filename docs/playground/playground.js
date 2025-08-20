@@ -88,7 +88,8 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
         }
         const p = document.createElement("p");
         p.className = "log-line";
-        p.textContent = item;
+        const cleaned = item.includes("%c") ? item.replace(/%c/g, "") : item;
+        p.textContent = cleaned;
         container.appendChild(p);
       } else if (typeof item === "object" && item != null) {
         container.appendChild(renderJson(item));
