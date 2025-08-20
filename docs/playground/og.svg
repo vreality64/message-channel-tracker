@@ -42,7 +42,7 @@
     <text class="chipTitle" x="16" y="28">Console UI</text>
     <g transform="translate(16,48)" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#d6e9ff">
       <rect x="0" y="-6" width="268" height="28" rx="6" fill="#0a0f1e" stroke="#17203a"/>
-      <text x="10" y="14">%cin → %cpostMessage%c → %cout</text>
+      <text x="10" y="14">in → postMessage → out</text>
       <g fill="#7aa2f7">
         <rect x="6" y="36" width="260" height="2" rx="1"/>
         <rect x="6" y="66" width="180" height="2" rx="1"/>
