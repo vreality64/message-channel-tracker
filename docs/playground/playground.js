@@ -62,13 +62,14 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     container.appendChild(prefix);
 
     // Support styled console logs with %c segments
-    if (typeof parts[0] === "string" && parts[0].includes("%c")) {
-      const { line, consumed } = renderStyledLine(parts[0], parts.slice(1));
+    let remaining = parts;
+    if (typeof remaining[0] === "string" && remaining[0].includes("%c")) {
+      const { line, consumed } = renderStyledLine(remaining[0], remaining.slice(1));
       container.appendChild(line);
-      parts = parts.slice(1 + consumed);
+      remaining = remaining.slice(1 + consumed);
     }
 
-    for (const item of parts) {
+    for (const item of remaining) {
       if (typeof item === "string") {
         // Render simple keys like "event:" "data:" with color separator
         const m = item.match(/^(\w+):$/);
