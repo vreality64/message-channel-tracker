@@ -1,6 +1,6 @@
 /* global SharedWorker */
 
-const uiLogRoot = document.getElementById("console-log");
+let uiLogRoot = document.getElementById("console-log");
 const log = (tag, payload) => {
   // mirror only for dev; UI console is filled by MCT logs capture below
   // eslint-disable-next-line no-console
@@ -118,7 +118,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   console.error = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(["[error]", ...args]); return orig.error.apply(console, args); };
   function createGroup(titleParts, collapsed) {
     const group = document.createElement("div");
-    group.className = "group" + (collapsed ? " collapsed" : "");
+    group.className = `group${collapsed ? " collapsed" : ""}`;
     const header = document.createElement("div");
     header.className = "group-header";
     const arrow = document.createElement("span");
