@@ -1,6 +1,6 @@
 /* global SharedWorker */
 
-let uiLogRoot = document.getElementById("console-log");
+const uiLogRoot = document.getElementById("console-log");
 const log = (tag, payload) => {
   // mirror only for dev; UI console is filled by MCT logs capture below
   // eslint-disable-next-line no-console
@@ -146,18 +146,18 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     body.className = "group-body";
     group.append(header, body);
     header.addEventListener("click", () => group.classList.toggle("collapsed"));
-    const root = groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
-    root.appendChild(group);
-    root.scrollTop = root.scrollHeight;
-    return { group, body };
+    const parent = groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
+    parent.appendChild(group);
+    parent.scrollTop = parent.scrollHeight;
+    return { body };
   }
 
   if (orig.group) console.group = (...args) => {
     const isMct = isMctArgs(args) || mctDepth > 0;
     groupStack.push({ isMct: isMctArgs(args) });
     if (isMct) {
-      const { body } = createGroup(["[group]", ...args], false);
-      groupBodies.push(body);
+      const created = createGroup(["[group]", ...args], false);
+      groupBodies.push(created.body);
       indent++;
       const ret = orig.group(...args);
       // groupEnd will pop
@@ -170,8 +170,8 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     const isMct = isMctArgs(args) || mctDepth > 0;
     groupStack.push({ isMct: isMctArgs(args) });
     if (isMct) {
-      const { body } = createGroup(["[group]", ...args], true);
-      groupBodies.push(body);
+      const created = createGroup(["[group]", ...args], true);
+      groupBodies.push(created.body);
       indent++;
       const ret = orig.groupCollapsed(...args);
       // groupEnd will pop
