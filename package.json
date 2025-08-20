@@ -18,6 +18,7 @@
     "hero:gif": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -filter_complex 'fps=24,scale=960:-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=single:max_colors=256[p];[s1][p]paletteuse=dither=sierra2_4a' -loop 0 ./docs/assets/hero.gif",
     "hero:gif:hq": "pnpm run hero:gif",
     "hero:webp": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=24,scale=960:-1:flags=lanczos -loop 0 -preset picture -an -lossless 0 -quality 92 -compression_level 4 ./docs/assets/hero.webp",
+    "hero:webp:ultra": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=30,scale=1200:-1:flags=lanczos -loop 0 -preset picture -an -lossless 0 -quality 95 -compression_level 3 ./docs/assets/hero.webp",
     "hero:webp:lossless": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=24,scale=960:-1:flags=lanczos -loop 0 -preset picture -an -lossless 1 -compression_level 4 ./docs/assets/hero.webp",
     "hero:optim:gif": "gifsicle -O3 ./docs/assets/hero.gif -o ./docs/assets/hero.gif",
     "hero:optim:webp": "cwebp -q 90 ./docs/assets/hero.webp -o ./docs/assets/hero.webp"
