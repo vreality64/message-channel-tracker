@@ -153,29 +153,28 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
 
   if (orig.group) console.group = (...args) => {
     const isTopLevelMct = isMctArgs(args);
-    if (isTopLevelMct && mctDepth === 0) {
+    if (isTopLevelMct) {
+      // Always isolate each new MCT message into its own top-level UI group
       groupBodies.length = 0;
       indent = 0;
-    }
-    if (isTopLevelMct) {
+      mctDepth = 0;
       const created = createGroup(["[group]", ...args], false);
       groupBodies.push(created.body);
-      indent++;
-      mctDepth++;
+      indent = 1;
+      mctDepth = 1;
     }
     return orig.group(...args);
   };
   if (orig.groupCollapsed) console.groupCollapsed = (...args) => {
     const isTopLevelMct = isMctArgs(args);
-    if (isTopLevelMct && mctDepth === 0) {
+    if (isTopLevelMct) {
       groupBodies.length = 0;
       indent = 0;
-    }
-    if (isTopLevelMct) {
+      mctDepth = 0;
       const created = createGroup(["[group]", ...args], true);
       groupBodies.push(created.body);
-      indent++;
-      mctDepth++;
+      indent = 1;
+      mctDepth = 1;
     }
     return orig.groupCollapsed(...args);
   };
