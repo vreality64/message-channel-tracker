@@ -13,7 +13,12 @@
     "prepare": "husky",
     "docs:serve": "python3 -m http.server 5174 --directory docs --bind 127.0.0.1",
     "docs:open": "open http://localhost:5174/",
-    "docs": "pnpm run docs:serve"
+    "docs": "pnpm run docs:serve",
+    "hero:capture:tip": "echo '1) pnpm run docs && open http://localhost:5174/hero-demo.html\n2) 화면 녹화(QuickTime 등)로 6~8초 캡처\n3) 파일을 docs/assets/hero-src.mp4 로 저장한 뒤, pnpm run hero:gif && pnpm run hero:webp && pnpm run hero:optim:gif && pnpm run hero:optim:webp'",
+    "hero:gif": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=24,scale=960:-1:flags=lanczos -loop 0 ./docs/assets/hero.gif",
+    "hero:webp": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=24,scale=960:-1:flags=lanczos -loop 0 -preset picture -an -lossless 0 -quality 80 -compression_level 6 ./docs/assets/hero.webp",
+    "hero:optim:gif": "gifsicle -O3 --lossy=30 ./docs/assets/hero.gif -o ./docs/assets/hero.gif",
+    "hero:optim:webp": "cwebp -q 82 ./docs/assets/hero.webp -o ./docs/assets/hero.webp"
   },
   "devDependencies": {
     "happy-dom": "^18.0.1",

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MCT Hero Demo</title>
+    <style>
+      :root {
+        --bg: #0b1020; --fg: #e6edf3; --muted: #a6b3c2; --card: #0f1629; --border: #1f2a44;
+        --accent: #0ea5e9; --accent-2: #22d3ee; --outline: color-mix(in oklab, var(--fg) 14%, transparent);
+      }
+      html, body { height: 100%; }
+      body { margin: 0; background: var(--bg); color: var(--fg); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Apple SD Gothic Neo, Arial; display: grid; place-items: center; }
+      .frame { width: 960px; height: 540px; background: var(--card); border: 1px solid var(--outline); border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,.35); position: relative; overflow: hidden; }
+      .topbar { height: 44px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; padding: 0 12px; }
+      .dot { width: 10px; height: 10px; border-radius: 50%; }
+      .dot.red { background: #ef4444; } .dot.yellow { background: #f59e0b; } .dot.green { background: #10b981; }
+      .title { font-weight: 800; font-size: 14px; margin-left: 8px; color: var(--fg); }
+      .tabs { margin-left: auto; display: flex; gap: 16px; color: var(--muted); font-weight: 700; font-size: 12px; }
+      .tabs .active { color: var(--fg); }
+      .body { position: absolute; inset: 44px 0 0 0; padding: 16px 18px; }
+
+      .group { display: grid; grid-template-columns: 8px 1fr; gap: 12px; align-items: start; margin-bottom: 18px; opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
+      .group.show { opacity: 1; transform: none; }
+      .bar { width: 8px; border-radius: 4px; height: 88px; }
+      .bar.post { background: #22d3ee; } .bar.chan { background: #0ea5e9; } .bar.broad { background: #6ee7b7; } .bar.worker { background: #f59e0b; }
+      .badge { display: inline-block; border: 2px solid; border-image: linear-gradient(135deg, var(--accent), var(--accent-2)) 1; padding: 4px 10px; border-radius: 10px; font-weight: 800; font-size: 12px; }
+      .mono { font-family: SFMono-Regular, ui-monospace, Menlo, monospace; color: #c9d4e5; font-size: 14px; }
+      .muted { color: var(--muted); font-family: SFMono-Regular, ui-monospace, Menlo, monospace; font-size: 13px; }
+      .row { margin-top: 8px; }
+
+      .cta { position: absolute; inset: auto 12px 12px auto; display: flex; gap: 8px; }
+      .btn { appearance: none; background: var(--card); color: var(--fg); border: 1px solid var(--outline); padding: 8px 12px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+      .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; border: none; }
+    </style>
+  </head>
+  <body>
+    <div class="frame" id="frame">
+      <div class="topbar">
+        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+        <div class="title">DevTools · Console</div>
+        <div class="tabs"><span>Elements</span><span class="active">Console</span><span>Network</span></div>
+      </div>
+      <div class="body">
+        <div class="group" id="g1">
+          <div class="bar post"></div>
+          <div>
+            <span class="badge">window.postMessage</span>
+            <div class="row mono">"hello from MCT" <span class="muted">target: *</span></div>
+            <div class="row muted">at page → window</div>
+          </div>
+        </div>
+        <div class="group" id="g2">
+          <div class="bar chan" style="height:102px"></div>
+          <div>
+            <span class="badge">MessageChannel / Port</span>
+            <div class="row mono">port.postMessage({type: "PING"})</div>
+            <div class="row muted">port.onmessage → { type: "PONG" }</div>
+            <div class="row muted">channel: demo</div>
+          </div>
+        </div>
+        <div class="group" id="g3">
+          <div class="bar broad" style="height:86px"></div>
+          <div>
+            <span class="badge">BroadcastChannel</span>
+            <div class="row mono">channel.postMessage("update:ready")</div>
+            <div class="row muted">name: app:sync</div>
+          </div>
+        </div>
+        <div class="group" id="g4">
+          <div class="bar worker" style="height:98px"></div>
+          <div>
+            <span class="badge">Worker / SW</span>
+            <div class="row mono">worker.postMessage({ event: "start" })</div>
+            <div class="row muted">sw.onmessage → { event: "ready" }</div>
+          </div>
+        </div>
+      </div>
+      <div class="cta">
+        <button class="btn" id="restart">Restart</button>
+        <button class="btn primary" id="play">Play</button>
+      </div>
+    </div>
+    <script>
+      const order = [g1, g2, g3, g4];
+      function reset() { order.forEach(el => { el.classList.remove('show'); }); }
+      function play() {
+        reset();
+        let t = 0;
+        order.forEach((el, i) => {
+          setTimeout(() => el.classList.add('show'), t);
+          t += i === 0 ? 400 : 600;
+        });
+      }
+      document.getElementById('play').addEventListener('click', play);
+      document.getElementById('restart').addEventListener('click', reset);
+      // auto run for capture
+      setTimeout(play, 400);
+      setInterval(play, 5000);
+    </script>
+  </body>
+</html>
