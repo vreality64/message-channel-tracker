@@ -7,6 +7,25 @@ const log = (tag, payload) => {
   console.log("[PG]", tag, payload);
 };
 
+const hasMct = Boolean(window.__MCT_INSTALLED__);
+const mctDemoLog = (kind, payload) => {
+  if (hasMct) return; // real MCT will print its own logs
+  try {
+    // Mimic MCT style: group and key/value lines
+    // eslint-disable-next-line no-console
+    console.groupCollapsed("[MCT]", new Date().toISOString());
+    // eslint-disable-next-line no-console
+    console.log("kind:", kind);
+    if (payload !== undefined) {
+      // eslint-disable-next-line no-console
+      console.log("data:", payload);
+    }
+  } finally {
+    // eslint-disable-next-line no-console
+    console.groupEnd?.();
+  }
+};
+
 document.getElementById("clear-log")?.addEventListener("click", () => {
   uiLogRoot.innerHTML = "";
 });
@@ -59,17 +78,20 @@ const childFrame = document.getElementById("child-frame");
 
 window.addEventListener("message", (e) => {
   log("window", { origin: e.origin, data: e.data });
+  mctDemoLog("window.message", { origin: e.origin, data: e.data });
 });
 
 btnPostSelf.addEventListener("click", () => {
   window.postMessage({ kind: "self", t: Date.now() }, "*");
   log("window", { posted: "self" });
+  mctDemoLog("window.postMessage", { posted: "self" });
 });
 
 btnPostIframe.addEventListener("click", () => {
   const target = childFrame?.contentWindow;
   target?.postMessage({ kind: "to-iframe", t: Date.now() }, "*");
   log("window", { posted: "to-iframe" });
+  mctDemoLog("window.postMessage", { posted: "to-iframe" });
 });
 
 btnPostX.addEventListener("click", () => {
@@ -80,6 +102,7 @@ btnPostX.addEventListener("click", () => {
     try {
       w.postMessage({ kind: "x-origin", t: Date.now() }, "*");
       log("window", { posted: "x-origin" });
+      mctDemoLog("window.postMessage", { posted: "x-origin" });
     } catch {}
   }, 500);
 });
@@ -99,12 +122,15 @@ btnMcInit.addEventListener("click", () => {
 
   portA.addEventListener("message", (e) => log("mc", { port: "A", data: e.data }));
   portB.addEventListener("message", (e) => log("mc", { port: "B", data: e.data }));
+  portA.addEventListener("message", (e) => mctDemoLog("MessagePort.onmessage", { port: "A", data: e.data }));
+  portB.addEventListener("message", (e) => mctDemoLog("MessagePort.onmessage", { port: "B", data: e.data }));
   portA.start();
   portB.start();
 
   // Simple handshake
   portA.postMessage({ hello: "from A" });
   portB.postMessage({ hello: "from B" });
+  mctDemoLog("MessageChannel", { handshake: true });
 });
 
 btnMcPing.addEventListener("click", () => {
@@ -112,6 +138,7 @@ btnMcPing.addEventListener("click", () => {
   portA.postMessage({ ping: "A->B", t: Date.now() });
   portB.postMessage({ ping: "B->A", t: Date.now() });
   log("mc", { ping: true });
+  mctDemoLog("MessagePort.postMessage", { ping: true });
 });
 
 // BroadcastChannel
@@ -125,6 +152,8 @@ btnBcOpen.addEventListener("click", () => {
   bc2 = new BroadcastChannel("mct-demo");
   bc1.addEventListener("message", (e) => log("bc", { ch: 1, data: e.data }));
   bc2.addEventListener("message", (e) => log("bc", { ch: 2, data: e.data }));
+  bc1.addEventListener("message", (e) => mctDemoLog("BroadcastChannel.onmessage", { ch: 1, data: e.data }));
+  bc2.addEventListener("message", (e) => mctDemoLog("BroadcastChannel.onmessage", { ch: 2, data: e.data }));
 });
 
 btnBcSend.addEventListener("click", () => {
@@ -132,6 +161,7 @@ btnBcSend.addEventListener("click", () => {
   bc1.postMessage({ from: "bc1", t: Date.now() });
   bc2.postMessage({ from: "bc2", t: Date.now() });
   log("bc", { sent: true });
+  mctDemoLog("BroadcastChannel.postMessage", { sent: true });
 });
 
 // Worker
@@ -143,12 +173,14 @@ btnWorkerStart.addEventListener("click", () => {
   if (worker) return;
   worker = new Worker("./worker.js");
   worker.addEventListener("message", (e) => log("worker", e.data));
+  worker.addEventListener("message", (e) => mctDemoLog("Worker.onmessage", e.data));
 });
 
 btnWorkerPing.addEventListener("click", () => {
   if (!worker) return;
   worker.postMessage({ ping: "hello worker", t: Date.now() });
   log("worker", { ping: true });
+  mctDemoLog("Worker.postMessage", { ping: true });
 });
 
 // SharedWorker
@@ -163,6 +195,7 @@ btnSharedStart.addEventListener("click", () => {
     shared = new SharedWorker("./shared-worker.js", { name: "mct-shared" });
     sharedPort = shared.port;
     sharedPort.addEventListener("message", (e) => log("mc", { shared: true, data: e.data }));
+    sharedPort.addEventListener("message", (e) => mctDemoLog("SharedWorker.onmessage", e.data));
     sharedPort.start();
   } catch (e) {
     log("SharedWorker unsupported?", e.message);
@@ -173,6 +206,7 @@ btnSharedPing.addEventListener("click", () => {
   if (!sharedPort) return;
   sharedPort.postMessage({ ping: "hello shared", t: Date.now() });
   log("mc", { sharedPing: true });
+  mctDemoLog("SharedWorker.postMessage", { ping: true });
 });
 
 // Service Worker
@@ -185,6 +219,7 @@ btnSwRegister.addEventListener("click", async () => {
   }
   const reg = await navigator.serviceWorker.register("./sw.js");
   log("sw", { registered: reg.scope });
+  mctDemoLog("ServiceWorker.register", { scope: reg.scope });
 });
 
 btnSwPing.addEventListener("click", async () => {
@@ -194,4 +229,5 @@ btnSwPing.addEventListener("click", async () => {
   if (!sw) return log("sw", { noActive: true });
   sw.postMessage({ ping: "hello sw", t: Date.now() });
   log("sw", { ping: true });
+  mctDemoLog("ServiceWorker.postMessage", { ping: true });
 });
