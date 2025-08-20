@@ -50,7 +50,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   let indent = 0;
   let mctDepth = 0;
   const groupStack = [];
-  const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\bMCT\b|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
+  const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\[?MCT\]?|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
   const append = (parts) => {
     const container = document.createElement("div");
     const time = new Date().toLocaleTimeString();
@@ -139,6 +139,9 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     return orig.groupEnd();
   };
 })();
+
+// Emit a demo line so users immediately see output without clicking
+mctDemoLog("ready", { demo: true });
 
 // window.postMessage
 const btnPostSelf = document.getElementById("btn-post-self");
