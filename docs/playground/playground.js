@@ -52,17 +52,66 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   const groupStack = [];
   const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\bMCT\b|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
   const append = (parts) => {
-    const line = document.createElement("p");
-    line.className = "log-line";
+    const container = document.createElement("div");
     const time = new Date().toLocaleTimeString();
-    const text = parts.map((p) => {
-      if (typeof p === "string") return p;
-      try { return JSON.stringify(p); } catch { return String(p); }
-    }).join(" ");
-    line.textContent = `${"  ".repeat(indent)}${time} — ${text}`;
-    uiLogRoot.appendChild(line);
+    const prefix = document.createElement("p");
+    prefix.className = "log-line";
+    prefix.textContent = `${"  ".repeat(indent)}${time} —`;
+    container.appendChild(prefix);
+
+    for (const item of parts) {
+      if (typeof item === "string") {
+        // Render simple keys like "event:" "data:" with color separator
+        const m = item.match(/^(\w+):$/);
+        if (m) {
+          const p = document.createElement("p");
+          p.className = "log-line";
+          const k = document.createElement("span");
+          k.className = "kv-key";
+          k.textContent = m[1];
+          const sep = document.createElement("span");
+          sep.className = "kv-sep";
+          sep.textContent = ":";
+          p.append(k, sep);
+          container.appendChild(p);
+          continue;
+        }
+        const p = document.createElement("p");
+        p.className = "log-line";
+        p.textContent = item;
+        container.appendChild(p);
+      } else if (typeof item === "object" && item != null) {
+        container.appendChild(renderJson(item));
+      } else {
+        const p = document.createElement("p");
+        p.className = "log-line";
+        p.textContent = String(item);
+        container.appendChild(p);
+      }
+    }
+
+    uiLogRoot.appendChild(container);
     uiLogRoot.scrollTop = uiLogRoot.scrollHeight;
   };
+
+  function renderJson(value) {
+    const pre = document.createElement("pre");
+    pre.className = "json-block";
+    pre.innerHTML = syntaxHighlightJSON(value, 2);
+    return pre;
+  }
+
+  function syntaxHighlightJSON(value, space = 2) {
+    const json = JSON.stringify(value, null, space)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return json
+      .replace(/\n/g, "\n")
+      .replace(/(\s*)(\".*?\")(?=\s*:)/g, (m, s, k) => `${s}<span class=\"json-key\">${k}</span>`) // keys
+      .replace(/:\s*\"([^\"]*)\"/g, (m, v) => `: <span class=\"json-string\">"${v}"</span>`) // strings
+      .replace(/:\s*(\d+\.?\d*)/g, (m, v) => `: <span class=\"json-number\">${v}</span>`) // numbers
+      .replace(/:\s*(true|false)/g, (m, v) => `: <span class=\"json-bool\">${v}</span>`) // bools
+      .replace(/:\s*(null)/g, (m, v) => `: <span class=\"json-null\">${v}</span>`); // null
+  }
   console.log = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.log.apply(console, args); };
   console.info = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(args); return orig.info.apply(console, args); };
   console.warn = (...args) => { if (mctDepth > 0 || isMctArgs(args)) append(["[warn]", ...args]); return orig.warn.apply(console, args); };
