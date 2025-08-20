@@ -345,11 +345,29 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
       const badge = document.createElement("span");
       badge.className = "badge";
       badge.textContent = "MCT";
-      const meta = document.createElement("span");
-      meta.className = "meta";
-      const iso = joined.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)?.[0] || new Date().toLocaleTimeString();
-      meta.textContent = ` — ${iso}`;
-      title.replaceChildren(badge, meta);
+      // detect arrow and op
+      const arrowChar = joined.match(/[←→↔]/)?.[0] || "";
+      const opMatch = joined.match(/(window\.(postMessage|message)|MessagePort\.(postMessage|message)|BroadcastChannel\.(postMessage|message)|Worker\.(postMessage|message)|SharedWorker\.(postMessage|message)|ServiceWorker\.(postMessage|message|register))/);
+      const opText = opMatch ? opMatch[0] : "";
+      const iso = joined.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)?.[0] || new Date().toISOString();
+
+      const arrowSpan = document.createElement("span");
+      arrowSpan.className = `mct-arrow ${arrowChar === "→" ? "out" : arrowChar === "←" ? "in" : arrowChar === "↔" ? "port" : ""}`.trim();
+      arrowSpan.textContent = arrowChar || "";
+
+      const opSpan = document.createElement("span");
+      opSpan.className = "meta";
+      opSpan.textContent = opText;
+
+      const timeSpan = document.createElement("span");
+      timeSpan.className = "meta";
+      timeSpan.textContent = ` — ${iso}`;
+
+      const fragments = [badge];
+      if (arrowChar) fragments.push(arrowSpan);
+      if (opText) fragments.push(opSpan);
+      fragments.push(timeSpan);
+      title.replaceChildren(...fragments);
     } else {
       title.textContent = joined;
     }

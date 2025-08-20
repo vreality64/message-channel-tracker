@@ -1,144 +1,387 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MCT Playground</title>
-    <style>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MCT Playground</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #0f172a;
+      --muted: #64748b;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --btn-bg: #f8fafc;
+      --btn-border: #d1d5db;
+      --code: #f1f5f9;
+      --console-bg: #0a0f1e;
+      --console-fg: #d6e9ff;
+      --console-border: #17203a;
+    }
+
+    @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #ffffff; --fg: #0f172a; --muted: #64748b; --card: #ffffff; --border: #e5e7eb;
-        --btn-bg: #f8fafc; --btn-border: #d1d5db; --code: #f1f5f9; --console-bg: #0a0f1e; --console-fg: #d6e9ff; --console-border: #17203a;
+        --bg: #0b1020;
+        --fg: #e6edf3;
+        --muted: #a6b3c2;
+        --card: #0f1629;
+        --border: #1f2a44;
+        --btn-bg: #121a2f;
+        --btn-border: #243250;
+        --code: #111827;
+        --console-bg: #0a0f1e;
+        --console-fg: #d6e9ff;
+        --console-border: #17203a;
       }
-      @media (prefers-color-scheme: dark) {
-        :root { --bg: #0b1020; --fg: #e6edf3; --muted: #a6b3c2; --card: #0f1629; --border: #1f2a44; --btn-bg: #121a2f; --btn-border: #243250; --code: #111827; --console-bg: #0a0f1e; --console-fg: #d6e9ff; --console-border: #17203a; }
-      }
-      [data-theme="light"] { --bg: #ffffff; --fg: #0f172a; --muted: #64748b; --card: #ffffff; --border: #e5e7eb; --btn-bg: #f8fafc; --btn-border: #d1d5db; --code: #f1f5f9; }
-      [data-theme="dark"] { --bg: #0b1020; --fg: #e6edf3; --muted: #a6b3c2; --card: #0f1629; --border: #1f2a44; --btn-bg: #121a2f; --btn-border: #243250; --code: #111827; }
+    }
 
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 24px; line-height: 1.5; background: var(--bg); color: var(--fg); }
-      header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-      h1 { margin: 0; font-size: 20px; }
-      .actions { display: flex; gap: 8px; }
-      .desc { color: var(--muted); margin: 6px 0 16px; }
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
-      .card { border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--card); }
-      .card h2 { font-size: 16px; margin: 0 0 8px; }
-      button { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--btn-border); background: var(--btn-bg); color: var(--fg); cursor: pointer; }
-      button:active { transform: translateY(1px); }
-      .row { display: flex; gap: 8px; flex-wrap: wrap; }
-      iframe { width: 100%; height: 180px; border: 1px dashed var(--border); border-radius: 8px; background: var(--card); }
-      code { background: var(--code); padding: 2px 6px; border-radius: 6px; }
-      .note { font-size: 12px; color: var(--muted); margin-top: 6px; }
-      .console { margin-top: 16px; border: 1px solid var(--console-border); border-radius: 10px; background: var(--console-bg); }
-      .console-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid var(--console-border); color: var(--console-fg); font-weight: 700; }
-      .console-body { max-height: 50vh; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--console-fg); padding: 8px 10px; }
-      .log-line { white-space: pre-wrap; word-break: break-word; margin: 0; padding: 3px 0; }
-      .kv-key { font-weight: 800; margin-right: 6px; }
-      .kv-sep { color: #7aa2f7; opacity: .8; margin-right: 6px; }
-      .json-block { margin: 6px 0 8px; padding: 8px 10px; background: color-mix(in oklab, var(--console-bg) 85%, transparent); border: 1px solid var(--console-border); border-radius: 8px; overflow: auto; }
-      .json-key { color: #93c5fd; }
-      .json-string { color: #86efac; }
-      .json-number { color: #fca5a5; }
-      .json-bool { color: #fcd34d; }
-      .json-null { color: #c4b5fd; }
-      .group { border-left: 2px solid color-mix(in oklab, var(--console-fg) 20%, transparent); margin: 4px 0 6px; border-radius: 4px; }
-      .group-header { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; padding: 3px 0 3px 4px; }
-      .group-arrow { display: inline-block; transition: transform .15s ease; }
-      .group.collapsed .group-arrow { transform: rotate(-90deg); }
-      .group-title { font-weight: 800; }
-      .group-body { padding-left: 10px; }
-      .group.collapsed .group-body { display: none; }
-      .toolbar { display: flex; gap: 8px; align-items: center; }
-      .badge { display: inline-block; font-weight: 900; font-size: 11px; padding: 2px 6px; border-radius: 6px; background: linear-gradient(135deg, #0ea5e9, #22d3ee); color: #fff; }
-      .meta { opacity: .8; }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>Message Channel Tracker — Playground</h1>
-      <div class="actions">
-        <button id="theme-toggle">🌓 Theme</button>
-        <button id="clear-log">Clear log</button>
-      </div>
-    </header>
-    <div class="desc">아래 콘솔 영역에서 메시지를 바로 확인할 수 있습니다. 확장 팝업으로 로깅을 켜기/끄기 할 수 있습니다.</div>
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --fg: #0f172a;
+      --muted: #64748b;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --btn-bg: #f8fafc;
+      --btn-border: #d1d5db;
+      --code: #f1f5f9;
+    }
 
-    <div class="grid">
-      <div class="card">
-        <h2>window.postMessage</h2>
-        <div class="row">
-          <button id="btn-post-self">Post to self</button>
-          <button id="btn-post-iframe">Post to iframe</button>
-          <button id="btn-post-xorigin">Post to cross-origin</button>
-        </div>
-        <div class="note">Uses <code>window.postMessage</code> and listens for <code>message</code> events.</div>
-      </div>
+    [data-theme="dark"] {
+      --bg: #0b1020;
+      --fg: #e6edf3;
+      --muted: #a6b3c2;
+      --card: #0f1629;
+      --border: #1f2a44;
+      --btn-bg: #121a2f;
+      --btn-border: #243250;
+      --code: #111827;
+    }
 
-      <div class="card">
-        <h2>MessageChannel / MessagePort</h2>
-        <div class="row">
-          <button id="btn-mc-init">Init channel</button>
-          <button id="btn-mc-ping">Ping via ports</button>
-        </div>
-        <div class="note">Creates a channel, transfers ports, and bounces messages.</div>
-      </div>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+      line-height: 1.5;
+      background: var(--bg);
+      color: var(--fg);
+    }
 
-      <div class="card">
-        <h2>BroadcastChannel</h2>
-        <div class="row">
-          <button id="btn-bc-open">Open channels</button>
-          <button id="btn-bc-send">Send broadcast</button>
-        </div>
-        <div class="note">Opens two channels with the same name and exchanges messages.</div>
-      </div>
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
 
-      <div class="card">
-        <h2>Worker</h2>
-        <div class="row">
-          <button id="btn-worker-start">Start worker</button>
-          <button id="btn-worker-ping">Ping worker</button>
-        </div>
-        <div class="note">Spawns a dedicated worker, sends/receives messages.</div>
-      </div>
+    h1 {
+      margin: 0;
+      font-size: 20px;
+    }
 
-      <div class="card">
-        <h2>SharedWorker</h2>
-        <div class="row">
-          <button id="btn-shared-start">Start SharedWorker</button>
-          <button id="btn-shared-ping">Ping SharedWorker</button>
-        </div>
-        <div class="note">Connects to a shared worker via <code>MessagePort</code>.</div>
-      </div>
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
 
-      <div class="card">
-        <h2>Service Worker</h2>
-        <div class="row">
-          <button id="btn-sw-register">Register SW</button>
-          <button id="btn-sw-ping">Ping SW</button>
-        </div>
-        <div class="note">Registers a service worker and exchanges messages.</div>
-      </div>
+    .desc {
+      color: var(--muted);
+      margin: 6px 0 16px;
+    }
 
-      <div class="card">
-        <h2>Child iframe</h2>
-        <iframe id="child-frame" src="./iframe.html"></iframe>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: var(--card);
+    }
+
+    .card h2 {
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+
+    button {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--btn-border);
+      background: var(--btn-bg);
+      color: var(--fg);
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    iframe {
+      width: 100%;
+      height: 180px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--card);
+    }
+
+    code {
+      background: var(--code);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .console {
+      margin-top: 16px;
+      border: 1px solid var(--console-border);
+      border-radius: 10px;
+      background: var(--console-bg);
+    }
+
+    .console-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--console-border);
+      color: var(--console-fg);
+      font-weight: 700;
+    }
+
+    .console-body {
+      max-height: 50vh;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      color: var(--console-fg);
+      padding: 8px 10px;
+    }
+
+    .log-line {
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+      padding: 3px 0;
+    }
+
+    .kv-key {
+      font-weight: 800;
+      margin-right: 6px;
+    }
+
+    .kv-sep {
+      color: #7aa2f7;
+      opacity: .8;
+      margin-right: 6px;
+    }
+
+    .json-block {
+      margin: 6px 0 8px;
+      padding: 8px 10px;
+      background: color-mix(in oklab, var(--console-bg) 85%, transparent);
+      border: 1px solid var(--console-border);
+      border-radius: 8px;
+      overflow: auto;
+    }
+
+    .json-key {
+      color: #93c5fd;
+    }
+
+    .json-string {
+      color: #86efac;
+    }
+
+    .json-number {
+      color: #fca5a5;
+    }
+
+    .json-bool {
+      color: #fcd34d;
+    }
+
+    .json-null {
+      color: #c4b5fd;
+    }
+
+    .group {
+      border-left: 2px solid color-mix(in oklab, var(--console-fg) 20%, transparent);
+      margin: 4px 0 6px;
+      border-radius: 4px;
+    }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+      padding: 3px 0 3px 4px;
+    }
+
+    .group-arrow {
+      display: inline-block;
+      transition: transform .15s ease;
+    }
+
+    .group.collapsed .group-arrow {
+      transform: rotate(-90deg);
+    }
+
+    .group-title {
+      font-weight: 800;
+    }
+
+    .group-body {
+      padding-left: 10px;
+    }
+
+    .group.collapsed .group-body {
+      display: none;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-block;
+      font-weight: 900;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #0ea5e9, #22d3ee);
+      color: #fff;
+    }
+
+    .meta {
+      opacity: .8;
+    }
+    .mct-arrow {
+      display: inline-block;
+      margin: 0 4px;
+      border-radius: 6px;
+      padding: 0 4px;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+    .mct-arrow.in {
+      color: #ef4444; border-color: #e5e7eb; background: #ffffff;
+    }
+    .mct-arrow.out {
+      color: #22c55e; border-color: #e5e7eb; background: #ffffff;
+    }
+    .mct-arrow.port {
+      color: #a855f7; border-color: #e5e7eb; background: #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Message Channel Tracker — Playground</h1>
+    <div class="actions">
+      <button id="theme-toggle">🌓 Theme</button>
+      <button id="clear-log">Clear log</button>
+    </div>
+  </header>
+  <div class="desc">아래 콘솔 영역에서 메시지를 바로 확인할 수 있습니다. 확장 팝업으로 로깅을 켜기/끄기 할 수 있습니다.</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>window.postMessage</h2>
+      <div class="row">
+        <button id="btn-post-self">Post to self</button>
+        <button id="btn-post-iframe">Post to iframe</button>
+        <button id="btn-post-xorigin">Post to cross-origin</button>
       </div>
+      <div class="note">Uses <code>window.postMessage</code> and listens for <code>message</code> events.</div>
     </div>
 
-    <div class="console">
-      <div class="console-header">
-        <span>Console</span>
-        <div class="toolbar">
-          <label><input type="checkbox" id="show-window" checked /> window</label>
-          <label><input type="checkbox" id="show-mc" checked /> MessageChannel</label>
-          <label><input type="checkbox" id="show-bc" checked /> BroadcastChannel</label>
-          <label><input type="checkbox" id="show-worker" checked /> Worker</label>
-          <label><input type="checkbox" id="show-sw" checked /> ServiceWorker</label>
-        </div>
+    <div class="card">
+      <h2>MessageChannel / MessagePort</h2>
+      <div class="row">
+        <button id="btn-mc-init">Init channel</button>
+        <button id="btn-mc-ping">Ping via ports</button>
       </div>
-      <div id="console-log" class="console-body" aria-live="polite"></div>
+      <div class="note">Creates a channel, transfers ports, and bounces messages.</div>
     </div>
 
-    <script type="module" src="./playground.js"></script>
-  </body>
+    <div class="card">
+      <h2>BroadcastChannel</h2>
+      <div class="row">
+        <button id="btn-bc-open">Open channels</button>
+        <button id="btn-bc-send">Send broadcast</button>
+      </div>
+      <div class="note">Opens two channels with the same name and exchanges messages.</div>
+    </div>
+
+    <div class="card">
+      <h2>Worker</h2>
+      <div class="row">
+        <button id="btn-worker-start">Start worker</button>
+        <button id="btn-worker-ping">Ping worker</button>
+      </div>
+      <div class="note">Spawns a dedicated worker, sends/receives messages.</div>
+    </div>
+
+    <div class="card">
+      <h2>SharedWorker</h2>
+      <div class="row">
+        <button id="btn-shared-start">Start SharedWorker</button>
+        <button id="btn-shared-ping">Ping SharedWorker</button>
+      </div>
+      <div class="note">Connects to a shared worker via <code>MessagePort</code>.</div>
+    </div>
+
+    <div class="card">
+      <h2>Service Worker</h2>
+      <div class="row">
+        <button id="btn-sw-register">Register SW</button>
+        <button id="btn-sw-ping">Ping SW</button>
+      </div>
+      <div class="note">Registers a service worker and exchanges messages.</div>
+    </div>
+
+    <div class="card">
+      <h2>Child iframe</h2>
+      <iframe id="child-frame" src="./iframe.html"></iframe>
+    </div>
+  </div>
+
+  <div class="console">
+    <div class="console-header">
+      <span>Console</span>
+      <div class="toolbar">
+        <label><input type="checkbox" id="show-window" checked /> window</label>
+        <label><input type="checkbox" id="show-mc" checked /> MessageChannel</label>
+        <label><input type="checkbox" id="show-bc" checked /> BroadcastChannel</label>
+        <label><input type="checkbox" id="show-worker" checked /> Worker</label>
+        <label><input type="checkbox" id="show-sw" checked /> ServiceWorker</label>
+      </div>
+    </div>
+    <div id="console-log" class="console-body" aria-live="polite"></div>
+  </div>
+
+  <script type="module" src="./playground.js"></script>
+</body>
+
 </html>
