@@ -49,7 +49,6 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   };
   let indent = 0;
   let mctDepth = 0;
-  const groupStack = [];
   const groupBodies = [];
   const isMctArgs = (args) => args.some((a) => typeof a === "string" && /(\[?MCT\]?|Message\s*Channel\s*Tracker|MCT:)/i.test(a));
   const append = (parts) => {
@@ -153,44 +152,36 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   }
 
   if (orig.group) console.group = (...args) => {
-    const isMct = isMctArgs(args) || mctDepth > 0;
-    const isTopLevelMct = isMctArgs(args) && mctDepth === 0;
-    if (isTopLevelMct) {
-      // Safety: close any leaked UI groups from previous sequences
+    const isTopLevelMct = isMctArgs(args);
+    if (isTopLevelMct && mctDepth === 0) {
       groupBodies.length = 0;
       indent = 0;
     }
-    groupStack.push({ isMct: isMctArgs(args) });
-    if (isMct) {
+    if (isTopLevelMct) {
       const created = createGroup(["[group]", ...args], false);
       groupBodies.push(created.body);
       indent++;
-      const ret = orig.group(...args);
-      // groupEnd will pop
-      if (isMctArgs(args)) mctDepth++;
-      return ret;
+      mctDepth++;
     }
     return orig.group(...args);
   };
   if (orig.groupCollapsed) console.groupCollapsed = (...args) => {
-    const isMct = isMctArgs(args) || mctDepth > 0;
-    groupStack.push({ isMct: isMctArgs(args) });
-    if (isMct) {
+    const isTopLevelMct = isMctArgs(args);
+    if (isTopLevelMct && mctDepth === 0) {
+      groupBodies.length = 0;
+      indent = 0;
+    }
+    if (isTopLevelMct) {
       const created = createGroup(["[group]", ...args], true);
       groupBodies.push(created.body);
       indent++;
-      const ret = orig.groupCollapsed(...args);
-      // groupEnd will pop
-      if (isMctArgs(args)) mctDepth++;
-      return ret;
+      mctDepth++;
     }
     return orig.groupCollapsed(...args);
   };
   if (orig.groupEnd) console.groupEnd = () => {
-    const popped = groupStack.pop();
-    const wasMctGroup = Boolean(popped?.isMct) || mctDepth > 0;
-    if (groupBodies.length) groupBodies.pop();
-    if (wasMctGroup) {
+    if (mctDepth > 0) {
+      if (groupBodies.length) groupBodies.pop();
       indent = Math.max(0, indent - 1);
       mctDepth = Math.max(0, mctDepth - 1);
     }
