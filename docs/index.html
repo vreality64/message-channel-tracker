@@ -17,6 +17,7 @@
     <meta name="twitter:image" content="https://vreality64.github.io/message-channel-tracker/assets/og.svg" />
     <meta name="theme-color" content="#0ea5e9" />
     <link rel="icon" href="./assets/favicon.svg" />
+    <link rel="stylesheet" href="./assets/theme.css" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -172,18 +173,7 @@
       }, { threshold: 0.12 });
       document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-      // Theme toggle with localStorage preference
-      const root = document.documentElement;
-      const themeToggle = document.getElementById('theme-toggle');
-      const savedTheme = localStorage.getItem('mct:theme');
-      if (savedTheme === 'light' || savedTheme === 'dark') {
-        root.setAttribute('data-theme', savedTheme);
-      }
-      themeToggle?.addEventListener('click', () => {
-        const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        root.setAttribute('data-theme', next);
-        localStorage.setItem('mct:theme', next);
-      });
+      // Theme handled by shared site.js
 
       // Mobile nav toggle
       const nav = document.getElementById('site-nav');
@@ -231,5 +221,6 @@
         } catch {}
       })();
     </script>
+    <script src="./assets/site.js"></script>
   </body>
 </html>

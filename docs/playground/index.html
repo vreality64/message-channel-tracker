@@ -9,6 +9,7 @@
   <link rel="icon" href="../assets/favicon.svg" />
   <meta name="theme-color" content="#0ea5e9" />
   <meta name="description" content="브라우저 메시지를 실시간으로 테스트하고, 콘솔 UI에서 흐름을 확인하세요." />
+  <link rel="stylesheet" href="../assets/theme.css" />
   <meta property="og:title" content="MCT Playground" />
   <meta property="og:description" content="브라우저 메시지를 실시간으로 테스트하고, 콘솔 UI에서 흐름을 확인하세요." />
   <meta property="og:type" content="website" />
@@ -20,11 +21,7 @@
   <meta name="twitter:image" content="https://vreality64.github.io/message-channel-tracker/playground/og.svg" />
   <style>
     :root {
-      --bg: #ffffff;
-      --fg: #0f172a;
-      --muted: #64748b;
-      --card: #ffffff;
-      --border: #e5e7eb;
+      /* Playground-specific tokens (use shared theme for base colors) */
       --btn-bg: #f8fafc;
       --btn-border: #d1d5db;
       --code: #f1f5f9;
@@ -32,43 +29,12 @@
       --console-fg: #d6e9ff;
       --console-border: #17203a;
     }
-
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #0b1020;
-        --fg: #e6edf3;
-        --muted: #a6b3c2;
-        --card: #0f1629;
-        --border: #1f2a44;
         --btn-bg: #121a2f;
         --btn-border: #243250;
         --code: #111827;
-        --console-bg: #0a0f1e;
-        --console-fg: #d6e9ff;
-        --console-border: #17203a;
       }
-    }
-
-    [data-theme="light"] {
-      --bg: #ffffff;
-      --fg: #0f172a;
-      --muted: #64748b;
-      --card: #ffffff;
-      --border: #e5e7eb;
-      --btn-bg: #f8fafc;
-      --btn-border: #d1d5db;
-      --code: #f1f5f9;
-    }
-
-    [data-theme="dark"] {
-      --bg: #0b1020;
-      --fg: #e6edf3;
-      --muted: #a6b3c2;
-      --card: #0f1629;
-      --border: #1f2a44;
-      --btn-bg: #121a2f;
-      --btn-border: #243250;
-      --code: #111827;
     }
 
     body {
