@@ -99,10 +99,26 @@ function mctGroup(op) {
 }
 function mctOpenGroup(op) {
   const pairs = mctGroup(op);
-  const fmt = pairs.filter((_, i) => i % 2 === 0).join("%c ");
-  const styles = pairs.filter((_, i) => i % 2 === 1);
+  const fmtParts = [];
+  const params = [];
+  for (let i = 0; i < pairs.length; i += 2) {
+    const rawFmt = String(pairs[i] || "");
+    const style = String(pairs[i + 1] || "");
+    fmtParts.push(rawFmt);
+    params.push(style);
+    const hasNext = i + 2 < pairs.length;
+    if (hasNext) {
+      const nextRawFmt = String(pairs[i + 2] || "");
+      const nextIsArrow = /[←→↔]/.test(nextRawFmt);
+      if (!nextIsArrow) {
+        fmtParts.push("%c ");
+        params.push("");
+      }
+    }
+  }
+  const fmt = fmtParts.join("");
   // eslint-disable-next-line no-console
-  console.groupCollapsed(fmt, ...styles);
+  console.groupCollapsed(fmt, ...params);
 }
 function mctCloseGroup() {
   // eslint-disable-next-line no-console
@@ -386,7 +402,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     title.className = "group-title";
     // If first argument is a styled format, render styled header using its styles
     if (Array.isArray(titleParts) && typeof titleParts[0] === "string" && /%[cso]/.test(titleParts[0])) {
-      const { node } = renderStyledInline(String(titleParts[0]).replace(/%[cso]/g, ""), titleParts.slice(1));
+      const { node } = renderStyledInline(String(titleParts[0]), titleParts.slice(1));
       title.replaceChildren(node);
     } else {
       const joined = titleParts.map((p) => (typeof p === "string" ? p : "")).join(" ");
@@ -415,7 +431,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
       groupBodies.length = 0;
       indent = 0;
       mctDepth = 0;
-      const created = createGroup(["[group]", ...args], false);
+      const created = createGroup(args, false);
       groupBodies.push(created.body);
       indent = 1;
       mctDepth = 1;
@@ -433,7 +449,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
       groupBodies.length = 0;
       indent = 0;
       mctDepth = 0;
-      const created = createGroup(["[group]", ...args], true);
+      const created = createGroup(args, true);
       groupBodies.push(created.body);
       indent = 1;
       mctDepth = 1;
