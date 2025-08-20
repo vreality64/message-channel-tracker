@@ -154,6 +154,11 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
 
   if (orig.group) console.group = (...args) => {
     const isTopLevelMct = isMctArgs(args);
+    if (!isTopLevelMct && mctDepth === 0 && groupBodies.length) {
+      // Defensive: ensure no residual group body captures root-level logs
+      groupBodies.length = 0;
+      indent = 0;
+    }
     if (isTopLevelMct) {
       // Always isolate each new MCT message into its own top-level UI group
       groupBodies.length = 0;
@@ -169,6 +174,10 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   };
   if (orig.groupCollapsed) console.groupCollapsed = (...args) => {
     const isTopLevelMct = isMctArgs(args);
+    if (!isTopLevelMct && mctDepth === 0 && groupBodies.length) {
+      groupBodies.length = 0;
+      indent = 0;
+    }
     if (isTopLevelMct) {
       groupBodies.length = 0;
       indent = 0;
