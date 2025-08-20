@@ -154,6 +154,12 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
 
   if (orig.group) console.group = (...args) => {
     const isMct = isMctArgs(args) || mctDepth > 0;
+    const isTopLevelMct = isMctArgs(args) && mctDepth === 0;
+    if (isTopLevelMct) {
+      // Safety: close any leaked UI groups from previous sequences
+      groupBodies.length = 0;
+      indent = 0;
+    }
     groupStack.push({ isMct: isMctArgs(args) });
     if (isMct) {
       const created = createGroup(["[group]", ...args], false);
@@ -182,10 +188,12 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   };
   if (orig.groupEnd) console.groupEnd = () => {
     const popped = groupStack.pop();
-    const wasMctGroup = Boolean(popped?.isMct);
+    const wasMctGroup = Boolean(popped?.isMct) || mctDepth > 0;
     if (groupBodies.length) groupBodies.pop();
-    if (mctDepth > 0) indent = Math.max(0, indent - 1);
-    if (wasMctGroup) mctDepth = Math.max(0, mctDepth - 1);
+    if (wasMctGroup) {
+      indent = Math.max(0, indent - 1);
+      mctDepth = Math.max(0, mctDepth - 1);
+    }
     return orig.groupEnd();
   };
 })();
