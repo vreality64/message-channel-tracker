@@ -327,9 +327,6 @@
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
-          console.log("channel:", channel);
-          console.log("port1:", channel.port1);
-          console.log("port2:", channel.port2);
           endGroup();
         } catch (_) {}
       }

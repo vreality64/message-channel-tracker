@@ -4,21 +4,34 @@
       <stop offset="0%" stop-color="#0ea5e9"/>
       <stop offset="100%" stop-color="#22d3ee"/>
     </linearGradient>
+    <linearGradient id="glow1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+    </linearGradient>
     <style>
       .bg{fill:#0b1020}
-      .title{fill:#e6edf3;font:800 62px/1.1 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
-      .sub{fill:#a6b3c2;font:600 28px ui-sans-serif,system-ui}
+      .title{fill:#e6edf3;font:800 64px/1.1 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+      .sub{fill:#a6b3c2;font:700 28px ui-sans-serif,system-ui}
       .pill{fill:none;stroke:url(#g);stroke-width:3}
-      .pillText{fill:#e6edf3;font:700 20px ui-sans-serif,system-ui}
+      .pillText{fill:#e6edf3;font:800 20px ui-sans-serif,system-ui}
+      .logo{fill:#fff}
     </style>
   </defs>
   <rect class="bg" x="0" y="0" width="1200" height="630"/>
-  <g transform="translate(80,110)">
-    <text class="title" x="0" y="0">Message Channel\nTracker</text>
-    <text class="sub" x="0" y="76">브라우저 메시지 흐름을 깨뜨리지 않고 관찰하세요</text>
-    <g transform="translate(0,130)">
-      <rect class="pill" x="0" y="-24" rx="16" ry="16" width="400" height="48"/>
-      <text class="pillText" x="16" y="8">postMessage · MessageChannel · Worker</text>
+  <g opacity="0.6">
+    <ellipse cx="220" cy="120" rx="260" ry="80" fill="url(#glow1)"/>
+    <ellipse cx="980" cy="80" rx="240" ry="70" fill="url(#glow1)"/>
+  </g>
+  <g transform="translate(80,158)">
+    <g transform="translate(0,-26)">
+      <rect x="0" y="0" width="52" height="52" rx="12" fill="url(#g)"/>
+      <path class="logo" d="M8 12h36a2 2 0 0 1 0 4H8a2 2 0 0 1 0-4Zm0 10h30a2 2 0 0 1 0 4H8a2 2 0 0 1 0-4Zm0 10h24a2 2 0 0 1 0 4H8a2 2 0 0 1 0-4Z"/>
+    </g>
+    <text class="title" x="72" y="0" dominant-baseline="middle">Message Channel Tracker</text>
+    <text class="sub" x="0" y="92">브라우저 메시지 흐름을 깨뜨리지 않고 관찰하세요</text>
+    <g transform="translate(0,150)">
+      <rect class="pill" x="0" y="-24" rx="16" ry="16" width="760" height="48"/>
+      <text class="pillText" x="16" y="8">postMessage · MessageChannel · BroadcastChannel · Worker/ServiceWorker</text>
     </g>
   </g>
 </svg>
