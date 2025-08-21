@@ -79,11 +79,12 @@
     arrowPort:
       "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
     meta: "color:#64748b;",
+    labelEmph: "font-weight:900;color:#0ea5e9;",
   };
 
   // MessageChannel/MessagePort metadata to clarify directionality
   let nextChannelId = 1;
-  const portMeta = new WeakMap(); // MessagePort -> { channelId: number, label: 'A' | 'B' }
+  const portMeta = new WeakMap(); // MessagePort -> { channelId: number, label: 'p1' | 'p2' }
   function setPortMeta(port, channelId, label) {
     try {
       portMeta.set(port, { channelId, label });
@@ -250,13 +251,15 @@
       if (state.enabled) {
         try {
           const metaInfo = getPortMeta(this);
-          const dir = metaInfo
-            ? ` (ch#${metaInfo.channelId} ${metaInfo.label}\u2192${metaInfo.label === "A" ? "B" : "A"})`
-            : "";
+          const other = metaInfo ? (metaInfo.label === "p1" ? "p2" : "p1") : null;
           const titlePairs = [
             ["%cMCT", styles.badgeBase],
             ["%c↔", styles.arrowPort],
-            [`%cMessagePort.postMessage${dir}`, styles.meta],
+            [`%cMessagePort.postMessage (ch#${metaInfo?.channelId ?? "?"} `, styles.meta],
+            [`%c${metaInfo?.label ?? "p?"}`, styles.labelEmph],
+            ["%c\u2192", styles.meta],
+            [`%c${other ?? "p?"}`, styles.labelEmph],
+            ["%c)", styles.meta],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -292,13 +295,15 @@
         if (!state.enabled) return;
         try {
           const metaInfo = getPortMeta(this);
-          const dir = metaInfo
-            ? ` (ch#${metaInfo.channelId} ${(metaInfo.label === "A" ? "B" : "A")}\u2192${metaInfo.label})`
-            : "";
+          const other = metaInfo ? (metaInfo.label === "p1" ? "p2" : "p1") : null;
           const titlePairs = [
             ["%cMCT", styles.badgeBase],
             ["%c←", styles.arrowIn],
-            [`%cMessagePort.message${dir}`, styles.meta],
+            [`%cMessagePort.message (ch#${metaInfo?.channelId ?? "?"} `, styles.meta],
+            [`%c${other ?? "p?"}`, styles.labelEmph],
+            ["%c\u2192", styles.meta],
+            [`%c${metaInfo?.label ?? "p?"}`, styles.labelEmph],
+            ["%c)", styles.meta],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -345,12 +350,16 @@
       if (state.enabled) {
         try {
           const id = nextChannelId++;
-          setPortMeta(channel.port1, id, "A");
-          setPortMeta(channel.port2, id, "B");
+          setPortMeta(channel.port1, id, "p1");
+          setPortMeta(channel.port2, id, "p2");
           const titlePairs = [
             ["%cMCT", styles.badgeBase],
             ["%cnew", styles.meta],
-            [`%cMessageChannel (ch#${id} A\u2194B)`, styles.meta],
+            [`%cMessageChannel (ch#${id} `, styles.meta],
+            ["%cp1", styles.labelEmph],
+            ["%c\u2194", styles.meta],
+            ["%cp2", styles.labelEmph],
+            ["%c)", styles.meta],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
