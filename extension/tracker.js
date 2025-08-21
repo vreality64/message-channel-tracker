@@ -81,6 +81,22 @@
     meta: "color:#64748b;",
   };
 
+  // MessageChannel/MessagePort metadata to clarify directionality
+  let nextChannelId = 1;
+  const portMeta = new WeakMap(); // MessagePort -> { channelId: number, label: 'A' | 'B' }
+  function setPortMeta(port, channelId, label) {
+    try {
+      portMeta.set(port, { channelId, label });
+    } catch (_) {}
+  }
+  function getPortMeta(port) {
+    try {
+      return portMeta.get(port) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   function logData(label, value) {
     try {
       if (state.prettyJson) {
@@ -233,10 +249,14 @@
     function wrappedPortPostMessage(message, transfer) {
       if (state.enabled) {
         try {
+          const metaInfo = getPortMeta(this);
+          const dir = metaInfo
+            ? ` (ch#${metaInfo.channelId} ${metaInfo.label}\u2192${metaInfo.label === "A" ? "B" : "A"})`
+            : "";
           const titlePairs = [
             ["%cMCT", styles.badgeBase],
             ["%c↔", styles.arrowPort],
-            ["%cMessagePort.postMessage", styles.meta],
+            [`%cMessagePort.postMessage${dir}`, styles.meta],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -271,10 +291,14 @@
       const captureLogger = (event) => {
         if (!state.enabled) return;
         try {
+          const metaInfo = getPortMeta(this);
+          const dir = metaInfo
+            ? ` (ch#${metaInfo.channelId} ${(metaInfo.label === "A" ? "B" : "A")}\u2192${metaInfo.label})`
+            : "";
           const titlePairs = [
             ["%cMCT", styles.badgeBase],
             ["%c←", styles.arrowIn],
-            ["%cMessagePort.message", styles.meta],
+            [`%cMessagePort.message${dir}`, styles.meta],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -320,10 +344,13 @@
       const channel = new OriginalMC();
       if (state.enabled) {
         try {
+          const id = nextChannelId++;
+          setPortMeta(channel.port1, id, "A");
+          setPortMeta(channel.port2, id, "B");
           const titlePairs = [
             ["%cMCT", styles.badgeBase],
             ["%cnew", styles.meta],
-            ["%cMessageChannel", styles.meta],
+            [`%cMessageChannel (ch#${id} A\u2194B)`, styles.meta],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
