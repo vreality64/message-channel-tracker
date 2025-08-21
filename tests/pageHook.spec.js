@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
 
 function loadPageHookIntoHappydom() {
-  const code = readFileSync("extension/pageHook.js", "utf-8");
+  const code = readFileSync("extension/tracker.js", "utf-8");
   // Provide minimal globals used by the script
   const contextConsole = {
     // Forward groups to outer console so spies still work

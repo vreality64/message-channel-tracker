@@ -19,7 +19,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["pageHook.js"],
+      "resources": ["tracker.js"],
       "matches": ["<all_urls>"]
     }
   ]

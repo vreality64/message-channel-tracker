@@ -6,7 +6,7 @@
   const injectPageHook = () => {
     try {
       const scriptEl = document.createElement("script");
-      scriptEl.src = chrome.runtime.getURL("pageHook.js");
+      scriptEl.src = chrome.runtime.getURL("tracker.js");
       scriptEl.async = false;
       // Carry extension ID for potential diagnostics
       scriptEl.dataset.mctExtensionId = chrome.runtime.id;
@@ -15,7 +15,7 @@
       scriptEl.addEventListener("load", () => scriptEl.remove());
     } catch (error) {
       // Non-fatal; extension still runs without injection
-      console.warn("[MCT] Failed to inject pageHook.js", error);
+      console.warn("[MCT] Failed to inject tracker.js", error);
     }
   };
 
