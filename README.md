@@ -77,3 +77,13 @@ window.postMessage("hello from MCT", "*");
 ## Notes
 - Logging is read-only and designed to avoid altering original behavior.
 - To avoid content script sandboxing limits, `pageHook.js` is injected into the page context.
+
+## Options
+
+### Pretty JSON (`mctPrettyJson`)
+- Toggle this in the extension popup ("Pretty JSON").
+- When enabled, the logger focuses on user-provided payloads and pretty-prints them:
+  - Tries to `JSON.parse` string values that look like JSON
+  - Stringifies objects/arrays with `JSON.stringify(value, null, 2)`
+- When disabled, values are shown inline without additional formatting.
+- The setting is stored in `chrome.storage.sync` as `mctPrettyJson` and applies across tabs. Changes take effect immediately.
