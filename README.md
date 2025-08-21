@@ -2,6 +2,12 @@
 
 English | [한국어](README.ko.md)
 
+## Links
+- Docs: https://vreality64.github.io/message-channel-tracker/
+- Playground: https://vreality64.github.io/message-channel-tracker/playground/
+
+## Descriptions
+
 A Chrome extension to observe browser message flows without breaking them. It neatly logs to the DevTools console with grouping and colors for:
 - `window.postMessage` calls and `window` "message" events
 - `MessageChannel` creation and `MessagePort` postMessage / incoming messages
@@ -71,7 +77,3 @@ window.postMessage("hello from MCT", "*");
 ## Notes
 - Logging is read-only and designed to avoid altering original behavior.
 - To avoid content script sandboxing limits, `pageHook.js` is injected into the page context.
-
-## Links
-- Docs: https://vreality64.github.io/message-channel-tracker/
-- Playground: https://vreality64.github.io/message-channel-tracker/playground/
