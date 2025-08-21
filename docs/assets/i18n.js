@@ -44,7 +44,7 @@
         "To try multiple channels at once, use the local <strong>Playground</strong>. Run <code>pnpm run docs</code> then open <code>/playground/</code>.",
       "how.title": "How it works",
       "how.l1":
-        "<code>content.js</code> injects <code>pageHook.js</code> to safely wrap native objects in the page context.",
+        "<code>content.js</code> injects <code>tracker.js</code> to safely wrap native objects in the page context.",
       "how.l2": "Messages are organized into console output with colors and groups.",
       "how.l3": "Logging is controlled by toggle events (<code>MCT:SET_ENABLED</code>).",
       "how.l4": "Read‑only design that doesn't modify original behavior.",
@@ -131,7 +131,7 @@
         "여러 채널을 한 번에 시험하려면 로컬 <strong>Playground</strong>를 사용하세요. <code>pnpm run docs</code>로 정적 서버를 실행한 뒤 <code>/playground/</code>에 접속하세요.",
       "how.title": "동작 원리",
       "how.l1":
-        "<code>content.js</code>가 <code>pageHook.js</code>를 삽입해 페이지 컨텍스트에서 안전하게 내장 객체를 래핑합니다.",
+        "<code>content.js</code>가 <code>tracker.js</code>를 삽입해 페이지 컨텍스트에서 안전하게 내장 객체를 래핑합니다.",
       "how.l2": "메시지는 색상/그룹으로 정리되어 콘솔에 출력되며,",
       "how.l3": "토글 이벤트(<code>MCT:SET_ENABLED</code>)로 로깅을 제어합니다.",
       "how.l4": "원래 동작을 바꾸지 않는 <em>읽기 전용</em> 설계입니다.",

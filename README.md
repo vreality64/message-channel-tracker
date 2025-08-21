@@ -58,9 +58,9 @@ window.postMessage("hello from MCT", "*");
 ```
 
 ## File Structure
-- `extension/manifest.json`: Manifest v3. Injects `content.js` on all pages and exposes the popup (`popup.html`) and `pageHook.js` as web-accessible resources.
-- `extension/content.js`: Injects `pageHook.js`, passes stored toggle state, and relays `MCT:SET_ENABLED` messages from the popup.
-- `extension/pageHook.js`: Instrumentation in the page context. Wraps and logs:
+- `extension/manifest.json`: Manifest v3. Injects `content.js` on all pages and exposes the popup (`popup.html`) and `tracker.js` as web-accessible resources.
+- `extension/content.js`: Injects `tracker.js`, passes stored toggle state, and relays `MCT:SET_ENABLED` messages from the popup.
+- `extension/tracker.js`: Instrumentation in the page context. Wraps and logs:
   - `window.postMessage` / `window` `message` events
   - `MessagePort` / `MessageChannel`
   - `BroadcastChannel`
@@ -76,7 +76,7 @@ window.postMessage("hello from MCT", "*");
 
 ## Notes
 - Logging is read-only and designed to avoid altering original behavior.
-- To avoid content script sandboxing limits, `pageHook.js` is injected into the page context.
+- To avoid content script sandboxing limits, `tracker.js` is injected into the page context.
 
 ## Options
 

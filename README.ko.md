@@ -58,9 +58,9 @@ window.postMessage("hello from MCT", "*");
 ```
 
 ## 파일 구조와 역할
-- `extension/manifest.json`: 확장 설정(Manifest v3). `content.js`를 모든 페이지에 주입하고, 팝업(`popup.html`)과 `pageHook.js`를 웹 접근 리소스로 노출합니다.
-- `extension/content.js`: 페이지에 `pageHook.js`를 삽입하고 저장된 토글 상태를 전달. 팝업에서 오는 `MCT:SET_ENABLED` 메시지를 페이지로 중계합니다.
-- `extension/pageHook.js`: 실제 계측 로직(페이지 컨텍스트). 다음을 래핑/로깅합니다.
+- `extension/manifest.json`: 확장 설정(Manifest v3). `content.js`를 모든 페이지에 주입하고, 팝업(`popup.html`)과 `tracker.js`를 웹 접근 리소스로 노출합니다.
+- `extension/content.js`: 페이지에 `tracker.js`를 삽입하고 저장된 토글 상태를 전달. 팝업에서 오는 `MCT:SET_ENABLED` 메시지를 페이지로 중계합니다.
+- `extension/tracker.js`: 실제 계측 로직(페이지 컨텍스트). 다음을 래핑/로깅합니다.
   - `window.postMessage`/`window`의 `message` 이벤트
   - `MessagePort`/`MessageChannel`
   - `BroadcastChannel`
@@ -76,7 +76,7 @@ window.postMessage("hello from MCT", "*");
 
 ## 주의 사항
 - 로깅은 읽기 전용이며 원래 동작을 변경하지 않도록 설계되었습니다.
-- Content script 샌드박스 제약을 피하기 위해 `pageHook.js`를 페이지 컨텍스트에 주입합니다.
+- Content script 샌드박스 제약을 피하기 위해 `tracker.js`를 페이지 컨텍스트에 주입합니다.
 
 ## 옵션
 

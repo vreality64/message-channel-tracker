@@ -3,7 +3,7 @@
    * Injects the page hook script into the page context, so we can safely
    * wrap built-ins without the Chrome content-script sandbox getting in the way.
    */
-  const injectPageHook = () => {
+  const injectTracker = () => {
     try {
       const scriptEl = document.createElement("script");
       scriptEl.src = chrome.runtime.getURL("tracker.js");
@@ -41,6 +41,6 @@
     }
   });
 
-  injectPageHook();
+  injectTracker();
   sendInitialState();
 })();

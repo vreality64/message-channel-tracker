@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
 
-function loadPageHookIntoHappydom() {
+function loadlTrackerIntoHappydom() {
   const code = readFileSync("extension/tracker.js", "utf-8");
   // Provide minimal globals used by the script
   const contextConsole = {
@@ -28,7 +28,7 @@ function loadPageHookIntoHappydom() {
   runInNewContext(`(function(){ ${code} })()`, context);
 }
 
-describe("pageHook console title formatting", () => {
+describe("tracker console title formatting", () => {
   let groupSpy;
 
   beforeEach(() => {
@@ -43,7 +43,7 @@ describe("pageHook console title formatting", () => {
   });
 
   it("does not insert space before outbound arrow (→) in window.postMessage logs", () => {
-    loadPageHookIntoHappydom();
+    loadlTrackerIntoHappydom();
 
     // invoke wrapped window.postMessage
     window.postMessage({ test: true }, "*");
@@ -59,7 +59,7 @@ describe("pageHook console title formatting", () => {
   });
 
   it("does not insert space before inbound arrow (←) in window.message logs", () => {
-    loadPageHookIntoHappydom();
+    loadlTrackerIntoHappydom();
 
     // dispatch an inbound message event
     const ev = new window.MessageEvent("message", { data: "x", origin: "null" });
