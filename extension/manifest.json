@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "Message Channel Tracker",
+  "name": "__MSG_appTitle__",
   "version": "1.0.1",
-  "description": "Track and pretty-print window, MessageChannel, BroadcastChannel, and Worker messages without breaking behavior.",
+  "description": "__MSG_appDescription__",
+  "default_locale": "en",
   "permissions": ["storage", "tabs"],
   "action": {
-    "default_title": "Message Channel Tracker",
+    "default_title": "__MSG_appTitle__",
     "default_popup": "popup.html"
   },
   "content_scripts": [
