@@ -80,6 +80,11 @@
       "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
     meta: "color:#64748b;",
     labelEmph: "font-weight:900;color:#0ea5e9;",
+    jsonKey: "color:#93c5fd;",
+    jsonString: "color:#86efac;",
+    jsonNumber: "color:#fca5a5;",
+    jsonBool: "color:#fcd34d;",
+    jsonNull: "color:#c4b5fd;",
   };
 
   // MessageChannel/MessagePort metadata to clarify directionality
@@ -98,6 +103,85 @@
     }
   }
 
+  function logStyledJson(value) {
+    try {
+      const json = JSON.stringify(value, null, 2);
+      const segs = [];
+      let i = 0;
+      const len = json.length;
+      while (i < len) {
+        const ch = json[i];
+        // string
+        if (ch === '"') {
+          let j = i + 1;
+          let esc = false;
+          while (j < len) {
+            const c = json[j];
+            if (esc) {
+              esc = false;
+              j++;
+              continue;
+            }
+            if (c === '\\') {
+              esc = true;
+              j++;
+              continue;
+            }
+            if (c === '"') break;
+            j++;
+          }
+          const strToken = json.slice(i, Math.min(j + 1, len));
+          // lookahead to see if this is a key (next non-ws is ':')
+          let k = j + 1;
+          while (k < len && /\s/.test(json[k])) k++;
+          const isKey = k < len && json[k] === ':';
+          segs.push([strToken, isKey ? styles.jsonKey : styles.jsonString]);
+          i = Math.min(j + 1, len);
+          continue;
+        }
+        // number
+        if (/[0-9\-]/.test(ch)) {
+          let j = i + 1;
+          while (j < len && /[0-9eE+\-.]/.test(json[j])) j++;
+          segs.push([json.slice(i, j), styles.jsonNumber]);
+          i = j;
+          continue;
+        }
+        // true/false/null
+        if (json.startsWith('true', i)) {
+          segs.push(['true', styles.jsonBool]);
+          i += 4;
+          continue;
+        }
+        if (json.startsWith('false', i)) {
+          segs.push(['false', styles.jsonBool]);
+          i += 5;
+          continue;
+        }
+        if (json.startsWith('null', i)) {
+          segs.push(['null', styles.jsonNull]);
+          i += 4;
+          continue;
+        }
+        // punctuation or whitespace/default
+        segs.push([json[i], styles.meta]);
+        i++;
+      }
+      // build console format
+      const fmtParts = [];
+      const params = [];
+      for (const [text, style] of segs) {
+        fmtParts.push(`%c${text}`);
+        params.push(style);
+      }
+      // eslint-disable-next-line no-console
+      console.log(fmtParts.join(''), ...params);
+    } catch {
+      // eslint-disable-next-line no-console
+      console.log(value);
+    }
+  }
+
   function logData(label, value) {
     try {
       if (state.prettyJson) {
@@ -106,9 +190,8 @@
           try {
             const parsed = JSON.parse(value);
             if (parsed && typeof parsed === "object") {
-              const prettyParsed = JSON.stringify(parsed, null, 2);
               console.log(label);
-              console.log(prettyParsed);
+              logStyledJson(parsed);
               return;
             }
           } catch (_) {
@@ -118,9 +201,8 @@
         // If the payload is an object/array, pretty print directly
         if (value && typeof value === "object") {
           try {
-            const prettyObj = JSON.stringify(value, null, 2);
             console.log(label);
-            console.log(prettyObj);
+            logStyledJson(value);
             return;
           } catch (_) {
             // fall through to default
