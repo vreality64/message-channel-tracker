@@ -19,15 +19,18 @@
     "message",
     (event) => {
       try {
-        if (event?.source !== window) return;
         const data = event?.data;
         if (!data || typeof data !== "object") return;
+        // Accept control messages regardless of event.source to be robust across environments
         if (data.type === "MCT:SET_ENABLED") {
           state.enabled = Boolean(data.enabled);
           logInternalInfo(state.enabled ? "Tracking enabled" : "Tracking disabled");
-        } else if (data.type === "MCT:SET_PRETTY_JSON") {
+          return;
+        }
+        if (data.type === "MCT:SET_PRETTY_JSON") {
           state.prettyJson = Boolean(data.pretty);
           logInternalInfo(state.prettyJson ? "Pretty JSON: On" : "Pretty JSON: Off");
+          return;
         }
       } catch (_) {
         // Swallow
