@@ -179,6 +179,9 @@
   function applyI18n(lang) {
     const dict = messages[lang] || messages.en;
     const nodes = document.querySelectorAll("[data-i18n]");
+    try {
+      document.documentElement.setAttribute("lang", lang === "ko" ? "ko" : "en");
+    } catch {}
     for (const el of nodes) {
       const key = el.getAttribute("data-i18n");
       const val = dict[key];
@@ -191,12 +194,7 @@
   function init() {
     const select = document.getElementById("lang-select");
     const saved = localStorage.getItem("mct:lang");
-    const initial =
-      saved && (saved === "en" || saved === "ko")
-        ? saved
-        : (navigator.language || "en").startsWith("ko")
-          ? "ko"
-          : "en";
+    const initial = saved && (saved === "en" || saved === "ko") ? saved : "en";
     if (select) {
       select.value = initial;
       select.addEventListener("change", () => {
