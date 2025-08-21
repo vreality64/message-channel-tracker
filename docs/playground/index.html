@@ -366,14 +366,6 @@
         <option value="ko">한국어</option>
       </select>
       <button id="theme-toggle">🌓 <span data-i18n="header.theme">Theme</span></button>
-      <div class="console-actions">
-        <label id="pg-pretty-toggle" class="toggle-btn" data-active="false" title="Pretty JSON">
-          <span class="dot" aria-hidden="true"></span>
-          <input type="checkbox" id="pg-pretty" aria-label="Pretty JSON" />
-          <span>Pretty JSON</span>
-        </label>
-        <button id="clear-log"><span data-i18n="header.clear">Clear</span></button>
-      </div>
     </div>
   </header>
   <div class="desc" data-i18n="header.desc">아래 콘솔 영역에서 메시지를 바로 확인할 수 있습니다. 확장 팝업으로 로깅을 켜기/끄기 할 수 있습니다.</div>
@@ -443,6 +435,14 @@
   <div class="console">
     <div class="console-header">
       <span data-i18n="console.title">Console</span>
+      <div class="console-actions">
+        <label id="pg-pretty-toggle" class="toggle-btn" data-active="false" title="Pretty JSON">
+          <span class="dot" aria-hidden="true"></span>
+          <input type="checkbox" id="pg-pretty" aria-label="Pretty JSON" />
+          <span>Pretty JSON</span>
+        </label>
+        <button id="clear-log"><span data-i18n="header.clear">Clear</span></button>
+      </div>
     </div>
     <div id="console-log" class="console-body" aria-live="polite"></div>
   </div>
