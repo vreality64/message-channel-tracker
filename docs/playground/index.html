@@ -37,6 +37,18 @@
       }
     }
 
+    /* Respect explicit theme toggle */
+    [data-theme="light"] {
+      --btn-bg: #f8fafc;
+      --btn-border: #d1d5db;
+      --code: #f1f5f9;
+    }
+    [data-theme="dark"] {
+      --btn-bg: #121a2f;
+      --btn-border: #243250;
+      --code: #111827;
+    }
+
     /* Style language selector like other buttons */
     #lang-select {
       appearance: none;
