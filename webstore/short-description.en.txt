@@ -1,0 +1,1 @@
+Visualize postMessage/MessageChannel/BroadcastChannel/Worker flows in DevTools. Toggleable, read‑only, with Pretty JSON.
