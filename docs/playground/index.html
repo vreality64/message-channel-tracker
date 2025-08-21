@@ -293,6 +293,7 @@
         <option value="en">English</option>
         <option value="ko">한국어</option>
       </select>
+      <label><input type="checkbox" id="pg-pretty" /> Pretty JSON</label>
       <button id="theme-toggle">🌓 <span data-i18n="header.theme">Theme</span></button>
       <button id="clear-log"><span data-i18n="header.clear">Clear</span></button>
     </div>
@@ -378,6 +379,36 @@
   <script src="../assets/site.js"></script>
   <script src="../assets/i18n.js"></script>
   <script type="module" src="./playground.js"></script>
+  <script>
+    // Load tracker.js from the repository to keep behavior in sync with the extension
+    (async () => {
+      const sources = [
+        'https://raw.githubusercontent.com/vreality64/message-channel-tracker/main/extension/tracker.js',
+        'https://cdn.jsdelivr.net/gh/vreality64/message-channel-tracker@main/extension/tracker.js',
+      ];
+      for (const url of sources) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) continue;
+          const code = await res.text();
+          const s = document.createElement('script');
+          s.type = 'text/javascript';
+          s.textContent = code;
+          document.documentElement.appendChild(s);
+          // Enable tracking and sync Pretty JSON state
+          const pretty = document.getElementById('pg-pretty')?.checked;
+          window.postMessage({ type: 'MCT:SET_ENABLED', enabled: true }, '*');
+          window.postMessage({ type: 'MCT:SET_PRETTY_JSON', pretty: Boolean(pretty) }, '*');
+          // Wire checkbox to tracker state
+          document.getElementById('pg-pretty')?.addEventListener('change', (e) => {
+            const p = e.currentTarget && e.currentTarget.checked;
+            window.postMessage({ type: 'MCT:SET_PRETTY_JSON', pretty: Boolean(p) }, '*');
+          });
+          break;
+        } catch {}
+      }
+    })();
+  </script>
 </body>
 
 </html>
