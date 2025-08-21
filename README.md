@@ -8,5 +8,4 @@ A Chrome extension to observe browser message flows without breaking them. For t
 - Playground: https://vreality64.github.io/message-channel-tracker/playground/
 
 Quick links:
-- English: README.en.md
 - Korean: README.ko.md
