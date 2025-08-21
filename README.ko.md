@@ -1,5 +1,7 @@
 # Message Channel Tracker
 
+[English](README.md) | 한국어
+
 브라우저 페이지에서 발생하는 메시지 흐름을 깨뜨리지 않고 관찰할 수 있는 Chrome 확장입니다. 다음을 그룹/컬러로 보기 좋게 DevTools 콘솔에 로깅합니다:
 - `window.postMessage` 호출과 `window`의 `message` 이벤트
 - `MessageChannel` 생성 및 `MessagePort`의 postMessage/수신 메시지
