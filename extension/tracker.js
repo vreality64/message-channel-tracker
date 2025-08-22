@@ -105,6 +105,19 @@
       return null;
     }
   }
+  function ensurePortMeta(port) {
+    try {
+      let meta = portMeta.get(port);
+      if (!meta) {
+        const id = nextChannelId++;
+        meta = { channelId: id, label: "p1" };
+        portMeta.set(port, meta);
+      }
+      return meta;
+    } catch (_) {
+      return null;
+    }
+  }
 
   function logStyledJson(value) {
     try {
@@ -335,7 +348,7 @@
     function wrappedPortPostMessage(message, transfer) {
       if (state.enabled) {
         try {
-          const metaInfo = getPortMeta(this);
+          const metaInfo = getPortMeta(this) || ensurePortMeta(this);
           const other = metaInfo ? (metaInfo.label === "p1" ? "p2" : "p1") : null;
           const titlePairs = [
             ["%cMCT", styles.badgeBase],
@@ -379,7 +392,7 @@
       const captureLogger = (event) => {
         if (!state.enabled) return;
         try {
-          const metaInfo = getPortMeta(this);
+          const metaInfo = getPortMeta(this) || ensurePortMeta(this);
           const other = metaInfo ? (metaInfo.label === "p1" ? "p2" : "p1") : null;
           const titlePairs = [
             ["%cMCT", styles.badgeBase],
