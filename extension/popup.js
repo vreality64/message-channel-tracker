@@ -19,7 +19,7 @@
   }
 
   const setUi = (enabled) => {
-    enabledToggle.checked = Boolean(enabled);
+    enabledToggle.checked = !!enabled;
     const onText = chrome?.i18n?.getMessage?.("statusOn") || "On";
     const offText = chrome?.i18n?.getMessage?.("statusOff") || "Off";
     statusLabel.textContent = enabled ? onText : offText;
@@ -43,16 +43,13 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     applyI18n();
-    chrome.storage.sync.get(
-      { mctEnabled: true, mctPrettyJson: false },
-      ({ mctEnabled, mctPrettyJson }) => {
-        setUi(Boolean(mctEnabled));
-        if (prettyToggle) prettyToggle.checked = Boolean(mctPrettyJson);
-      },
-    );
+    chrome.storage.sync.get({ mctEnabled: true, mctPrettyJson: false }, ({ mctEnabled, mctPrettyJson }) => {
+      setUi(!!mctEnabled);
+      if (prettyToggle) prettyToggle.checked = !!mctPrettyJson;
+    });
 
     enabledToggle.addEventListener("change", (e) => {
-      const enabled = Boolean(enabledToggle.checked);
+      const enabled = !!enabledToggle.checked;
       chrome.storage.sync.set({ mctEnabled: enabled }, () => {
         setUi(enabled);
         sendToggleToActiveTab(enabled);
@@ -60,7 +57,7 @@
     });
 
     prettyToggle?.addEventListener("change", () => {
-      const pretty = Boolean(prettyToggle.checked);
+      const pretty = !!prettyToggle.checked;
       chrome.storage.sync.set({ mctPrettyJson: pretty }, () => {
         try {
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {

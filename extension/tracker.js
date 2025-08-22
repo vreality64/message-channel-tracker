@@ -23,12 +23,12 @@
         if (!data || typeof data !== "object") return;
         // Accept control messages regardless of event.source to be robust across environments
         if (data.type === "MCT:SET_ENABLED") {
-          state.enabled = Boolean(data.enabled);
+          state.enabled = !!data.enabled;
           logInternalInfo(state.enabled ? "Tracking enabled" : "Tracking disabled");
           return;
         }
         if (data.type === "MCT:SET_PRETTY_JSON") {
-          state.prettyJson = Boolean(data.pretty);
+          state.prettyJson = !!data.pretty;
           logInternalInfo(state.prettyJson ? "Pretty JSON: On" : "Pretty JSON: Off");
           return;
         }

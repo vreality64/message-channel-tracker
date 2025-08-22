@@ -5,7 +5,7 @@ const log = () => {};
 
 // Detect MCT dynamically to avoid stale value when tracker loads later
 function isMctInstalled() {
-  return Boolean(window.__MCT_INSTALLED__);
+  return !!window.__MCT_INSTALLED__;
 }
 const mctStyles = {
   badgeBase:
@@ -317,7 +317,18 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
         container.appendChild(p);
         idx += 1;
       } else if (typeof item === "object" && item != null) {
-        container.appendChild(renderJson(item));
+        if (!!window.__MCT_PRETTY__) {
+          container.appendChild(renderJson(item));
+        } else {
+          const p = document.createElement("p");
+          p.className = "log-line";
+          try {
+            p.textContent = JSON.stringify(item);
+          } catch {
+            p.textContent = String(item);
+          }
+          container.appendChild(p);
+        }
         idx += 1;
       } else {
         const p = document.createElement("p");
@@ -547,7 +558,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
     };
   if (orig.groupEnd)
     console.groupEnd = () => {
-      const isTopLevelMct = Boolean(groupStack.pop());
+      const isTopLevelMct = !!groupStack.pop();
       if (isTopLevelMct && mctDepth > 0) {
         if (groupBodies.length) groupBodies.pop();
         indent = Math.max(0, indent - 1);

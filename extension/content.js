@@ -25,7 +25,7 @@
   const sendInitialState = () => {
     try {
       chrome.storage.sync.get({ mctEnabled: true }, ({ mctEnabled }) => {
-        window.postMessage({ type: "MCT:SET_ENABLED", enabled: Boolean(mctEnabled) }, "*");
+        window.postMessage({ type: "MCT:SET_ENABLED", enabled: !!mctEnabled }, "*");
       });
     } catch (error) {
       console.warn("[MCT] Failed to read initial state", error);
@@ -35,9 +35,9 @@
   // Listen for popup messages and forward them to the page context
   chrome.runtime.onMessage.addListener((message) => {
     if (message && message.type === "MCT:SET_ENABLED") {
-      window.postMessage({ type: "MCT:SET_ENABLED", enabled: Boolean(message.enabled) }, "*");
+      window.postMessage({ type: "MCT:SET_ENABLED", enabled: !!message.enabled }, "*");
     } else if (message && message.type === "MCT:SET_PRETTY_JSON") {
-      window.postMessage({ type: "MCT:SET_PRETTY_JSON", pretty: Boolean(message.pretty) }, "*");
+      window.postMessage({ type: "MCT:SET_PRETTY_JSON", pretty: !!message.pretty }, "*");
     }
   });
 

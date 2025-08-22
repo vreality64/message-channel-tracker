@@ -471,13 +471,15 @@
           const prettyWrap = document.getElementById('pg-pretty-toggle');
           const pretty = prettyEl?.checked;
           window.postMessage({ type: 'MCT:SET_ENABLED', enabled: true }, '*');
-          window.postMessage({ type: 'MCT:SET_PRETTY_JSON', pretty: Boolean(pretty) }, '*');
+          window.postMessage({ type: 'MCT:SET_PRETTY_JSON', pretty: !!pretty }, '*');
           // Wire checkbox to tracker state
           if (prettyWrap) prettyWrap.dataset.active = pretty ? 'true' : 'false';
+          window.__MCT_PRETTY__ = !!pretty;
           prettyEl?.addEventListener('change', (e) => {
             const p = e.currentTarget && e.currentTarget.checked;
             if (prettyWrap) prettyWrap.dataset.active = p ? 'true' : 'false';
-            window.postMessage({ type: 'MCT:SET_PRETTY_JSON', pretty: Boolean(p) }, '*');
+            window.postMessage({ type: 'MCT:SET_PRETTY_JSON', pretty: !!p }, '*');
+            window.__MCT_PRETTY__ = !!p;
           });
           break;
         } catch {}
