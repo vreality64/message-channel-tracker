@@ -3,7 +3,10 @@
 const uiLogRoot = document.getElementById("console-log");
 const log = () => {};
 
-const hasMct = Boolean(window.__MCT_INSTALLED__);
+// Detect MCT dynamically to avoid stale value when tracker loads later
+function isMctInstalled() {
+  return Boolean(window.__MCT_INSTALLED__);
+}
 const mctStyles = {
   badgeBase:
     "display:inline-block;padding:1px 5px;border-radius:10px;background:#3b82f6;color:white;font-weight:600;",
@@ -190,7 +193,7 @@ function mctCloseGroup() {
   console.groupEnd?.();
 }
 const mctDemoLog = (op, data) => {
-  if (hasMct) return;
+  if (isMctInstalled()) return;
   try {
     mctOpenGroup(op);
     switch (op) {
