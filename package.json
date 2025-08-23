@@ -22,7 +22,8 @@
     "hero:webp:lossless": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=24,scale=960:-1:flags=lanczos -loop 0 -preset picture -an -lossless 1 -compression_level 4 ./docs/assets/hero.webp",
     "hero:optim:gif": "gifsicle -O3 ./docs/assets/hero.gif -o ./docs/assets/hero.gif",
     "hero:optim:webp": "cwebp -q 90 ./docs/assets/hero.webp -o ./docs/assets/hero.webp",
-    "capture:shots": "node scripts/capture.js"
+    "capture:shots": "node scripts/capture.js",
+    "icon:128": "node scripts/export-icon.js 128 webstore/icon-128.png"
   },
   "devDependencies": {
     "happy-dom": "^18.0.1",

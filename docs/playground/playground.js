@@ -317,7 +317,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
         container.appendChild(p);
         idx += 1;
       } else if (typeof item === "object" && item != null) {
-        if (!!window.__MCT_PRETTY__) {
+        if (window.__MCT_PRETTY__) {
           container.appendChild(renderJson(item));
         } else {
           const p = document.createElement("p");
