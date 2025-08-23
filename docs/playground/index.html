@@ -9,6 +9,25 @@
   <link rel="icon" href="../assets/favicon.svg" />
   <meta name="theme-color" content="#0ea5e9" />
   <meta name="description" content="브라우저 메시지를 실시간으로 테스트하고, 콘솔 UI에서 흐름을 확인하세요." />
+  <script>
+    (function () {
+      try {
+        var root = document.documentElement;
+        var params = new URLSearchParams(window.location.search);
+        var t = params.get('theme');
+        var hasUrlTheme = t === 'light' || t === 'dark';
+        if (hasUrlTheme) {
+          root.setAttribute('data-theme', t);
+          try { localStorage.setItem('mct:theme', t); } catch {}
+        } else {
+          try {
+            var saved = localStorage.getItem('mct:theme');
+            if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+          } catch {}
+        }
+      } catch {}
+    })();
+  </script>
   <link rel="stylesheet" href="../assets/theme.css" />
   <meta property="og:title" content="MCT Playground" />
   <meta property="og:description" content="브라우저 메시지를 실시간으로 테스트하고, 콘솔 UI에서 흐름을 확인하세요." />
