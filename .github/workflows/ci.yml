@@ -1,4 +1,4 @@
-name: CI
+name: ci
 
 on:
   push:
@@ -8,38 +8,33 @@ on:
 
 permissions:
   contents: read
-  # Allow PR annotations from linters/test reporters
-  checks: write
-
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
-  build-test-lint:
-    name: Lint and Test
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.14.0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: 'pnpm'
+          version: 10
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint (Biome)
+      - name: Lint
         run: pnpm run lint
 
-      - name: Test (Vitest)
-        run: pnpm run test -- --reporter=dot --coverage=false
+      - name: Type check
+        run: pnpm run type-check
+
+      - name: Tests
+        run: pnpm test

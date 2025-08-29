@@ -33,6 +33,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Type check
+        run: pnpm run type-check
+
+      - name: Run tests
+        run: pnpm test
+
       - name: Create Release PR or publish
         id: changesets
         uses: changesets/action@v1
