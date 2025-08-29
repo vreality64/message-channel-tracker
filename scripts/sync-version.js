@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 function syncVersion() {
   try {
@@ -22,7 +22,7 @@ function syncVersion() {
     if (packageVersion !== manifestVersion) {
       // manifest.json 버전을 package.json과 동기화
       manifestContent.version = packageVersion;
-      writeFileSync(manifestPath, JSON.stringify(manifestContent, null, 2) + '\n');
+      writeFileSync(manifestPath, `${JSON.stringify(manifestContent, null, 2)}\n`);
       console.log(`✅ Manifest version updated to ${packageVersion}`);
     } else {
       console.log('✅ Versions are already in sync');
