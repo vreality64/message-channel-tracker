@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config/schema.json",
-  "changelog": "@changesets/changelog-git",
+  "changelog": ["@changesets/changelog-github", { "repo": "vreality64/message-channel-tracker" }],
   "commit": false,
   "access": "restricted",
   "baseBranch": "main",

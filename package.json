@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.14.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vreality64/message-channel-tracker.git"
+  },
   "scripts": {
     "build": "pnpm run build:extension && tsc --noEmit",
     "build:playground": "tsc docs/playground/playground.ts --outDir docs/playground --target ES2022 --module ESNext --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports",
@@ -11,7 +15,7 @@
     "build:docs": "pnpm run build:playground",
     "sync:version": "node scripts/sync-version.js",
     "changeset": "changeset",
-    "version": "changeset version",
+    "version": "changeset version && pnpm run sync:version",
     "release": "pnpm run version && pnpm run sync:version && pnpm run build:extension && cd extension && zip -r ../message-channel-tracker.zip . -x \"src/*\" \"*.ts\" && cd ..",
     "package:extension": "pnpm run sync:version && pnpm run build:extension && cd extension && zip -r ../message-channel-tracker.zip . -x \"src/*\" \"*.ts\" && cd ..",
     "type-check": "tsc --noEmit",
@@ -39,6 +43,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@changesets/cli": "^2.29.6",
+    "@changesets/changelog-github": "^0.5.0",
     "@types/chrome": "^0.1.4",
     "@types/node": "^24.3.0",
     "happy-dom": "^18.0.1",
