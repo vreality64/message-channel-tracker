@@ -93,13 +93,13 @@
   // MessageChannel/MessagePort metadata to clarify directionality
   let nextChannelId = 1;
   const portMeta = new WeakMap<MessagePort, { channelId: number; label: "p1" | "p2" }>();
-  
+
   function setPortMeta(port: MessagePort, channelId: number, label: "p1" | "p2"): void {
     try {
       portMeta.set(port, { channelId, label });
     } catch (_) {}
   }
-  
+
   function getPortMeta(port: MessagePort): { channelId: number; label: "p1" | "p2" } | null {
     try {
       return portMeta.get(port) || null;
@@ -107,7 +107,7 @@
       return null;
     }
   }
-  
+
   function ensurePortMeta(port: MessagePort): { channelId: number; label: "p1" | "p2" } | null {
     try {
       let meta = portMeta.get(port);
@@ -265,13 +265,13 @@
       } catch (_) {}
     }
   }
-  
+
   function endGroup(): void {
     try {
       console.groupEnd();
     } catch (_) {}
   }
-  
+
   function logInternalInfo(message: string): void {
     try {
       console.log("%cMCT%c — %c%s", styles.badgeBase, "", styles.meta, message);
