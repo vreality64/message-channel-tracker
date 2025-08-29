@@ -1,41 +1,58 @@
-name: Release
+name: release
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   release:
-    name: Release
+    name: Create Release PR
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+          cache: 'pnpm'
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create Release Pull Request or Publish
+      - name: Create Release PR or publish
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm run release
-          title: "chore: release packages"
-          commit: "chore: release packages"
-          tag: "v${{ steps.changesets.outputs.publishedPackages }}"
+          version: pnpm run version
+          publish: echo "Skipping publish"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build and package extension (on release PR)
+        if: steps.changesets.outputs.hasChangesets == 'true'
+        run: |
+          pnpm run sync:version
+          pnpm run build:extension
+          cd extension
+          zip -r ../message-channel-tracker.zip . -x "src/*" "*.ts"
+
+      - name: Upload artifact (zip)
+        if: steps.changesets.outputs.hasChangesets == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: message-channel-tracker-zip
+          path: message-channel-tracker.zip
