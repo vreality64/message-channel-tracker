@@ -13,6 +13,7 @@ interface MCTData {
   origin?: string;
   message?: unknown;
   posted?: unknown;
+  targetOrigin?: string;
   port?: string;
   ch?: number;
   sent?: boolean;
