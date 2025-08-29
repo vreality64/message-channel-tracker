@@ -16,7 +16,7 @@
     "sync:version": "node scripts/sync-version.js",
     "changeset": "changeset",
     "version": "changeset version && pnpm run sync:version",
-    "release": "pnpm run version && pnpm run sync:version && pnpm run build:extension && cd extension && zip -r ../message-channel-tracker.zip . -x \"src/*\" \"*.ts\" && cd ..",
+    "release": "pnpm run version && pnpm run build:extension && cd extension && zip -r ../message-channel-tracker.zip . -x \"src/*\" \"*.ts\" && cd ..",
     "package:extension": "pnpm run sync:version && pnpm run build:extension && cd extension && zip -r ../message-channel-tracker.zip . -x \"src/*\" \"*.ts\" && cd ..",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
