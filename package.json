@@ -4,12 +4,14 @@
   "type": "module",
   "packageManager": "pnpm@10.14.0",
   "scripts": {
+    "build": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "biome lint --reporter=summary .",
     "lint:fix": "biome lint --fix .",
     "format": "biome format --write .",
-    "prepush": "pnpm run lint && pnpm run test",
+    "prepush": "pnpm run type-check && pnpm run lint && pnpm run test",
     "prepare": "husky",
     "docs:serve": "python3 -m http.server 5174 --directory docs --bind 127.0.0.1",
     "docs:open": "open http://localhost:5174/",
@@ -19,17 +21,21 @@
     "hero:gif:hq": "pnpm run hero:gif",
     "hero:webp": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=24,scale=960:-1:flags=lanczos -loop 0 -preset picture -an -lossless 0 -quality 92 -compression_level 4 ./docs/assets/hero.webp",
     "hero:webp:ultra": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=30,scale=1200:-1:flags=lanczos -loop 0 -preset picture -an -lossless 0 -quality 95 -compression_level 3 ./docs/assets/hero.webp",
-    "hero:webp:lossless": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=24,scale=960:-1:flags=lanczos -loop 0 -preset picture -an -lossless 1 -compression_level 4 ./docs/assets/hero.webp",
+    "hero:webp:lossless": "ffmpeg -y -i ./docs/assets/hero-src.mp4 -vf fps=24,scale=960:-1:flags=lanczos -loop 0 -preset picture -an -lossless 0 -quality 92 -compression_level 4 ./docs/assets/hero.webp",
     "hero:optim:gif": "gifsicle -O3 ./docs/assets/hero.gif -o ./docs/assets/hero.gif",
     "hero:optim:webp": "cwebp -q 90 ./docs/assets/hero.webp -o ./docs/assets/hero.webp",
-    "capture:shots": "node scripts/capture.js",
-    "icon:128": "node scripts/export-icon.js 128 webstore/icon-128.png"
+    "capture:shots": "tsx scripts/capture.ts",
+    "icon:128": "tsx scripts/export-icon.ts 128 webstore/icon-128.png"
   },
   "devDependencies": {
-    "happy-dom": "^18.0.1",
-    "vitest": "^1.6.0",
     "@biomejs/biome": "^1.8.3",
+    "@types/chrome": "^0.1.4",
+    "@types/node": "^24.3.0",
+    "happy-dom": "^18.0.1",
     "husky": "^9.1.6",
-    "puppeteer": "^23.5.0"
+    "puppeteer": "^23.5.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "^1.6.0"
   }
 }

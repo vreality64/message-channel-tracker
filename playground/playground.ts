@@ -1,14 +1,14 @@
 /* global SharedWorker */
 
-const log = (...args) => console.log("[PG]", ...args);
+const log = (...args: unknown[]): void => console.log("[PG]", ...args);
 
 // window.postMessage
-const btnPostSelf = document.getElementById("btn-post-self");
-const btnPostIframe = document.getElementById("btn-post-iframe");
-const btnPostX = document.getElementById("btn-post-xorigin");
-const childFrame = document.getElementById("child-frame");
+const btnPostSelf = document.getElementById("btn-post-self") as HTMLButtonElement;
+const btnPostIframe = document.getElementById("btn-post-iframe") as HTMLButtonElement;
+const btnPostX = document.getElementById("btn-post-xorigin") as HTMLButtonElement;
+const childFrame = document.getElementById("child-frame") as HTMLIFrameElement;
 
-window.addEventListener("message", (e) => {
+window.addEventListener("message", (e: MessageEvent) => {
   log("window.message", e.origin, e.data);
 });
 
@@ -33,20 +33,20 @@ btnPostX.addEventListener("click", () => {
 });
 
 // MessageChannel / MessagePort
-let channel = null;
-let portA = null;
-let portB = null;
+let channel: MessageChannel | null = null;
+let portA: MessagePort | null = null;
+let portB: MessagePort | null = null;
 
-const btnMcInit = document.getElementById("btn-mc-init");
-const btnMcPing = document.getElementById("btn-mc-ping");
+const btnMcInit = document.getElementById("btn-mc-init") as HTMLButtonElement;
+const btnMcPing = document.getElementById("btn-mc-ping") as HTMLButtonElement;
 
 btnMcInit.addEventListener("click", () => {
   channel = new MessageChannel();
   portA = channel.port1;
   portB = channel.port2;
 
-  portA.addEventListener("message", (e) => log("portA <-", e.data));
-  portB.addEventListener("message", (e) => log("portB <-", e.data));
+  portA.addEventListener("message", (e: MessageEvent) => log("portA <-", e.data));
+  portB.addEventListener("message", (e: MessageEvent) => log("portB <-", e.data));
   portA.start();
   portB.start();
 
@@ -62,16 +62,16 @@ btnMcPing.addEventListener("click", () => {
 });
 
 // BroadcastChannel
-let bc1 = null;
-let bc2 = null;
-const btnBcOpen = document.getElementById("btn-bc-open");
-const btnBcSend = document.getElementById("btn-bc-send");
+let bc1: BroadcastChannel | null = null;
+let bc2: BroadcastChannel | null = null;
+const btnBcOpen = document.getElementById("btn-bc-open") as HTMLButtonElement;
+const btnBcSend = document.getElementById("btn-bc-send") as HTMLButtonElement;
 
 btnBcOpen.addEventListener("click", () => {
   bc1 = new BroadcastChannel("mct-demo");
   bc2 = new BroadcastChannel("mct-demo");
-  bc1.addEventListener("message", (e) => log("bc1 <-", e.data));
-  bc2.addEventListener("message", (e) => log("bc2 <-", e.data));
+  bc1.addEventListener("message", (e: MessageEvent) => log("bc1 <-", e.data));
+  bc2.addEventListener("message", (e: MessageEvent) => log("bc2 <-", e.data));
 });
 
 btnBcSend.addEventListener("click", () => {
@@ -81,14 +81,14 @@ btnBcSend.addEventListener("click", () => {
 });
 
 // Worker
-let worker = null;
-const btnWorkerStart = document.getElementById("btn-worker-start");
-const btnWorkerPing = document.getElementById("btn-worker-ping");
+let worker: Worker | null = null;
+const btnWorkerStart = document.getElementById("btn-worker-start") as HTMLButtonElement;
+const btnWorkerPing = document.getElementById("btn-worker-ping") as HTMLButtonElement;
 
 btnWorkerStart.addEventListener("click", () => {
   if (worker) return;
   worker = new Worker("./worker.js");
-  worker.addEventListener("message", (e) => log("worker <-", e.data));
+  worker.addEventListener("message", (e: MessageEvent) => log("worker <-", e.data));
 });
 
 btnWorkerPing.addEventListener("click", () => {
@@ -97,20 +97,21 @@ btnWorkerPing.addEventListener("click", () => {
 });
 
 // SharedWorker
-let shared = null;
-let sharedPort = null;
-const btnSharedStart = document.getElementById("btn-shared-start");
-const btnSharedPing = document.getElementById("btn-shared-ping");
+let shared: SharedWorker | null = null;
+let sharedPort: MessagePort | null = null;
+const btnSharedStart = document.getElementById("btn-shared-start") as HTMLButtonElement;
+const btnSharedPing = document.getElementById("btn-shared-ping") as HTMLButtonElement;
 
 btnSharedStart.addEventListener("click", () => {
   if (shared) return;
   try {
     shared = new SharedWorker("./shared-worker.js", { name: "mct-shared" });
     sharedPort = shared.port;
-    sharedPort.addEventListener("message", (e) => log("shared <-", e.data));
+    sharedPort.addEventListener("message", (e: MessageEvent) => log("shared <-", e.data));
     sharedPort.start();
-  } catch (e) {
-    log("SharedWorker unsupported?", e.message);
+  } catch (e: unknown) {
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    log("SharedWorker unsupported?", errorMessage);
   }
 });
 
@@ -120,8 +121,8 @@ btnSharedPing.addEventListener("click", () => {
 });
 
 // Service Worker
-const btnSwRegister = document.getElementById("btn-sw-register");
-const btnSwPing = document.getElementById("btn-sw-ping");
+const btnSwRegister = document.getElementById("btn-sw-register") as HTMLButtonElement;
+const btnSwPing = document.getElementById("btn-sw-ping") as HTMLButtonElement;
 
 btnSwRegister.addEventListener("click", async () => {
   if (!("serviceWorker" in navigator)) {

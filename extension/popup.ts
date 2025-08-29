@@ -1,12 +1,12 @@
 (() => {
-  const enabledToggle = document.getElementById("enabledToggle");
-  const statusLabel = document.getElementById("statusLabel");
-  const prettyToggle = document.getElementById("prettyToggle");
-  const titleEl = document.getElementById("title");
-  const prettyLabel = document.getElementById("prettyLabel");
-  const hint = document.getElementById("hint");
+  const enabledToggle = document.getElementById("enabledToggle") as HTMLInputElement;
+  const statusLabel = document.getElementById("statusLabel") as HTMLElement;
+  const prettyToggle = document.getElementById("prettyToggle") as HTMLInputElement;
+  const titleEl = document.getElementById("title") as HTMLElement;
+  const prettyLabel = document.getElementById("prettyLabel") as HTMLElement;
+  const hint = document.getElementById("hint") as HTMLElement;
 
-  function applyI18n() {
+  function applyI18n(): void {
     try {
       // Static labels
       if (titleEl) titleEl.textContent = chrome.i18n.getMessage("appTitle") || titleEl.textContent;
@@ -18,7 +18,7 @@
     } catch {}
   }
 
-  const setUi = (enabled) => {
+  const setUi = (enabled: boolean): void => {
     enabledToggle.checked = !!enabled;
     const onText = chrome?.i18n?.getMessage?.("statusOn") || "On";
     const offText = chrome?.i18n?.getMessage?.("statusOff") || "Off";
@@ -27,9 +27,9 @@
     statusLabel.classList.toggle("off", !enabled);
   };
 
-  const sendToggleToActiveTab = (enabled) => {
+  const sendToggleToActiveTab = (enabled: boolean): void => {
     try {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[]) => {
         const tab = Array.isArray(tabs) ? tabs[0] : null;
         if (tab && tab.id != null) {
           chrome.tabs.sendMessage(tab.id, { type: "MCT:SET_ENABLED", enabled });
@@ -43,12 +43,12 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     applyI18n();
-    chrome.storage.sync.get({ mctEnabled: true, mctPrettyJson: false }, ({ mctEnabled, mctPrettyJson }) => {
+    chrome.storage.sync.get({ mctEnabled: true, mctPrettyJson: false }, ({ mctEnabled, mctPrettyJson }: { mctEnabled: boolean; mctPrettyJson: boolean }) => {
       setUi(!!mctEnabled);
       if (prettyToggle) prettyToggle.checked = !!mctPrettyJson;
     });
 
-    enabledToggle.addEventListener("change", (e) => {
+    enabledToggle.addEventListener("change", (e: Event) => {
       const enabled = !!enabledToggle.checked;
       chrome.storage.sync.set({ mctEnabled: enabled }, () => {
         setUi(enabled);
@@ -60,7 +60,7 @@
       const pretty = !!prettyToggle.checked;
       chrome.storage.sync.set({ mctPrettyJson: pretty }, () => {
         try {
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[]) => {
             const tab = Array.isArray(tabs) ? tabs[0] : null;
             if (tab && tab.id != null) {
               chrome.tabs.sendMessage(tab.id, { type: "MCT:SET_PRETTY_JSON", pretty });

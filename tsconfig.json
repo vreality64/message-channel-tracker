@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "types": ["node", "chrome", "vitest/globals"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "extension/**/*",
+    "scripts/**/*",
+    "tests/**/*",
+    "playground/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "docs",
+    "webstore"
+  ]
+}

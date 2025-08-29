@@ -3,7 +3,7 @@
    * Injects the page hook script into the page context, so we can safely
    * wrap built-ins without the Chrome content-script sandbox getting in the way.
    */
-  const injectTracker = () => {
+  const injectTracker = (): void => {
     try {
       const scriptEl = document.createElement("script");
       scriptEl.src = chrome.runtime.getURL("tracker.js");
@@ -22,9 +22,9 @@
   /**
    * Send initial enabled state to the page hook based on synced storage.
    */
-  const sendInitialState = () => {
+  const sendInitialState = (): void => {
     try {
-      chrome.storage.sync.get({ mctEnabled: true }, ({ mctEnabled }) => {
+      chrome.storage.sync.get({ mctEnabled: true }, ({ mctEnabled }: { mctEnabled: boolean }) => {
         window.postMessage({ type: "MCT:SET_ENABLED", enabled: !!mctEnabled }, "*");
       });
     } catch (error) {
@@ -32,8 +32,15 @@
     }
   };
 
+  // Types for message handling
+  interface MCTMessage {
+    type: string;
+    enabled?: boolean;
+    pretty?: boolean;
+  }
+
   // Listen for popup messages and forward them to the page context
-  chrome.runtime.onMessage.addListener((message) => {
+  chrome.runtime.onMessage.addListener((message: MCTMessage) => {
     if (message && message.type === "MCT:SET_ENABLED") {
       window.postMessage({ type: "MCT:SET_ENABLED", enabled: !!message.enabled }, "*");
     } else if (message && message.type === "MCT:SET_PRETTY_JSON") {

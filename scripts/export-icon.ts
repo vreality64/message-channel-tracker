@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import puppeteer from 'puppeteer';
+import puppeteer, { type Browser, type Page } from 'puppeteer';
 import { existsSync, mkdirSync } from 'node:fs';
 
-async function main() {
+async function main(): Promise<void> {
   const size = Number(process.argv[2] || '128');
   const outArg = process.argv[3];
   const outPath = outArg ? path.resolve(outArg) : path.join(process.cwd(), 'webstore', `icon-${size}.png`);
@@ -36,28 +36,33 @@ async function main() {
     '/usr/bin/google-chrome',
     '/usr/bin/chromium-browser',
     '/usr/local/bin/chromium',
-  ].filter(Boolean);
-  let executablePath;
+  ].filter(Boolean) as string[];
+
+  let executablePath: string | undefined;
   for (const p of chromeCandidates) {
-    if (existsSync(p)) { executablePath = p; break; }
+    if (existsSync(p)) {
+      executablePath = p;
+      break;
+    }
   }
 
-  const browser = await puppeteer.launch({
+  const browser: Browser = await puppeteer.launch({
     headless: true,
     defaultViewport: { width: size, height: size, deviceScaleFactor: 1 },
     executablePath,
     args: ['--no-sandbox','--disable-setuid-sandbox'],
   });
-  const page = await browser.newPage();
+
+  const page: Page = await browser.newPage();
   await page.setContent(html, { waitUntil: 'domcontentloaded' });
   // Ensure any fonts/styles are fully applied
-  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  await page.evaluate(() => new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r()))));
   await page.screenshot({ path: outPath, clip: { x: 0, y: 0, width: size, height: size } });
   await browser.close();
   console.log('Saved', outPath);
 }
 
-main().catch((e) => {
+main().catch((e: unknown) => {
   console.error(e);
   process.exit(1);
 });
