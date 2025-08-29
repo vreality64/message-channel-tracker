@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { describe, it, expect } from "vitest";
 
 describe("playground light mode", () => {
   it("index.html forces light color scheme and explicit colors", () => {

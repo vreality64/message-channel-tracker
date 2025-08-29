@@ -1,20 +1,21 @@
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
+import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 
 describe("MessageChannel direction labels", () => {
-  let groupSpy;
-  let logSpy;
+  let groupSpy: any;
+  let logSpy: any;
 
-  function loadTracker() {
+  function loadTracker(): void {
     const code = readFileSync("extension/tracker.js", "utf-8");
     const contextConsole = {
-      group: (...args) => console.group(...args),
-      groupCollapsed: (...args) => console.groupCollapsed(...args),
-      groupEnd: (...args) => console.groupEnd(...args),
-      log: (...args) => console.log(...args),
-      info: (...args) => console.info(...args),
-      warn: (...args) => console.warn(...args),
-      error: (...args) => console.error(...args),
+      group: (...args: unknown[]) => console.group(...args),
+      groupCollapsed: (...args: unknown[]) => console.groupCollapsed(...args),
+      groupEnd: () => console.groupEnd(),
+      log: (...args: unknown[]) => console.log(...args),
+      info: (...args: unknown[]) => console.info(...args),
+      warn: (...args: unknown[]) => console.warn(...args),
+      error: (...args: unknown[]) => console.error(...args),
     };
     const context = { window, document, console: contextConsole, navigator, setTimeout, clearTimeout };
     runInNewContext(`(function(){ ${code} })()`, context);
@@ -49,9 +50,10 @@ describe("MessageChannel direction labels", () => {
     const calls = groupSpy.mock.calls;
     expect(calls.length).toBeGreaterThan(0);
     // Find a call that mentions MessagePort.postMessage
-    const call = calls.find((args) => typeof args[0] === "string" && /MessagePort\.postMessage/.test(String(args[0])));
+    const call = calls.find((args: unknown[]) => typeof args[0] === "string" && /MessagePort\.postMessage/.test(String(args[0])));
     expect(call).toBeTruthy();
-    const fmt = call[0];
+    if (!call) throw new Error("Call not found");
+    const fmt = call[0] as string;
     // Expect p1 or p2 labels to be present
     expect(/p1|p2/.test(fmt)).toBe(true);
   });

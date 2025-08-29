@@ -1,21 +1,22 @@
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
+import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 
-function loadlTrackerIntoHappydom() {
+function loadlTrackerIntoHappydom(): void {
   const code = readFileSync("extension/tracker.js", "utf-8");
   // Provide minimal globals used by the script
   const contextConsole = {
     // Forward groups to outer console so spies still work
-    group: (...args) => console.group(...args),
-    groupCollapsed: (...args) => console.groupCollapsed(...args),
-    groupEnd: (...args) => console.groupEnd(...args),
+    group: (...args: unknown[]) => console.group(...args),
+    groupCollapsed: (...args: unknown[]) => console.groupCollapsed(...args),
+    groupEnd: () => console.groupEnd(),
     // Silence noisy outputs
     log: () => {},
     info: () => {},
     debug: () => {},
     // Keep warnings/errors visible
-    warn: (...args) => console.warn(...args),
-    error: (...args) => console.error(...args),
+    warn: (...args: unknown[]) => console.warn(...args),
+    error: (...args: unknown[]) => console.error(...args),
   };
   const context = {
     window,
@@ -29,7 +30,7 @@ function loadlTrackerIntoHappydom() {
 }
 
 describe("tracker console title formatting", () => {
-  let groupSpy;
+  let groupSpy: any;
 
   beforeEach(() => {
     groupSpy = vi.spyOn(console, "groupCollapsed").mockImplementation(() => {});
@@ -50,7 +51,7 @@ describe("tracker console title formatting", () => {
 
     const calls = groupSpy.mock.calls;
     expect(calls.length).toBeGreaterThan(0);
-    const [fmt] = calls[0];
+    const [fmt] = calls[0] as [string, ...unknown[]];
 
     // should contain arrow token
     expect(fmt).toMatch(/→/);
@@ -67,7 +68,7 @@ describe("tracker console title formatting", () => {
 
     const calls = groupSpy.mock.calls;
     expect(calls.length).toBeGreaterThan(0);
-    const [fmt] = calls[0];
+    const [fmt] = calls[0] as [string, ...unknown[]];
 
     expect(fmt).toMatch(/←/);
     expect(fmt).not.toMatch(/\s←/);

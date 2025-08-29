@@ -1,16 +1,17 @@
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
+import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 
-function loadTracker() {
+function loadTracker(): void {
   const code = readFileSync("extension/tracker.js", "utf-8");
   const contextConsole = {
-    group: (...args) => console.group(...args),
-    groupCollapsed: (...args) => console.groupCollapsed(...args),
-    groupEnd: (...args) => console.groupEnd(...args),
-    log: (...args) => console.log(...args),
-    info: (...args) => console.info(...args),
-    warn: (...args) => console.warn(...args),
-    error: (...args) => console.error(...args),
+    group: (...args: unknown[]) => console.group(...args),
+    groupCollapsed: (...args: unknown[]) => console.groupCollapsed(...args),
+    groupEnd: () => console.groupEnd(),
+    log: (...args: unknown[]) => console.log(...args),
+    info: (...args: unknown[]) => console.info(...args),
+    warn: (...args: unknown[]) => console.warn(...args),
+    error: (...args: unknown[]) => console.error(...args),
   };
   const context = {
     window,
@@ -24,7 +25,7 @@ function loadTracker() {
 }
 
 describe("pretty JSON formatting", () => {
-  let spy;
+  let spy: any;
 
   beforeEach(() => {
     spy = vi.spyOn(console, "log").mockImplementation(() => {});
