@@ -3,7 +3,7 @@ import { runInNewContext } from "node:vm";
 import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 
 function loadTracker(): void {
-  const code = readFileSync("extension/tracker.js", "utf-8");
+  const code = readFileSync("extension/dist/tracker.js", "utf-8");
   const contextConsole = {
     group: (...args: unknown[]) => console.group(...args),
     groupCollapsed: (...args: unknown[]) => console.groupCollapsed(...args),

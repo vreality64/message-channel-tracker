@@ -6,7 +6,7 @@
   const injectTracker = (): void => {
     try {
       const scriptEl = document.createElement("script");
-      scriptEl.src = chrome.runtime.getURL("tracker.js");
+      scriptEl.src = chrome.runtime.getURL("dist/tracker.js");
       scriptEl.async = false;
       // Carry extension ID for potential diagnostics
       scriptEl.dataset.mctExtensionId = chrome.runtime.id;

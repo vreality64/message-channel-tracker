@@ -3,7 +3,7 @@ import { runInNewContext } from "node:vm";
 import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 
 function loadlTrackerIntoHappydom(): void {
-  const code = readFileSync("extension/tracker.js", "utf-8");
+  const code = readFileSync("extension/dist/tracker.js", "utf-8");
   // Provide minimal globals used by the script
   const contextConsole = {
     // Forward groups to outer console so spies still work
