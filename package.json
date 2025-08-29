@@ -18,6 +18,7 @@
     "version": "changeset version && pnpm run sync:version",
     "release": "pnpm run version && pnpm run build:extension && cd extension && zip -r ../message-channel-tracker.zip . -x \"src/*\" \"*.ts\" && cd ..",
     "package:extension": "pnpm run sync:version && pnpm run build:extension && cd extension && zip -r ../message-channel-tracker.zip . -x \"src/*\" \"*.ts\" && cd ..",
+    "publish:github": "node scripts/publish-github-release.js",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

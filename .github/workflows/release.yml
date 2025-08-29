@@ -44,21 +44,7 @@ jobs:
         uses: changesets/action@v1
         with:
           version: pnpm run version
-          publish: echo "Skipping publish"
+          publish: pnpm run publish:github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and package extension (on release PR)
-        if: steps.changesets.outputs.hasChangesets == 'true'
-        run: |
-          pnpm run sync:version
-          pnpm run build:extension
-          cd extension
-          zip -r ../message-channel-tracker.zip . -x "src/*" "*.ts"
-
-      - name: Upload artifact (zip)
-        if: steps.changesets.outputs.hasChangesets == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: message-channel-tracker-zip
-          path: message-channel-tracker.zip
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
