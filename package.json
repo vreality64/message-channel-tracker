@@ -4,8 +4,9 @@
   "type": "module",
   "packageManager": "pnpm@10.14.0",
   "scripts": {
-    "build": "tsc --noEmit",
+    "build": "pnpm run build:extension && tsc --noEmit",
     "build:playground": "tsc docs/playground/playground.ts --outDir docs/playground --target ES2022 --module ESNext --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports",
+    "build:extension": "tsc extension/*.ts --outDir extension --target ES2022 --module ESNext --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports",
     "build:docs": "pnpm run build:playground",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
