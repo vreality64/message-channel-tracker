@@ -1,13 +1,37 @@
 /* global SharedWorker */
 
-const uiLogRoot = document.getElementById("console-log");
-const log = () => {};
+interface MCTStyles {
+  badgeBase: string;
+  arrowOut: string;
+  arrowIn: string;
+  arrowPort: string;
+  meta: string;
+}
+
+interface MCTData {
+  data?: unknown;
+  origin?: string;
+  message?: unknown;
+  posted?: unknown;
+  port?: string;
+  ch?: number;
+  sent?: boolean;
+  scope?: string;
+  name?: string;
+  handshake?: boolean;
+  ping?: boolean;
+  demo?: boolean;
+}
+
+const uiLogRoot = document.getElementById("console-log") as HTMLElement;
+const log = (): void => {};
 
 // Detect MCT dynamically to avoid stale value when tracker loads later
-function isMctInstalled() {
-  return !!window.__MCT_INSTALLED__;
+function isMctInstalled(): boolean {
+  return !!(window as any).__MCT_INSTALLED__;
 }
-const mctStyles = {
+
+const mctStyles: MCTStyles = {
   badgeBase:
     "display:inline-block;padding:1px 5px;border-radius:10px;background:#3b82f6;color:white;font-weight:600;",
   arrowOut:
@@ -18,7 +42,8 @@ const mctStyles = {
     "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px;border-radius:6px;",
   meta: "color:#64748b;",
 };
-function mctGroup(op) {
+
+function mctGroup(op: string): string[] {
   const iso = new Date().toISOString();
   if (op === "window.postMessage")
     return [
@@ -165,10 +190,11 @@ function mctGroup(op) {
     ];
   return ["%cMCT", mctStyles.badgeBase, `%c${iso}`, mctStyles.meta];
 }
-function mctOpenGroup(op) {
+
+function mctOpenGroup(op: string): void {
   const pairs = mctGroup(op);
-  const fmtParts = [];
-  const params = [];
+  const fmtParts: string[] = [];
+  const params: string[] = [];
   for (let i = 0; i < pairs.length; i += 2) {
     const rawFmt = String(pairs[i] || "");
     const style = String(pairs[i + 1] || "");
@@ -188,11 +214,13 @@ function mctOpenGroup(op) {
   // eslint-disable-next-line no-console
   console.groupCollapsed(fmt, ...params);
 }
-function mctCloseGroup() {
+
+function mctCloseGroup(): void {
   // eslint-disable-next-line no-console
-  console.groupEnd?.();
+  (console.groupEnd as (() => void))?.();
 }
-const mctDemoLog = (op, data) => {
+
+const mctDemoLog = (op: string, data?: MCTData): void => {
   if (isMctInstalled()) return;
   try {
     mctOpenGroup(op);
@@ -266,13 +294,13 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
   };
   let indent = 0;
   let mctDepth = 0;
-  const groupBodies = [];
-  const groupStack = [];
-  const isMctArgs = (args) =>
+  const groupBodies: HTMLElement[] = [];
+  const groupStack: boolean[] = [];
+  const isMctArgs = (args: unknown[]): boolean =>
     args.some(
       (a) => typeof a === "string" && /(\[?MCT\]?|Message\s*Channel\s*Tracker|MCT:)/i.test(a),
     );
-  const append = (parts) => {
+  const append = (parts: unknown[]): void => {
     const root =
       mctDepth > 0 && groupBodies.length ? groupBodies[groupBodies.length - 1] : uiLogRoot;
     const container = document.createElement("div");
@@ -317,7 +345,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
         container.appendChild(p);
         idx += 1;
       } else if (typeof item === "object" && item != null) {
-        if (window.__MCT_PRETTY__) {
+        if ((window as any).__MCT_PRETTY__) {
           container.appendChild(renderJson(item));
         } else {
           const p = document.createElement("p");
@@ -343,14 +371,14 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
     root.scrollTop = root.scrollHeight;
   };
 
-  function renderJson(value) {
+  function renderJson(value: unknown): HTMLElement {
     const pre = document.createElement("pre");
     pre.className = "json-block";
     pre.innerHTML = syntaxHighlightJSON(value, 2);
     return pre;
   }
 
-  function syntaxHighlightJSON(value, space = 2) {
+  function syntaxHighlightJSON(value: unknown, space = 2): string {
     const json = JSON.stringify(value, null, space)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
@@ -364,7 +392,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
       .replace(/:\s*(null)/g, (m, v) => `: <span class=\"json-null\">${v}</span>`); // null
   }
 
-  function renderStyledLine(fmt, rest) {
+  function renderStyledLine(fmt: string, rest: unknown[]): { line: HTMLElement; consumed: number } {
     // Parses tokens in order: %c (style), %s (string), %o (object)
     // Uses a single cursor into rest, matching native console formatting order
     let cursor = 0;
@@ -374,7 +402,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
     p.className = "log-line";
     container.appendChild(p);
 
-    const pushText = (text) => {
+    const pushText = (text: string): void => {
       if (!text) return;
       const span = document.createElement("span");
       span.textContent = text;
@@ -394,7 +422,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
       const token = fmt[percent + 1];
       if (token === "c") {
         // style switch
-        currentStyle = rest[cursor++] ?? "";
+        currentStyle = String(rest[cursor++] ?? "");
         i = percent + 2;
         continue;
       }
@@ -424,12 +452,12 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
     return { line: container, consumed: cursor };
   }
 
-  function renderStyledInline(fmt, rest) {
+  function renderStyledInline(fmt: string, rest: unknown[]): { node: DocumentFragment; consumed: number } {
     // Similar to renderStyledLine but returns an inline fragment for headers
     let cursor = 0;
     let currentStyle = "";
     const frag = document.createDocumentFragment();
-    const pushText = (text) => {
+    const pushText = (text: string): void => {
       if (!text) return;
       const span = document.createElement("span");
       span.textContent = text;
@@ -446,7 +474,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
       if (percent > i) pushText(fmt.slice(i, percent));
       const token = fmt[percent + 1];
       if (token === "c") {
-        currentStyle = rest[cursor++] ?? "";
+        currentStyle = String(rest[cursor++] ?? "");
         i = percent + 2;
         continue;
       }
@@ -467,23 +495,23 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
     }
     return { node: frag, consumed: cursor };
   }
-  console.log = (...args) => {
+  console.log = (...args: unknown[]): void => {
     if (mctDepth > 0 || isMctArgs(args)) append(args);
-    return orig.log.apply(console, args);
+    return (orig.log as (...args: unknown[]) => void).apply(console, args);
   };
-  console.info = (...args) => {
+  console.info = (...args: unknown[]): void => {
     if (mctDepth > 0 || isMctArgs(args)) append(args);
-    return orig.info.apply(console, args);
+    return (orig.info as (...args: unknown[]) => void).apply(console, args);
   };
-  console.warn = (...args) => {
+  console.warn = (...args: unknown[]): void => {
     if (mctDepth > 0 || isMctArgs(args)) append(["[warn]", ...args]);
-    return orig.warn.apply(console, args);
+    return (orig.warn as (...args: unknown[]) => void).apply(console, args);
   };
-  console.error = (...args) => {
+  console.error = (...args: unknown[]): void => {
     if (mctDepth > 0 || isMctArgs(args)) append(["[error]", ...args]);
-    return orig.error.apply(console, args);
+    return (orig.error as (...args: unknown[]) => void).apply(console, args);
   };
-  function createGroup(titleParts, collapsed) {
+  function createGroup(titleParts: unknown[], collapsed: boolean): { body: HTMLElement } {
     const group = document.createElement("div");
     group.className = `group${collapsed ? " collapsed" : ""}`;
     const header = document.createElement("div");
@@ -517,7 +545,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
   }
 
   if (orig.group)
-    console.group = (...args) => {
+    console.group = (...args: unknown[]): void => {
       const isTopLevelMct = isMctArgs(args);
       if (!isTopLevelMct && mctDepth === 0 && groupBodies.length) {
         // Defensive: ensure no residual group body captures root-level logs
@@ -535,10 +563,10 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
         mctDepth = 1;
       }
       groupStack.push(isTopLevelMct);
-      return orig.group(...args);
+      return (orig.group as (...args: unknown[]) => void)(...args);
     };
   if (orig.groupCollapsed)
-    console.groupCollapsed = (...args) => {
+    console.groupCollapsed = (...args: unknown[]): void => {
       const isTopLevelMct = isMctArgs(args);
       if (!isTopLevelMct && mctDepth === 0 && groupBodies.length) {
         groupBodies.length = 0;
@@ -554,17 +582,17 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
         mctDepth = 1;
       }
       groupStack.push(isTopLevelMct);
-      return orig.groupCollapsed(...args);
+      return (orig.groupCollapsed as (...args: unknown[]) => void)(...args);
     };
   if (orig.groupEnd)
-    console.groupEnd = () => {
+    console.groupEnd = (): void => {
       const isTopLevelMct = !!groupStack.pop();
       if (isTopLevelMct && mctDepth > 0) {
         if (groupBodies.length) groupBodies.pop();
         indent = Math.max(0, indent - 1);
         mctDepth = Math.max(0, mctDepth - 1);
       }
-      return orig.groupEnd();
+      return (orig.groupEnd as () => void)();
     };
 })();
 
@@ -572,12 +600,12 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
 mctDemoLog("ready", { demo: true });
 
 // window.postMessage
-const btnPostSelf = document.getElementById("btn-post-self");
-const btnPostIframe = document.getElementById("btn-post-iframe");
-const btnPostX = document.getElementById("btn-post-xorigin");
-const childFrame = document.getElementById("child-frame");
+const btnPostSelf = document.getElementById("btn-post-self") as HTMLButtonElement;
+const btnPostIframe = document.getElementById("btn-post-iframe") as HTMLButtonElement;
+const btnPostX = document.getElementById("btn-post-xorigin") as HTMLButtonElement;
+const childFrame = document.getElementById("child-frame") as HTMLIFrameElement;
 
-window.addEventListener("message", (e) => {
+window.addEventListener("message", (e: MessageEvent) => {
   // mirror suppressed
   mctDemoLog("window.message", { origin: e.origin, data: e.data });
 });
@@ -609,12 +637,12 @@ btnPostX.addEventListener("click", () => {
 });
 
 // MessageChannel / MessagePort
-let channel = null;
-let portA = null;
-let portB = null;
+let channel: MessageChannel | null = null;
+let portA: MessagePort | null = null;
+let portB: MessagePort | null = null;
 
-const btnMcInit = document.getElementById("btn-mc-init");
-const btnMcPing = document.getElementById("btn-mc-ping");
+const btnMcInit = document.getElementById("btn-mc-init") as HTMLButtonElement;
+const btnMcPing = document.getElementById("btn-mc-ping") as HTMLButtonElement;
 
 btnMcInit.addEventListener("click", () => {
   channel = new MessageChannel();
@@ -622,10 +650,10 @@ btnMcInit.addEventListener("click", () => {
   portB = channel.port2;
 
   // mirror suppressed for port events
-  portA.addEventListener("message", (e) =>
+  portA.addEventListener("message", (e: MessageEvent) =>
     mctDemoLog("MessagePort.onmessage", { port: "A", data: e.data }),
   );
-  portB.addEventListener("message", (e) =>
+  portB.addEventListener("message", (e: MessageEvent) =>
     mctDemoLog("MessagePort.onmessage", { port: "B", data: e.data }),
   );
   portA.start();
@@ -646,19 +674,19 @@ btnMcPing.addEventListener("click", () => {
 });
 
 // BroadcastChannel
-let bc1 = null;
-let bc2 = null;
-const btnBcOpen = document.getElementById("btn-bc-open");
-const btnBcSend = document.getElementById("btn-bc-send");
+let bc1: BroadcastChannel | null = null;
+let bc2: BroadcastChannel | null = null;
+const btnBcOpen = document.getElementById("btn-bc-open") as HTMLButtonElement;
+const btnBcSend = document.getElementById("btn-bc-send") as HTMLButtonElement;
 
 btnBcOpen.addEventListener("click", () => {
   bc1 = new BroadcastChannel("mct-demo");
   bc2 = new BroadcastChannel("mct-demo");
   // mirror suppressed for bc message handlers
-  bc1.addEventListener("message", (e) =>
+  bc1.addEventListener("message", (e: MessageEvent) =>
     mctDemoLog("BroadcastChannel.onmessage", { ch: 1, data: e.data }),
   );
-  bc2.addEventListener("message", (e) =>
+  bc2.addEventListener("message", (e: MessageEvent) =>
     mctDemoLog("BroadcastChannel.onmessage", { ch: 2, data: e.data }),
   );
 });
@@ -672,15 +700,15 @@ btnBcSend.addEventListener("click", () => {
 });
 
 // Worker
-let worker = null;
-const btnWorkerStart = document.getElementById("btn-worker-start");
-const btnWorkerPing = document.getElementById("btn-worker-ping");
+let worker: Worker | null = null;
+const btnWorkerStart = document.getElementById("btn-worker-start") as HTMLButtonElement;
+const btnWorkerPing = document.getElementById("btn-worker-ping") as HTMLButtonElement;
 
 btnWorkerStart.addEventListener("click", () => {
   if (worker) return;
   worker = new Worker("./worker.js");
   // mirror suppressed
-  worker.addEventListener("message", (e) => mctDemoLog("Worker.onmessage", e.data));
+  worker.addEventListener("message", (e: MessageEvent) => mctDemoLog("Worker.onmessage", e.data));
 });
 
 btnWorkerPing.addEventListener("click", () => {
@@ -691,10 +719,10 @@ btnWorkerPing.addEventListener("click", () => {
 });
 
 // SharedWorker
-let shared = null;
-let sharedPort = null;
-const btnSharedStart = document.getElementById("btn-shared-start");
-const btnSharedPing = document.getElementById("btn-shared-ping");
+let shared: SharedWorker | null = null;
+let sharedPort: MessagePort | null = null;
+const btnSharedStart = document.getElementById("btn-shared-start") as HTMLButtonElement;
+const btnSharedPing = document.getElementById("btn-shared-ping") as HTMLButtonElement;
 
 btnSharedStart.addEventListener("click", () => {
   if (shared) return;
@@ -702,7 +730,7 @@ btnSharedStart.addEventListener("click", () => {
     shared = new SharedWorker("./shared-worker.js", { name: "mct-shared" });
     sharedPort = shared.port;
     // mirror suppressed
-    sharedPort.addEventListener("message", (e) => mctDemoLog("SharedWorker.onmessage", e.data));
+    sharedPort.addEventListener("message", (e: MessageEvent) => mctDemoLog("SharedWorker.onmessage", e.data));
     sharedPort.start();
   } catch (e) {
     // mirror suppressed
@@ -717,8 +745,8 @@ btnSharedPing.addEventListener("click", () => {
 });
 
 // Service Worker
-const btnSwRegister = document.getElementById("btn-sw-register");
-const btnSwPing = document.getElementById("btn-sw-ping");
+const btnSwRegister = document.getElementById("btn-sw-register") as HTMLButtonElement;
+const btnSwPing = document.getElementById("btn-sw-ping") as HTMLButtonElement;
 
 btnSwRegister.addEventListener("click", async () => {
   if (!("serviceWorker" in navigator)) {
