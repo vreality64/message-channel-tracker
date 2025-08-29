@@ -11,6 +11,10 @@ function run(command, args, options = {}) {
   }
 }
 
+function runQuiet(command, args, options = {}) {
+  return spawnSync(command, args, { stdio: 'pipe', shell: false, ...options });
+}
+
 function getVersion() {
   const pkgPath = join(process.cwd(), 'package.json');
   const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
@@ -44,6 +48,12 @@ function createGithubRelease(version) {
   const title = `message-channel-tracker ${tag}`;
   const body = getReleaseNotes(version);
   const notesFile = join(process.cwd(), '.release-notes.md');
+  // If release already exists, skip to make idempotent
+  const viewRes = runQuiet('gh', ['release', 'view', tag]);
+  if (viewRes.status === 0) {
+    console.log(`ℹ️ GitHub Release already exists for ${tag}. Skipping.`);
+    return;
+  }
   writeFileSync(notesFile, body);
   try {
     // Create release; this also creates the tag if missing
