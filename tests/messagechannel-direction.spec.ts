@@ -1,5 +1,4 @@
-import { readFileSync } from "node:fs";
-import { runInNewContext } from "node:vm";
+import { loadTrackerWithConsole } from "./utils/loadTracker";
 import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 
 describe("MessageChannel direction labels", () => {
@@ -7,7 +6,6 @@ describe("MessageChannel direction labels", () => {
   let logSpy: any;
 
   function loadTracker(): void {
-    const code = readFileSync("extension/dist/tracker.js", "utf-8");
     const contextConsole = {
       group: (...args: unknown[]) => console.group(...args),
       groupCollapsed: (...args: unknown[]) => console.groupCollapsed(...args),
@@ -16,9 +14,8 @@ describe("MessageChannel direction labels", () => {
       info: (...args: unknown[]) => console.info(...args),
       warn: (...args: unknown[]) => console.warn(...args),
       error: (...args: unknown[]) => console.error(...args),
-    };
-    const context = { window, document, console: contextConsole, navigator, setTimeout, clearTimeout };
-    runInNewContext(`(function(){ ${code} })()`, context);
+    } as any;
+    loadTrackerWithConsole(contextConsole);
   }
 
   beforeEach(() => {
