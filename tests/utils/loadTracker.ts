@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
+import { createRequire } from "node:module";
 
 /**
  * Loads the tracker code into the current happy-dom window without depending on built dist.
@@ -42,9 +43,8 @@ export function loadTrackerWithConsole(contextConsole: Console): void {
 
 function requireEsbuildSync(): any {
   try {
-    // Prefer a local esbuild if present (pnpm onlyBuiltDependencies may include it)
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    return require("esbuild");
+    const req = createRequire(import.meta.url);
+    return req("esbuild");
   } catch (e) {
     throw new Error(
       "esbuild is required for test-time transpile when extension/dist is missing. Please add it to devDependencies or ensure build runs before tests.",
