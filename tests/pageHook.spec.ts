@@ -35,9 +35,11 @@ describe("tracker console title formatting", () => {
     // invoke wrapped window.postMessage
     window.postMessage({ test: true }, "*");
 
-    const calls = groupSpy.mock.calls;
-    expect(calls.length).toBeGreaterThan(0);
-    const [fmt] = calls[0] as [string, ...unknown[]];
+    const calls = groupSpy.mock.calls as unknown[] as [string, ...unknown[]][];
+    const call = calls.find((args) => typeof args?.[0] === "string" && /window\.postMessage/.test(String(args[0])));
+    expect(call).toBeTruthy();
+    if (!call) throw new Error("window.postMessage log not found");
+    const fmt = call[0] as string;
 
     // should contain arrow token
     expect(fmt).toMatch(/→/);
@@ -52,9 +54,11 @@ describe("tracker console title formatting", () => {
     const ev = new window.MessageEvent("message", { data: "x", origin: "null" });
     window.dispatchEvent(ev);
 
-    const calls = groupSpy.mock.calls;
-    expect(calls.length).toBeGreaterThan(0);
-    const [fmt] = calls[0] as [string, ...unknown[]];
+    const calls = groupSpy.mock.calls as unknown[] as [string, ...unknown[]][];
+    const call = calls.find((args) => typeof args?.[0] === "string" && /window\.message/.test(String(args[0])));
+    expect(call).toBeTruthy();
+    if (!call) throw new Error("window.message log not found");
+    const fmt = call[0] as string;
 
     expect(fmt).toMatch(/←/);
     expect(fmt).not.toMatch(/\s←/);
