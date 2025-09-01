@@ -48,6 +48,23 @@
     }
   });
 
+  // React to storage changes so popup doesn't need tabs permission
+  try {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== "sync") return;
+      if (Object.prototype.hasOwnProperty.call(changes, "mctEnabled")) {
+        const nv = (changes as any).mctEnabled?.newValue;
+        window.postMessage({ type: "MCT:SET_ENABLED", enabled: !!nv }, "*");
+      }
+      if (Object.prototype.hasOwnProperty.call(changes, "mctPrettyJson")) {
+        const nv = (changes as any).mctPrettyJson?.newValue;
+        window.postMessage({ type: "MCT:SET_PRETTY_JSON", pretty: !!nv }, "*");
+      }
+    });
+  } catch (error) {
+    console.warn("[MCT] Failed to subscribe storage changes", error);
+  }
+
   injectTracker();
   sendInitialState();
 })();

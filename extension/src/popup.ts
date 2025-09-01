@@ -27,18 +27,9 @@
     statusLabel.classList.toggle("off", !enabled);
   };
 
-  const sendToggleToActiveTab = (enabled: boolean): void => {
-    try {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[]) => {
-        const tab = Array.isArray(tabs) ? tabs[0] : null;
-        if (tab && tab.id != null) {
-          chrome.tabs.sendMessage(tab.id, { type: "MCT:SET_ENABLED", enabled });
-        }
-      });
-    } catch (error) {
-      // Non-fatal in popup
-      console.warn("[MCT] Failed to message active tab", error);
-    }
+  // No tabs permission: propagate via storage change observed by content script
+  const persistEnabled = (enabled: boolean): void => {
+    chrome.storage.sync.set({ mctEnabled: enabled }, () => setUi(enabled));
   };
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -48,26 +39,11 @@
       if (prettyToggle) prettyToggle.checked = !!mctPrettyJson;
     });
 
-    enabledToggle.addEventListener("change", (e: Event) => {
-      const enabled = !!enabledToggle.checked;
-      chrome.storage.sync.set({ mctEnabled: enabled }, () => {
-        setUi(enabled);
-        sendToggleToActiveTab(enabled);
-      });
-    });
+    enabledToggle.addEventListener("change", () => persistEnabled(!!enabledToggle.checked));
 
     prettyToggle?.addEventListener("change", () => {
       const pretty = !!prettyToggle.checked;
-      chrome.storage.sync.set({ mctPrettyJson: pretty }, () => {
-        try {
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[]) => {
-            const tab = Array.isArray(tabs) ? tabs[0] : null;
-            if (tab && tab.id != null) {
-              chrome.tabs.sendMessage(tab.id, { type: "MCT:SET_PRETTY_JSON", pretty });
-            }
-          });
-        } catch {}
-      });
+      chrome.storage.sync.set({ mctPrettyJson: pretty }, () => {});
     });
   });
 })();
