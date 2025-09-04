@@ -47,5 +47,5 @@ jobs:
           version: pnpm run version
           publish: pnpm run publish:github
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CHANGESETS_TOKEN != '' && secrets.CHANGESETS_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.CHANGESETS_TOKEN != '' && secrets.CHANGESETS_TOKEN || secrets.GITHUB_TOKEN }}
