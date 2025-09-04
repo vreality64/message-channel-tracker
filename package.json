@@ -1,6 +1,6 @@
 {
   "name": "message-channel-tracker",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.14.0",
