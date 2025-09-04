@@ -21,7 +21,7 @@ Observe browser message flows without breaking them. MCT neatly groups and color
 4. Try `window.postMessage("hello from MCT", "*")`
 
 ## Permissions
-- storage, tabs (to persist toggle and reflect per‑tab state)
+- storage (to persist and broadcast toggle state)
 
 ## Source / Docs / Playground
 - Source: https://github.com/vreality64/message-channel-tracker

@@ -72,7 +72,7 @@ window.postMessage("hello from MCT", "*");
 - `README-QUICKSTART.txt`: 수동 로드 절차와 로깅 대상 요약.
 
 ## 권한
-- `storage`, `tabs`
+- `storage`
 
 ## 주의 사항
 - 로깅은 읽기 전용이며 원래 동작을 변경하지 않도록 설계되었습니다.

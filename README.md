@@ -72,7 +72,7 @@ window.postMessage("hello from MCT", "*");
 - `README-QUICKSTART.txt`: manual load steps and targets summary.
 
 ## Permissions
-- `storage`, `tabs`
+- `storage`
 
 ## Notes
 - Logging is read-only and designed to avoid altering original behavior.
@@ -86,4 +86,4 @@ window.postMessage("hello from MCT", "*");
   - Tries to `JSON.parse` string values that look like JSON
   - Stringifies objects/arrays with `JSON.stringify(value, null, 2)`
 - When disabled, values are shown inline without additional formatting.
-- The setting is stored in `chrome.storage.sync` as `mctPrettyJson` and applies across tabs. Changes take effect immediately.
+- The setting is stored in `chrome.storage.sync` (e.g., `mctEnabled`, `mctPrettyJson`). The content script listens to storage changes and applies them without requiring the `tabs` permission.

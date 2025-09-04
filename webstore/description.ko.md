@@ -21,7 +21,7 @@
 4. `window.postMessage("hello from MCT", "*")` 실행
 
 ## 권한
-- storage, tabs (토글 상태 저장 및 탭별 반영)
+- storage (토글 상태 저장 및 전파)
 
 ## 소스/문서/플레이그라운드
 - 소스: https://github.com/vreality64/message-channel-tracker

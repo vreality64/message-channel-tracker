@@ -48,7 +48,7 @@
       "how.l2": "Messages are organized into console output with colors and groups.",
       "how.l3": "Logging is controlled by toggle events (<code>MCT:SET_ENABLED</code>).",
       "how.l4": "Read‑only design that doesn't modify original behavior.",
-      "how.perms": "Required permissions: <code>storage</code>, <code>tabs</code>",
+      "how.perms": "Required permissions: <code>storage</code>",
       "how.note.title": "Note",
       "how.note.body":
         "In high‑volume environments, enable only when needed or use console filtering.",
@@ -135,7 +135,7 @@
       "how.l2": "메시지는 색상/그룹으로 정리되어 콘솔에 출력되며,",
       "how.l3": "토글 이벤트(<code>MCT:SET_ENABLED</code>)로 로깅을 제어합니다.",
       "how.l4": "원래 동작을 바꾸지 않는 <em>읽기 전용</em> 설계입니다.",
-      "how.perms": "필요 권한: <code>storage</code>, <code>tabs</code>",
+      "how.perms": "필요 권한: <code>storage</code>",
       "how.note.title": "주의",
       "how.note.body":
         "대량 메시지 환경에서는 성능을 위해 필요할 때만 켜거나, 콘솔 필터링을 함께 사용하세요.",
