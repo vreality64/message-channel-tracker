@@ -40,12 +40,12 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      - name: Create Release PR or publish
+      - name: Create or Update Release PR
         id: changesets
         uses: changesets/action@v1
         with:
+          commit: "chore: version packages"
+          title: "Release: Version Packages"
           version: pnpm run version
-          publish: pnpm run publish:github
         env:
           GITHUB_TOKEN: ${{ secrets.CHANGESETS_TOKEN != '' && secrets.CHANGESETS_TOKEN || secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.CHANGESETS_TOKEN != '' && secrets.CHANGESETS_TOKEN || secrets.GITHUB_TOKEN }}
