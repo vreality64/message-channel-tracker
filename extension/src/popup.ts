@@ -27,23 +27,67 @@
     statusLabel.classList.toggle("off", !enabled);
   };
 
-  // No tabs permission: propagate via storage change observed by content script
-  const persistEnabled = (enabled: boolean): void => {
-    chrome.storage.sync.set({ mctEnabled: enabled }, () => setUi(enabled));
-  };
+  function withActiveTab<T>(fn: (tabId: number) => void): void {
+    try {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs: chrome.tabs.Tab[]) => {
+        const tab = Array.isArray(tabs) ? tabs[0] : null;
+        if (tab && tab.id != null) fn(tab.id);
+      });
+    } catch (error) {
+      console.warn("[MCT] Failed to get active tab", error);
+    }
+  }
+
+  function ensureTrackerAndPost(tabId: number, message: unknown): void {
+    try {
+      chrome.scripting.executeScript({
+        target: { tabId },
+        func: (msg: unknown) => {
+          try {
+            const install = () => {
+              try {
+                // If not yet injected, inject tracker.js into the page context
+                // by adding a script tag sourced from the extension.
+                if (!(window as any).__MCT_INSTALLED__) {
+                  const s = document.createElement("script");
+                  // @ts-ignore: runtime is available in content world
+                  s.src = chrome.runtime.getURL("dist/tracker.js");
+                  s.async = false;
+                  (document.documentElement || document.head || document.body)?.appendChild(s);
+                }
+              } catch {}
+            };
+            install();
+            window.postMessage(msg as any, "*");
+          } catch {}
+        },
+        args: [message],
+        world: "ISOLATED",
+      });
+    } catch (error) {
+      console.warn("[MCT] Failed to execute in active tab", error);
+    }
+  }
 
   document.addEventListener("DOMContentLoaded", () => {
     applyI18n();
-    chrome.storage.sync.get({ mctEnabled: true, mctPrettyJson: false }, ({ mctEnabled, mctPrettyJson }: { mctEnabled: boolean; mctPrettyJson: boolean }) => {
-      setUi(!!mctEnabled);
-      if (prettyToggle) prettyToggle.checked = !!mctPrettyJson;
-    });
+    // Default UI state; per-tab and ephemeral
+    setUi(false);
+    if (prettyToggle) prettyToggle.checked = false;
 
-    enabledToggle.addEventListener("change", () => persistEnabled(!!enabledToggle.checked));
+    enabledToggle.addEventListener("change", () => {
+      const enabled = !!enabledToggle.checked;
+      setUi(enabled);
+      withActiveTab((tabId) =>
+        ensureTrackerAndPost(tabId, { type: "MCT:SET_ENABLED", enabled }),
+      );
+    });
 
     prettyToggle?.addEventListener("change", () => {
       const pretty = !!prettyToggle.checked;
-      chrome.storage.sync.set({ mctPrettyJson: pretty }, () => {});
+      withActiveTab((tabId) =>
+        ensureTrackerAndPost(tabId, { type: "MCT:SET_PRETTY_JSON", pretty }),
+      );
     });
   });
 })();

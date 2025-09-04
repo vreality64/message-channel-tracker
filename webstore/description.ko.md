@@ -21,7 +21,8 @@
 4. `window.postMessage("hello from MCT", "*")` 실행
 
 ## 권한
-- storage (토글 상태 저장 및 전파)
+- activeTab (사용자 제스처 시 활성 탭에만 일시적 권한)
+- scripting (토글 메시지 전송을 위한 작은 헬퍼 주입)
 
 ## 소스/문서/플레이그라운드
 - 소스: https://github.com/vreality64/message-channel-tracker

@@ -40,6 +40,7 @@
   }
 
   // Listen for popup messages and forward them to the page context
+  // In activeTab mode the popup executes directly in tab; keep this for backward compat if messages are sent
   chrome.runtime.onMessage.addListener((message: MCTMessage) => {
     if (message && message.type === "MCT:SET_ENABLED") {
       window.postMessage({ type: "MCT:SET_ENABLED", enabled: !!message.enabled }, "*");
@@ -48,22 +49,7 @@
     }
   });
 
-  // React to storage changes so popup doesn't need tabs permission
-  try {
-    chrome.storage.onChanged.addListener((changes, area) => {
-      if (area !== "sync") return;
-      if (Object.prototype.hasOwnProperty.call(changes, "mctEnabled")) {
-        const nv = (changes as any).mctEnabled?.newValue;
-        window.postMessage({ type: "MCT:SET_ENABLED", enabled: !!nv }, "*");
-      }
-      if (Object.prototype.hasOwnProperty.call(changes, "mctPrettyJson")) {
-        const nv = (changes as any).mctPrettyJson?.newValue;
-        window.postMessage({ type: "MCT:SET_PRETTY_JSON", pretty: !!nv }, "*");
-      }
-    });
-  } catch (error) {
-    console.warn("[MCT] Failed to subscribe storage changes", error);
-  }
+  // Storage propagation not required in activeTab-mode; keep logic minimal
 
   injectTracker();
   sendInitialState();
