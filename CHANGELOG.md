@@ -1,5 +1,11 @@
 # message-channel-tracker
 
+## 2.0.1
+
+### Patch Changes
+
+- [`c317795`](https://github.com/vreality64/message-channel-tracker/commit/c317795b93a90f68dd4ea8790182da799c1ceec0) Thanks [@vreality64](https://github.com/vreality64)! - Narrow web_accessible_resources to http/https origins to align with Chrome Web Store permissions policy.
+
 ## 2.0.0
 
 ### Major Changes
