@@ -18,7 +18,8 @@
         "dist/tracker.js"
       ],
       "matches": [
-        "<all_urls>"
+        "http://*/*",
+        "https://*/*"
       ]
     }
   ]

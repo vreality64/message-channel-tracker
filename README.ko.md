@@ -58,7 +58,7 @@ window.postMessage("hello from MCT", "*");
 ```
 
 ## 파일 구조와 역할
-- `extension/manifest.json`: 확장 설정(Manifest v3). `content.js`를 모든 페이지에 주입하고, 팝업(`popup.html`)과 `tracker.js`를 웹 접근 리소스로 노출합니다.
+- `extension/manifest.json`: 확장 설정(Manifest v3). 팝업(`popup.html`)과 `tracker.js`는 http/https 도메인에만 웹 접근 리소스로 노출되며(`<all_urls>` 미사용), Chrome Web Store 권한 정책을 준수합니다.
 - `extension/content.js`: 페이지에 `tracker.js`를 삽입하고 저장된 토글 상태를 전달. 팝업에서 오는 `MCT:SET_ENABLED` 메시지를 페이지로 중계합니다.
 - `extension/tracker.js`: 실제 계측 로직(페이지 컨텍스트). 다음을 래핑/로깅합니다.
   - `window.postMessage`/`window`의 `message` 이벤트

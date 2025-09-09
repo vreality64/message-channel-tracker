@@ -58,7 +58,7 @@ window.postMessage("hello from MCT", "*");
 ```
 
 ## File Structure
-- `extension/manifest.json`: Manifest v3. Injects `content.js` on all pages and exposes the popup (`popup.html`) and `tracker.js` as web-accessible resources.
+- `extension/manifest.json`: Manifest v3. Popup (`popup.html`) and `tracker.js` are web‑accessible only on http/https origins (no `<all_urls>`), aligning with Chrome Web Store permissions policy.
 - `extension/content.js`: Injects `tracker.js`, passes stored toggle state, and relays `MCT:SET_ENABLED` messages from the popup.
 - `extension/tracker.js`: Instrumentation in the page context. Wraps and logs:
   - `window.postMessage` / `window` `message` events
