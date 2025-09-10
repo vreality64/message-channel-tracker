@@ -69,10 +69,21 @@
     applyI18n();
     // Default UI state; per-tab and ephemeral
     setUi(false);
+    // Load persisted state and reflect in UI, then sync to active tab
+    try {
+      chrome.storage.sync.get({ mctEnabled: false }, ({ mctEnabled }: { mctEnabled: boolean }) => {
+        const enabled = !!mctEnabled;
+        setUi(enabled);
+        withActiveTab((tabId) => ensureTrackerAndPost(tabId, { type: "MCT:SET_ENABLED", enabled }));
+      });
+    } catch {}
 
     enabledToggle.addEventListener("change", () => {
       const enabled = !!enabledToggle.checked;
       setUi(enabled);
+      try {
+        chrome.storage.sync.set({ mctEnabled: enabled });
+      } catch {}
       withActiveTab((tabId) =>
         ensureTrackerAndPost(tabId, { type: "MCT:SET_ENABLED", enabled }),
       );

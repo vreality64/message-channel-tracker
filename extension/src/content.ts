@@ -24,7 +24,7 @@
    */
   const sendInitialState = (): void => {
     try {
-      chrome.storage.sync.get({ mctEnabled: true }, ({ mctEnabled }: { mctEnabled: boolean }) => {
+      chrome.storage.sync.get({ mctEnabled: false }, ({ mctEnabled }: { mctEnabled: boolean }) => {
         window.postMessage({ type: "MCT:SET_ENABLED", enabled: !!mctEnabled }, "*");
       });
     } catch (error) {

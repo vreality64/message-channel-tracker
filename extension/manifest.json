@@ -6,7 +6,8 @@
   "default_locale": "en",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "action": {
     "default_title": "__MSG_appTitle__",
