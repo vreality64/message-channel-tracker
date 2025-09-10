@@ -79,12 +79,10 @@ window.postMessage("hello from MCT", "*");
 - 로깅은 읽기 전용이며 원래 동작을 변경하지 않도록 설계되었습니다.
 - Content script 샌드박스 제약을 피하기 위해 `tracker.js`를 페이지 컨텍스트에 주입합니다.
 
-## 옵션
+## 포맷팅
 
-### Pretty JSON (`mctPrettyJson`)
-- 확장 팝업에서 "Pretty JSON" 옵션으로 토글할 수 있습니다.
-- 활성화 시 사용자 제공 payload 중심으로 출력하며, JSON을 보기 좋게 정리합니다:
+### Pretty JSON
+- 항상 활성화됩니다. payload를 읽기 좋게 자동 포맷팅합니다:
   - JSON 형태의 문자열은 `JSON.parse`를 시도해 객체로 변환
-  - 객체/배열은 `JSON.stringify(value, null, 2)`로 들여쓰기 출력
-- 비활성화 시 별도 포매팅 없이 인라인으로 표시합니다.
-- 설정은 `chrome.storage.sync`의 `mctPrettyJson` 키로 저장되며 탭 전체에 적용됩니다. 변경 즉시 반영됩니다.
+  - 객체/배열은 들여쓰기 및 하이라이트로 출력
+- 팝업은 로깅 On/Off만 제어하며 별도 pretty 옵션은 없습니다.

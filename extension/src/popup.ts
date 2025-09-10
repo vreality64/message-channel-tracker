@@ -1,17 +1,13 @@
 (() => {
   const enabledToggle = document.getElementById("enabledToggle") as HTMLInputElement;
   const statusLabel = document.getElementById("statusLabel") as HTMLElement;
-  const prettyToggle = document.getElementById("prettyToggle") as HTMLInputElement;
   const titleEl = document.getElementById("title") as HTMLElement;
-  const prettyLabel = document.getElementById("prettyLabel") as HTMLElement;
   const hint = document.getElementById("hint") as HTMLElement;
 
   function applyI18n(): void {
     try {
       // Static labels
       if (titleEl) titleEl.textContent = chrome.i18n.getMessage("appTitle") || titleEl.textContent;
-      if (prettyLabel)
-        prettyLabel.textContent = chrome.i18n.getMessage("prettyJson") || prettyLabel.textContent;
       if (hint) hint.textContent = chrome.i18n.getMessage("prettyHint") || hint.textContent;
       // Title of the document
       document.title = chrome.i18n.getMessage("appTitle") || document.title;
@@ -73,7 +69,6 @@
     applyI18n();
     // Default UI state; per-tab and ephemeral
     setUi(false);
-    if (prettyToggle) prettyToggle.checked = false;
 
     enabledToggle.addEventListener("change", () => {
       const enabled = !!enabledToggle.checked;
@@ -83,11 +78,5 @@
       );
     });
 
-    prettyToggle?.addEventListener("change", () => {
-      const pretty = !!prettyToggle.checked;
-      withActiveTab((tabId) =>
-        ensureTrackerAndPost(tabId, { type: "MCT:SET_PRETTY_JSON", pretty }),
-      );
-    });
   });
 })();

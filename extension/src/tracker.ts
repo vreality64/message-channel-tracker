@@ -11,7 +11,6 @@
   // State management
   const state = {
     enabled: true,
-    prettyJson: false,
   };
 
   // Receive enable/disable messages from the content script
@@ -25,11 +24,6 @@
         if (data.type === "MCT:SET_ENABLED") {
           state.enabled = !!data.enabled;
           logInternalInfo(state.enabled ? "Tracking enabled" : "Tracking disabled");
-          return;
-        }
-        if (data.type === "MCT:SET_PRETTY_JSON") {
-          state.prettyJson = !!data.pretty;
-          logInternalInfo(state.prettyJson ? "Pretty JSON: On" : "Pretty JSON: Off");
           return;
         }
       } catch (_) {
@@ -203,29 +197,27 @@
 
   function logData(label: string, value: unknown): void {
     try {
-      if (state.prettyJson) {
-        // If the payload is a JSON string, parse it first
-        if (typeof value === "string") {
-          try {
-            const parsed = JSON.parse(value);
-            if (parsed && typeof parsed === "object") {
-              console.log(label);
-              logStyledJson(parsed);
-              return;
-            }
-          } catch (_) {
-            // not a JSON string; fall through
-          }
-        }
-        // If the payload is an object/array, pretty print directly
-        if (value && typeof value === "object") {
-          try {
+      // If the payload is a JSON string, parse it first
+      if (typeof value === "string") {
+        try {
+          const parsed = JSON.parse(value);
+          if (parsed && typeof parsed === "object") {
             console.log(label);
-            logStyledJson(value);
+            logStyledJson(parsed);
             return;
-          } catch (_) {
-            // fall through to default
           }
+        } catch (_) {
+          // not a JSON string; fall through
+        }
+      }
+      // If the payload is an object/array, pretty print directly
+      if (value && typeof value === "object") {
+        try {
+          console.log(label);
+          logStyledJson(value);
+          return;
+        } catch (_) {
+          // fall through to default
         }
       }
       // Default: log inline

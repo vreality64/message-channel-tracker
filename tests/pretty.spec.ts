@@ -28,16 +28,14 @@ describe("pretty JSON formatting", () => {
     } catch {}
   });
 
-  it("prints JSON when pretty enabled (smoke)", () => {
+  it("prints JSON with pretty formatting (smoke)", () => {
     loadTracker();
-    // enable pretty via control message
-    window.postMessage({ type: "MCT:SET_PRETTY_JSON", pretty: true }, "*");
 
     const payload = { str: "s", num: 1, bool: true, nil: null, obj: { k: "v" } };
     window.postMessage(payload, "*");
 
     const calls = spy.mock.calls;
-    // Smoke: at least one console.log happened after pretty toggle
+    // Smoke: at least one console.log happened with pretty formatting
     expect(calls.length).toBeGreaterThan(0);
   });
 });

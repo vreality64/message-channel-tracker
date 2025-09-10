@@ -86,36 +86,7 @@
     }
 
     /* Button-like checkbox for Pretty JSON */
-    .toggle-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 1px solid var(--btn-border);
-      background: var(--btn-bg);
-      color: var(--fg);
-      cursor: pointer;
-      user-select: none;
-    }
-    .toggle-btn input {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .toggle-btn .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ef4444;
-    }
-    .toggle-btn[data-active="true"] {
-      background: linear-gradient(135deg, var(--accent, #0ea5e9), var(--accent-2, #22d3ee));
-      color: #fff;
-      border: none;
-    }
-    .toggle-btn[data-active="true"] .dot { background: #22c55e; }
+    /* Pretty toggle removed; always-on pretty JSON */
 
     body {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
@@ -455,11 +426,6 @@
     <div class="console-header">
       <span data-i18n="console.title">Console</span>
       <div class="console-actions">
-        <label id="pg-pretty-toggle" class="toggle-btn" data-active="false" title="Pretty JSON">
-          <span class="dot" aria-hidden="true"></span>
-          <input type="checkbox" id="pg-pretty" aria-label="Pretty JSON" />
-          <span>Pretty JSON</span>
-        </label>
         <button id="clear-log"><span data-i18n="header.clear">Clear</span></button>
       </div>
     </div>
@@ -485,21 +451,8 @@
           s.type = 'text/javascript';
           s.textContent = code;
           document.documentElement.appendChild(s);
-          // Enable tracking and sync Pretty JSON state
-          const prettyEl = document.getElementById('pg-pretty');
-          const prettyWrap = document.getElementById('pg-pretty-toggle');
-          const pretty = prettyEl?.checked;
+          // Enable tracking; pretty JSON is always on in tracker and UI
           window.postMessage({ type: 'MCT:SET_ENABLED', enabled: true }, '*');
-          window.postMessage({ type: 'MCT:SET_PRETTY_JSON', pretty: !!pretty }, '*');
-          // Wire checkbox to tracker state
-          if (prettyWrap) prettyWrap.dataset.active = pretty ? 'true' : 'false';
-          window.__MCT_PRETTY__ = !!pretty;
-          prettyEl?.addEventListener('change', (e) => {
-            const p = e.currentTarget && e.currentTarget.checked;
-            if (prettyWrap) prettyWrap.dataset.active = p ? 'true' : 'false';
-            window.postMessage({ type: 'MCT:SET_PRETTY_JSON', pretty: !!p }, '*');
-            window.__MCT_PRETTY__ = !!p;
-          });
           break;
         } catch {}
       }

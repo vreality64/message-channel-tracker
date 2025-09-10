@@ -36,7 +36,6 @@
   interface MCTMessage {
     type: string;
     enabled?: boolean;
-    pretty?: boolean;
   }
 
   // Listen for popup messages and forward them to the page context
@@ -44,8 +43,6 @@
   chrome.runtime.onMessage.addListener((message: MCTMessage) => {
     if (message && message.type === "MCT:SET_ENABLED") {
       window.postMessage({ type: "MCT:SET_ENABLED", enabled: !!message.enabled }, "*");
-    } else if (message && message.type === "MCT:SET_PRETTY_JSON") {
-      window.postMessage({ type: "MCT:SET_PRETTY_JSON", pretty: !!message.pretty }, "*");
     }
   });
 

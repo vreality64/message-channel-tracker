@@ -1,1 +1,1 @@
-Visualize postMessage/MessageChannel/BroadcastChannel/Worker flows in DevTools. Toggleable, read‑only, with Pretty JSON.
+Visualize postMessage/MessageChannel/BroadcastChannel/Worker flows in DevTools. Toggleable, read‑only, Pretty JSON always on.

@@ -316,20 +316,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
                 idx += 1;
             }
             else if (typeof item === "object" && item != null) {
-                if (window.__MCT_PRETTY__) {
-                    container.appendChild(renderJson(item));
-                }
-                else {
-                    const p = document.createElement("p");
-                    p.className = "log-line";
-                    try {
-                        p.textContent = JSON.stringify(item);
-                    }
-                    catch {
-                        p.textContent = String(item);
-                    }
-                    container.appendChild(p);
-                }
+                container.appendChild(renderJson(item));
                 idx += 1;
             }
             else {

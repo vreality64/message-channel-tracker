@@ -1,1 +1,1 @@
-DevTools에서 postMessage/MessageChannel/BroadcastChannel/Worker 흐름을 시각화합니다. 토글 가능, 읽기 전용, Pretty JSON 지원.
+DevTools에서 postMessage/MessageChannel/BroadcastChannel/Worker 흐름을 시각화합니다. 토글 가능, 읽기 전용, Pretty JSON 항상 켜짐.

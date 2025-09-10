@@ -79,12 +79,10 @@ window.postMessage("hello from MCT", "*");
 - Logging is read-only and designed to avoid altering original behavior.
 - To avoid content script sandboxing limits, `tracker.js` is injected into the page context.
 
-## Options
+## Formatting
 
-### Pretty JSON (`mctPrettyJson`)
-- Toggle this in the extension popup ("Pretty JSON").
-- When enabled, the logger focuses on user-provided payloads and pretty-prints them:
+### Pretty JSON
+- Pretty printing is always enabled. Payloads are formatted for readability:
   - Tries to `JSON.parse` string values that look like JSON
-  - Stringifies objects/arrays with `JSON.stringify(value, null, 2)`
-- When disabled, values are shown inline without additional formatting.
-- Per-tab control via the popup requires a user gesture and only grants temporary access to the active tab. The popup executes a small script into the active tab to inject `tracker.js` (if needed) and post toggle messages. No persistent broad host access is requested.
+  - Prints objects/arrays with indentation and syntax styling
+- The popup only controls On/Off for tracking; no separate pretty option.

@@ -346,18 +346,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
         container.appendChild(p);
         idx += 1;
       } else if (typeof item === "object" && item != null) {
-        if ((window as any).__MCT_PRETTY__) {
-          container.appendChild(renderJson(item));
-        } else {
-          const p = document.createElement("p");
-          p.className = "log-line";
-          try {
-            p.textContent = JSON.stringify(item);
-          } catch {
-            p.textContent = String(item);
-          }
-          container.appendChild(p);
-        }
+        container.appendChild(renderJson(item));
         idx += 1;
       } else {
         const p = document.createElement("p");
@@ -528,7 +517,7 @@ document.getElementById("clear-log")?.addEventListener("click", () => {
       typeof titleParts[0] === "string" &&
       /%[cso]/.test(titleParts[0])
     ) {
-      const { node } = renderStyledInline(String(titleParts[0]), titleParts.slice(1));
+          const { node } = renderStyledInline(String(titleParts[0]), titleParts.slice(1));
       title.replaceChildren(node);
     } else {
       const joined = titleParts.map((p) => (typeof p === "string" ? p : "")).join(" ");

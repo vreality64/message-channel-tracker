@@ -11,7 +11,7 @@ Observe browser message flows without breaking them. MCT neatly groups and color
 ## Highlights
 - Non‑intrusive: read‑only wrappers preserve original behavior
 - Toggleable: enable/disable from the extension popup
-- Pretty JSON: optional prettified payload logging (mctPrettyJson)
+- Pretty JSON: always-on prettified payload logging
 - Console‑first UX: thread‑like grouping, colored arrows, timestamps
 
 ## Quick Start

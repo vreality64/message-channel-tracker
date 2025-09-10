@@ -6,8 +6,8 @@ Provide at least 3 images (1280x800 or 1280x720) and one small tile (440x280). P
    - Source: docs/assets/screenshot.png or docs/assets/hero.webp (capture still)
    - Text overlay: "Visualize message flows in DevTools"
 
-2. Pretty JSON Option:
-   - Show the popup with "Pretty JSON" checkbox enabled
+2. Pretty JSON Output:
+   - Show console rendering with prettified JSON payloads (always on)
    - Console shows prettified JSON payload
    - Include arrow/group styling
 
