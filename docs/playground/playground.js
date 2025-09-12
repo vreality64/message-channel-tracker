@@ -15,14 +15,14 @@ const mctStyles = {
 function getMessagePreview(value) {
     try {
         if (typeof value === "string") {
-            return value.length > 10 ? value.substring(0, 10) + "..." : value;
+            return value.length > 10 ? `${value.substring(0, 10)}...` : value;
         }
         if (value && typeof value === "object") {
             const jsonStr = JSON.stringify(value);
-            return jsonStr.length > 10 ? jsonStr.substring(0, 10) + "..." : jsonStr;
+            return jsonStr.length > 10 ? `${jsonStr.substring(0, 10)}...` : jsonStr;
         }
         const strValue = String(value);
-        return strValue.length > 10 ? strValue.substring(0, 10) + "..." : strValue;
+        return strValue.length > 10 ? `${strValue.substring(0, 10)}...` : strValue;
     }
     catch (_) {
         return "?";
