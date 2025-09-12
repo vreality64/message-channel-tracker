@@ -21,6 +21,25 @@
     statusLabel.textContent = enabled ? onText : offText;
     statusLabel.classList.toggle("on", enabled);
     statusLabel.classList.toggle("off", !enabled);
+    
+    // Update extension icon based on enabled state
+    updateExtensionIcon(enabled);
+  };
+
+  const updateExtensionIcon = (enabled: boolean): void => {
+    try {
+      const iconPath = enabled ? {
+        "16": "icon-16-active.png",
+        "32": "icon-32-active.png"
+      } : {
+        "16": "icon-16.png",
+        "32": "icon-32.png"
+      };
+      
+      chrome.action.setIcon({ path: iconPath });
+    } catch (error) {
+      console.warn("[MCT] Failed to update extension icon", error);
+    }
   };
 
   function withActiveTab<T>(fn: (tabId: number) => void): void {

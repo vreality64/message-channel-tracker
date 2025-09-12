@@ -1,5 +1,29 @@
 # message-channel-tracker
 
+## 2.2.0
+
+### Minor Changes
+
+- ## New Features
+
+  ### Visual Status Indicator
+
+  - Extension icon now changes color based on enabled/disabled state
+  - Blue gradient for disabled state, green gradient for enabled state
+  - No need to click the extension to check if it's active
+
+  ### Message Preview
+
+  - First 10 characters of message content now shown in console group titles
+  - Works for all message types: window.postMessage, MessagePort, BroadcastChannel, Worker, ServiceWorker
+  - Makes debugging easier by showing message content without expanding groups
+
+  ### Updated Documentation
+
+  - README files updated with new features
+  - Web store descriptions updated
+  - Playground updated with preview functionality
+
 ## 2.0.1
 
 ### Patch Changes

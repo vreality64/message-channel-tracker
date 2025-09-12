@@ -15,7 +15,10 @@ A Chrome extension to observe browser message flows without breaking them. It ne
 - `Worker` / `SharedWorker` postMessage / incoming messages
 - `ServiceWorker` postMessage and incoming messages
 
-The on/off toggle state is stored in `chrome.storage.sync` under the `mctEnabled` key.
+## Features
+- **Visual Status Indicator**: Extension icon changes color based on enabled/disabled state
+- **Message Preview**: First 10 characters of message content shown in console group titles
+- **Toggle Control**: On/off toggle state stored in `chrome.storage.sync` under the `mctEnabled` key
 
 ## Quick Start
 - Open the extension management page (macOS helper script):

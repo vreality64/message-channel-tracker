@@ -7,11 +7,12 @@ import { existsSync, mkdirSync } from 'node:fs';
 async function main(): Promise<void> {
   const size = Number(process.argv[2] || '128');
   const outArg = process.argv[3];
-  const outPath = outArg ? path.resolve(outArg) : path.join(process.cwd(), 'webstore', `icon-${size}.png`);
+  const isActive = process.argv[4] === 'active';
+  const outPath = outArg ? path.resolve(outArg) : path.join(process.cwd(), 'webstore', `icon-${size}${isActive ? '-active' : ''}.png`);
   const outDir = path.dirname(outPath);
   mkdirSync(outDir, { recursive: true });
 
-  const svgPath = path.join(process.cwd(), 'docs', 'assets', 'logo.svg');
+  const svgPath = path.join(process.cwd(), 'docs', 'assets', isActive ? 'logo-active.svg' : 'logo.svg');
   const svg = fs.readFileSync(svgPath, 'utf8');
 
   const html = `<!doctype html>

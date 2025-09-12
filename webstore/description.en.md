@@ -10,6 +10,8 @@ Observe browser message flows without breaking them. MCT neatly groups and color
 
 ## Highlights
 - Non‑intrusive: read‑only wrappers preserve original behavior
+- Visual Status: extension icon changes color based on enabled/disabled state
+- Message Preview: first 10 characters of message content shown in console group titles
 - Toggleable: enable/disable from the extension popup
 - Pretty JSON: always-on prettified payload logging
 - Console‑first UX: thread‑like grouping, colored arrows, timestamps

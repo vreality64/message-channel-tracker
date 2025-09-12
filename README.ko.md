@@ -15,7 +15,10 @@
 - `Worker`/`SharedWorker`의 postMessage/수신 메시지
 - `ServiceWorker` 인스턴스의 postMessage 및 수신 메시지
 
-켜기/끄기 토글 상태는 `chrome.storage.sync`의 `mctEnabled` 키에 보관됩니다.
+## 주요 기능
+- **시각적 상태 표시**: 활성화/비활성화 상태에 따라 확장 아이콘 색상 변경
+- **메시지 미리보기**: 콘솔 그룹 제목에 메시지 내용의 첫 10글자 표시
+- **토글 제어**: 켜기/끄기 토글 상태는 `chrome.storage.sync`의 `mctEnabled` 키에 보관됩니다
 
 ## 빠른 시작
 - macOS에서 다음으로 확장 관리 페이지를 엽니다:

@@ -12,9 +12,26 @@ const mctStyles = {
     arrowPort: "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px;border-radius:6px;",
     meta: "color:#64748b;",
 };
-function mctGroup(op) {
+function getMessagePreview(value) {
+    try {
+        if (typeof value === "string") {
+            return value.length > 10 ? value.substring(0, 10) + "..." : value;
+        }
+        if (value && typeof value === "object") {
+            const jsonStr = JSON.stringify(value);
+            return jsonStr.length > 10 ? jsonStr.substring(0, 10) + "..." : jsonStr;
+        }
+        const strValue = String(value);
+        return strValue.length > 10 ? strValue.substring(0, 10) + "..." : strValue;
+    }
+    catch (_) {
+        return "?";
+    }
+}
+function mctGroup(op, message) {
     const iso = new Date().toISOString();
-    if (op === "window.postMessage")
+    if (op === "window.postMessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -22,10 +39,14 @@ function mctGroup(op) {
             mctStyles.arrowOut,
             "%cwindow.postMessage",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "window.message")
+    }
+    if (op === "window.message") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -33,10 +54,14 @@ function mctGroup(op) {
             mctStyles.arrowIn,
             "%cwindow.message",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "MessagePort.postMessage")
+    }
+    if (op === "MessagePort.postMessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -44,10 +69,14 @@ function mctGroup(op) {
             mctStyles.arrowPort,
             "%cMessagePort.postMessage",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "MessagePort.onmessage")
+    }
+    if (op === "MessagePort.onmessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -55,10 +84,14 @@ function mctGroup(op) {
             mctStyles.arrowIn,
             "%cMessagePort.message",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "BroadcastChannel.postMessage")
+    }
+    if (op === "BroadcastChannel.postMessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -66,10 +99,14 @@ function mctGroup(op) {
             mctStyles.arrowPort,
             "%cBroadcastChannel.postMessage",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "BroadcastChannel.onmessage")
+    }
+    if (op === "BroadcastChannel.onmessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -77,10 +114,14 @@ function mctGroup(op) {
             mctStyles.arrowIn,
             "%cBroadcastChannel.message",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "Worker.postMessage")
+    }
+    if (op === "Worker.postMessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -88,10 +129,14 @@ function mctGroup(op) {
             mctStyles.arrowOut,
             "%cWorker.postMessage",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "Worker.onmessage")
+    }
+    if (op === "Worker.onmessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -99,10 +144,14 @@ function mctGroup(op) {
             mctStyles.arrowIn,
             "%cWorker.message",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "SharedWorker.postMessage")
+    }
+    if (op === "SharedWorker.postMessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -110,10 +159,14 @@ function mctGroup(op) {
             mctStyles.arrowOut,
             "%cSharedWorker.postMessage",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "SharedWorker.onmessage")
+    }
+    if (op === "SharedWorker.onmessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -121,10 +174,14 @@ function mctGroup(op) {
             mctStyles.arrowIn,
             "%cSharedWorker.message",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "ServiceWorker.register")
+    }
+    if (op === "ServiceWorker.register") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -132,10 +189,14 @@ function mctGroup(op) {
             mctStyles.meta,
             "%cServiceWorker.register",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "ServiceWorker.postMessage")
+    }
+    if (op === "ServiceWorker.postMessage") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -143,10 +204,14 @@ function mctGroup(op) {
             mctStyles.arrowOut,
             "%cServiceWorker.postMessage",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
-    if (op === "ServiceWorker.message")
+    }
+    if (op === "ServiceWorker.message") {
+        const preview = message !== undefined ? getMessagePreview(message) : "";
         return [
             "%cMCT",
             mctStyles.badgeBase,
@@ -154,13 +219,16 @@ function mctGroup(op) {
             mctStyles.arrowIn,
             "%cServiceWorker.message",
             mctStyles.meta,
+            preview ? `%c "${preview}"` : "",
+            preview ? mctStyles.meta : "",
             `%c${iso}`,
             mctStyles.meta,
         ];
+    }
     return ["%cMCT", mctStyles.badgeBase, `%c${iso}`, mctStyles.meta];
 }
-function mctOpenGroup(op) {
-    const pairs = mctGroup(op);
+function mctOpenGroup(op, message) {
+    const pairs = mctGroup(op, message);
     const fmtParts = [];
     const params = [];
     for (let i = 0; i < pairs.length; i += 2) {
@@ -190,7 +258,8 @@ const mctDemoLog = (op, data) => {
     if (isMctInstalled())
         return;
     try {
-        mctOpenGroup(op);
+        const message = data?.message || data?.data || data?.posted;
+        mctOpenGroup(op, message);
         switch (op) {
             case "window.message":
                 if (data?.data !== undefined)

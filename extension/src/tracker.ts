@@ -195,6 +195,22 @@
     }
   }
 
+  function getMessagePreview(value: unknown): string {
+    try {
+      if (typeof value === "string") {
+        return value.length > 10 ? value.substring(0, 10) + "..." : value;
+      }
+      if (value && typeof value === "object") {
+        const jsonStr = JSON.stringify(value);
+        return jsonStr.length > 10 ? jsonStr.substring(0, 10) + "..." : jsonStr;
+      }
+      const strValue = String(value);
+      return strValue.length > 10 ? strValue.substring(0, 10) + "..." : strValue;
+    } catch (_) {
+      return "?";
+    }
+  }
+
   function logData(label: string, value: unknown): void {
     try {
       // If the payload is a JSON string, parse it first
@@ -279,10 +295,12 @@
         // Ignore our own control messages
         const t = event?.data?.type;
         if (typeof t === "string" && t.startsWith("MCT:")) return;
+        const preview = event?.data !== undefined ? getMessagePreview(event.data) : "";
         const titlePairs: [string, string][] = [
           ["%cMCT", styles.badgeBase],
           ["%c←", styles.arrowIn],
           ["%cwindow.message", styles.meta],
+          preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
           [`%c${nowIso()}`, styles.meta],
         ];
         logGroupCollapsedStyled(titlePairs);
@@ -301,10 +319,12 @@
     function wrappedPostMessage(this: Window, message: unknown, targetOrigin?: string, transfer?: Transferable[]): void {
       if (state.enabled) {
         try {
+          const preview = getMessagePreview(message);
           const titlePairs: [string, string][] = [
             ["%cMCT", styles.badgeBase],
             ["%c→%c", styles.arrowOut],
             ["%cwindow.postMessage", styles.meta],
+            preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -347,6 +367,7 @@
         try {
           const metaInfo = getPortMeta(this) || ensurePortMeta(this);
           const other = metaInfo ? (metaInfo.label === "p1" ? "p2" : "p1") : null;
+          const preview = getMessagePreview(message);
           const titlePairs: [string, string][] = [
             ["%cMCT", styles.badgeBase],
             ["%c↔", styles.arrowPort],
@@ -355,6 +376,7 @@
             ["%c\u2192", styles.meta],
             [`%c${other ?? "p?"}`, styles.labelEmph],
             ["%c)", styles.meta],
+            preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -391,6 +413,7 @@
         try {
           const metaInfo = getPortMeta(this) || ensurePortMeta(this);
           const other = metaInfo ? (metaInfo.label === "p1" ? "p2" : "p1") : null;
+          const preview = event?.data !== undefined ? getMessagePreview(event.data) : "";
           const titlePairs: [string, string][] = [
             ["%cMCT", styles.badgeBase],
             ["%c←", styles.arrowIn],
@@ -399,6 +422,7 @@
             ["%c\u2192", styles.meta],
             [`%c${metaInfo?.label ?? "p?"}`, styles.labelEmph],
             ["%c)", styles.meta],
+            preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -496,10 +520,12 @@
       function wrappedBCPostMessage(this: BroadcastChannel, message: unknown): void {
         if (state.enabled) {
           try {
+            const preview = getMessagePreview(message);
             const titlePairs: [string, string][] = [
               ["%cMCT", styles.badgeBase],
               ["%c↔", styles.arrowPort],
               ["%cBroadcastChannel.postMessage", styles.meta],
+              preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
               [`%c${nowIso()}`, styles.meta],
             ];
             logGroupCollapsedStyled(titlePairs);
@@ -523,10 +549,12 @@
           (event: MessageEvent) => {
             if (!state.enabled) return;
             try {
+              const preview = event?.data !== undefined ? getMessagePreview(event.data) : "";
               const titlePairs: [string, string][] = [
                 ["%cMCT", styles.badgeBase],
                 ["%c←", styles.arrowIn],
                 ["%cBroadcastChannel.message", styles.meta],
+                preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
                 [`%c${nowIso()}`, styles.meta],
               ];
               logGroupCollapsedStyled(titlePairs);
@@ -577,10 +605,12 @@
           function wrappedWorkerPostMessage(this: Worker, message: unknown, transfer?: Transferable[]): void {
             if (state.enabled) {
               try {
+                const preview = getMessagePreview(message);
                 const titlePairs: [string, string][] = [
                   ["%cMCT", styles.badgeBase],
                   ["%c→%c", styles.arrowOut],
                   [`%c${label}.postMessage`, styles.meta],
+                  preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
                   [`%c${nowIso()}`, styles.meta],
                 ];
                 logGroupCollapsedStyled(titlePairs);
@@ -605,10 +635,12 @@
             (event: MessageEvent) => {
               if (!state.enabled) return;
               try {
+                const preview = event?.data !== undefined ? getMessagePreview(event.data) : "";
                 const titlePairs: [string, string][] = [
                   ["%cMCT", styles.badgeBase],
                   ["%c←", styles.arrowIn],
                   [`%c${label}.message`, styles.meta],
+                  preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
                   [`%c${nowIso()}`, styles.meta],
                 ];
                 logGroupCollapsedStyled(titlePairs);
@@ -672,10 +704,12 @@
         function wrappedSWPostMessage(this: ServiceWorker, message: unknown, transfer?: Transferable[]): void {
           if (state.enabled) {
             try {
+              const preview = getMessagePreview(message);
               const titlePairs: [string, string][] = [
                 ["%cMCT", styles.badgeBase],
                 ["%c→", styles.arrowOut],
                 ["%cServiceWorker.postMessage", styles.meta],
+                preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
                 [`%c${nowIso()}`, styles.meta],
               ];
               logGroupCollapsedStyled(titlePairs);
@@ -711,10 +745,12 @@
         (event: MessageEvent) => {
           if (!state.enabled) return;
           try {
+            const preview = event?.data !== undefined ? getMessagePreview(event.data) : "";
             const titlePairs: [string, string][] = [
               ["%cMCT", styles.badgeBase],
               ["%c←", styles.arrowIn],
               ["%cServiceWorker.message", styles.meta],
+              preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
               [`%c${nowIso()}`, styles.meta],
             ];
             logGroupCollapsedStyled(titlePairs);
