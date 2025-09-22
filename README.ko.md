@@ -21,6 +21,11 @@
 - **토글 제어**: 켜기/끄기 토글 상태는 `chrome.storage.sync`의 `mctEnabled` 키에 보관됩니다
 
 ## 빠른 시작
+
+### Chrome Web Store에서 설치 (권장)
+[Message Channel Tracker 설치](https://chromewebstore.google.com/detail/message-channel-tracker/cphkfobmlnldljobdlndabnnjpjobano?authuser=0&hl=ko)
+
+### 소스에서 설치 (개발용)
 - macOS에서 다음으로 확장 관리 페이지를 엽니다:
 ```bash
 ./scripts/dev.sh

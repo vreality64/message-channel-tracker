@@ -21,6 +21,11 @@ A Chrome extension to observe browser message flows without breaking them. It ne
 - **Toggle Control**: On/off toggle state stored in `chrome.storage.sync` under the `mctEnabled` key
 
 ## Quick Start
+
+### Install from Chrome Web Store (Recommended)
+[Install Message Channel Tracker](https://chromewebstore.google.com/detail/message-channel-tracker/cphkfobmlnldljobdlndabnnjpjobano?authuser=0&hl=ko)
+
+### Install from Source (Development)
 - Open the extension management page (macOS helper script):
 ```bash
 ./scripts/dev.sh
