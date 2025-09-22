@@ -1,5 +1,18 @@
 # message-channel-tracker
 
+## 2.3.1
+
+### Patch Changes
+
+- ## Bug Fixes
+
+  ### Extension Icons
+
+  - Fixed extension list display showing default 'M' icon instead of custom icon
+  - Added proper `icons` field to manifest.json for all required sizes
+  - Generated 48px and 128px icons for proper scaling in Chrome extension list
+  - Ensures consistent icon display across all Chrome extension interfaces
+
 ## 2.3.0
 
 ### Minor Changes
