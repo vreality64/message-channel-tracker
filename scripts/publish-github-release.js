@@ -24,26 +24,34 @@ function getVersion() {
 function getReleaseNotes(version) {
   const changelogPath = join(process.cwd(), 'CHANGELOG.md');
   const changelog = readFileSync(changelogPath, 'utf-8');
-  const pattern = new RegExp(`(^|\n)##\\s+${version.replaceAll('.', '\\.')}(\n[\s\S]*?)(?=\n##\\s+|$)`, 'm');
-  const match = changelog.match(pattern);
-  if (match) {
-    // Extract the content after the version header
-    const content = match[0].replace(/^#+\s+\d+\.\d+\.\d+\s*\n/, '').trim();
-    // Clean up the markdown formatting
-    const cleanedContent = content
-      .replace(/^### Minor Changes\n/, '')
-      .replace(/^### Major Changes\n/, '')
-      .replace(/^### Patch Changes\n/, '')
-      .replace(/^- ## New Features\n/, '## New Features')
-      .replace(/^- ## Bug Fixes\n/, '## Bug Fixes')
-      .replace(/^- ## Improvements\n/, '## Improvements')
-      .replace(/^- /gm, '- ')
-      .trim();
-    
-    return `# What's New in v${version}\n\n${cleanedContent}`;
+  
+  // Find the section for this version
+  const versionSection = changelog.split(`## ${version}`)[1];
+  if (!versionSection) {
+    return `# What's New in v${version}\n\nAutomated release.`;
   }
-  // Fallback minimal notes
-  return `# What's New in v${version}\n\nAutomated release.`;
+  
+  // Extract content until the next version section
+  const nextVersionMatch = versionSection.match(/\n## \d+\.\d+\.\d+/);
+  const content = nextVersionMatch 
+    ? versionSection.substring(0, nextVersionMatch.index)
+    : versionSection;
+  
+  // Clean up the content
+  const cleanedContent = content
+    .replace(/^### Minor Changes\n/, '')
+    .replace(/^### Major Changes\n/, '')
+    .replace(/^### Patch Changes\n/, '')
+    .replace(/^- ## New Features\n/, '## New Features')
+    .replace(/^- ## Bug Fixes\n/, '## Bug Fixes')
+    .replace(/^- ## Improvements\n/, '## Improvements')
+    .replace(/^- /gm, '- ')
+    .replace(/^## New Features\n/, '## New Features')
+    .replace(/^## Bug Fixes\n/, '## Bug Fixes')
+    .replace(/^## Improvements\n/, '## Improvements')
+    .trim();
+  
+  return `# What's New in v${version}\n\n${cleanedContent}`;
 }
 
 function ensureZipBuilt() {
