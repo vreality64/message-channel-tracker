@@ -11,6 +11,7 @@
   // State management
   const state = {
     enabled: true,
+    previewLength: 10,
   };
 
   // Receive enable/disable messages from the content script
@@ -23,7 +24,14 @@
         // Accept control messages regardless of event.source to be robust across environments
         if (data.type === "MCT:SET_ENABLED") {
           state.enabled = !!data.enabled;
+          if (data.previewLength !== undefined) {
+            state.previewLength = data.previewLength;
+          }
           logInternalInfo(state.enabled ? "Tracking enabled" : "Tracking disabled");
+          return;
+        }
+        if (data.type === "MCT:SET_PREVIEW_LENGTH") {
+          state.previewLength = data.previewLength;
           return;
         }
       } catch (_) {
@@ -77,6 +85,7 @@
       "color:#a855f7;font-weight:700;background:#ffffff;border:1px solid #e5e7eb;padding:0 4px 0 4px;border-radius:6px;",
     meta: "color:#64748b;",
     labelEmph: "font-weight:900;color:#0ea5e9;",
+    preview: "color:#8b5cf6;font-style:italic;",
     jsonKey: "color:#93c5fd;",
     jsonString: "color:#86efac;",
     jsonNumber: "color:#fca5a5;",
@@ -195,17 +204,18 @@
     }
   }
 
-  function getMessagePreview(value: unknown): string {
+  function getMessagePreview(value: unknown, maxLength: number = state.previewLength): string {
     try {
+      if (maxLength === 0) return "";
       if (typeof value === "string") {
-        return value.length > 10 ? `${value.substring(0, 10)}...` : value;
+        return value.length > maxLength ? `${value.substring(0, maxLength)}...` : value;
       }
       if (value && typeof value === "object") {
         const jsonStr = JSON.stringify(value);
-        return jsonStr.length > 10 ? `${jsonStr.substring(0, 10)}...` : jsonStr;
+        return jsonStr.length > maxLength ? `${jsonStr.substring(0, maxLength)}...` : jsonStr;
       }
       const strValue = String(value);
-      return strValue.length > 10 ? `${strValue.substring(0, 10)}...` : strValue;
+      return strValue.length > maxLength ? `${strValue.substring(0, maxLength)}...` : strValue;
     } catch (_) {
       return "?";
     }
@@ -300,7 +310,7 @@
           ["%cMCT", styles.badgeBase],
           ["%c←", styles.arrowIn],
           ["%cwindow.message", styles.meta],
-          preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+          preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
           [`%c${nowIso()}`, styles.meta],
         ];
         logGroupCollapsedStyled(titlePairs);
@@ -324,7 +334,7 @@
             ["%cMCT", styles.badgeBase],
             ["%c→%c", styles.arrowOut],
             ["%cwindow.postMessage", styles.meta],
-            preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+            preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -376,7 +386,7 @@
             ["%c\u2192", styles.meta],
             [`%c${other ?? "p?"}`, styles.labelEmph],
             ["%c)", styles.meta],
-            preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+            preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -422,7 +432,7 @@
             ["%c\u2192", styles.meta],
             [`%c${metaInfo?.label ?? "p?"}`, styles.labelEmph],
             ["%c)", styles.meta],
-            preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+            preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
             [`%c${nowIso()}`, styles.meta],
           ];
           logGroupCollapsedStyled(titlePairs);
@@ -525,7 +535,7 @@
               ["%cMCT", styles.badgeBase],
               ["%c↔", styles.arrowPort],
               ["%cBroadcastChannel.postMessage", styles.meta],
-              preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+              preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
               [`%c${nowIso()}`, styles.meta],
             ];
             logGroupCollapsedStyled(titlePairs);
@@ -554,7 +564,7 @@
                 ["%cMCT", styles.badgeBase],
                 ["%c←", styles.arrowIn],
                 ["%cBroadcastChannel.message", styles.meta],
-                preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+                preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
                 [`%c${nowIso()}`, styles.meta],
               ];
               logGroupCollapsedStyled(titlePairs);
@@ -610,7 +620,7 @@
                   ["%cMCT", styles.badgeBase],
                   ["%c→%c", styles.arrowOut],
                   [`%c${label}.postMessage`, styles.meta],
-                  preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+                  preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
                   [`%c${nowIso()}`, styles.meta],
                 ];
                 logGroupCollapsedStyled(titlePairs);
@@ -640,7 +650,7 @@
                   ["%cMCT", styles.badgeBase],
                   ["%c←", styles.arrowIn],
                   [`%c${label}.message`, styles.meta],
-                  preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+                  preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
                   [`%c${nowIso()}`, styles.meta],
                 ];
                 logGroupCollapsedStyled(titlePairs);
@@ -709,7 +719,7 @@
                 ["%cMCT", styles.badgeBase],
                 ["%c→", styles.arrowOut],
                 ["%cServiceWorker.postMessage", styles.meta],
-                preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+                preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
                 [`%c${nowIso()}`, styles.meta],
               ];
               logGroupCollapsedStyled(titlePairs);
@@ -750,7 +760,7 @@
               ["%cMCT", styles.badgeBase],
               ["%c←", styles.arrowIn],
               ["%cServiceWorker.message", styles.meta],
-              preview ? [`%c "${preview}"`, styles.meta] : ["", ""],
+              preview ? [`%c "${preview}"`, styles.preview] : ["", ""],
               [`%c${nowIso()}`, styles.meta],
             ];
             logGroupCollapsedStyled(titlePairs);

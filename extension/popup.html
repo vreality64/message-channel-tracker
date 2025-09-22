@@ -18,7 +18,11 @@
         </label>
         <span id="statusLabel" class="status" data-i18n-text-on="statusOn" data-i18n-text-off="statusOff">Off</span>
       </div>
-      <div class="row hint" id="hint" data-i18n="prettyHint"></div>
+      <div class="row">
+        <label for="previewLength" class="option-label">Preview Length:</label>
+        <input type="range" id="previewLength" min="0" max="50" value="10" class="range-input" />
+        <span id="previewLengthValue" class="range-value">10</span>
+      </div>
     </div>
     <script src="dist/popup.js"></script>
   </body>

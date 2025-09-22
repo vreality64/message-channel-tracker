@@ -2,8 +2,6 @@
   "appTitle": { "message": "Message Channel Tracker" },
   "statusOn": { "message": "켜짐" },
   "statusOff": { "message": "꺼짐" },
-  "prettyJson": { "message": "Pretty JSON" },
-  "prettyHint": { "message": "payload를 항상 보기 좋게(JSON) 출력합니다." },
   "actionTitle": { "message": "Message Channel Tracker" },
   "appDescription": {
     "message": "원래 동작을 깨뜨리지 않고 window, MessageChannel, BroadcastChannel, Worker 메시지를 보기 좋게 출력합니다."

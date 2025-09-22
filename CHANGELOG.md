@@ -1,5 +1,37 @@
 # message-channel-tracker
 
+## 2.3.0
+
+### Minor Changes
+
+- ## New Features
+
+  ### Visual Status Indicator
+
+  - Extension icon now changes color based on enabled/disabled state
+  - Gray gradient for disabled state (transparent background)
+  - Blue gradient for enabled state (matching website favicon)
+  - No need to click the extension to check if it's active
+
+  ### Message Preview Options
+
+  - Added preview length slider in popup (0-50 characters)
+  - Real-time preview length adjustment
+  - Settings saved in chrome.storage.sync for synchronization
+  - Preview color changed to purple italic for better visibility
+
+  ### UI Improvements
+
+  - Removed pretty print hint text from popup for cleaner interface
+  - Added range slider with visual feedback
+  - Improved popup styling and layout
+
+  ### Icon Design Updates
+
+  - Transparent background for inactive state
+  - Consistent with website favicon design for active state
+  - Better integration with browser themes
+
 ## 2.2.0
 
 ### Minor Changes

@@ -2,8 +2,6 @@
   "appTitle": { "message": "Message Channel Tracker" },
   "statusOn": { "message": "On" },
   "statusOff": { "message": "Off" },
-  "prettyJson": { "message": "Pretty JSON" },
-  "prettyHint": { "message": "Logs payloads with pretty JSON formatting." },
   "actionTitle": { "message": "Message Channel Tracker" },
   "appDescription": {
     "message": "Track and pretty-print window, MessageChannel, BroadcastChannel, and Worker messages without breaking behavior."

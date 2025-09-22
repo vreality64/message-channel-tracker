@@ -2,25 +2,29 @@
   const enabledToggle = document.getElementById("enabledToggle") as HTMLInputElement;
   const statusLabel = document.getElementById("statusLabel") as HTMLElement;
   const titleEl = document.getElementById("title") as HTMLElement;
-  const hint = document.getElementById("hint") as HTMLElement;
+  const previewLengthInput = document.getElementById("previewLength") as HTMLInputElement;
+  const previewLengthValue = document.getElementById("previewLengthValue") as HTMLElement;
 
   function applyI18n(): void {
     try {
       // Static labels
       if (titleEl) titleEl.textContent = chrome.i18n.getMessage("appTitle") || titleEl.textContent;
-      if (hint) hint.textContent = chrome.i18n.getMessage("prettyHint") || hint.textContent;
       // Title of the document
       document.title = chrome.i18n.getMessage("appTitle") || document.title;
     } catch {}
   }
 
-  const setUi = (enabled: boolean): void => {
+  const setUi = (enabled: boolean, previewLength: number = 10): void => {
     enabledToggle.checked = !!enabled;
     const onText = chrome?.i18n?.getMessage?.("statusOn") || "On";
     const offText = chrome?.i18n?.getMessage?.("statusOff") || "Off";
     statusLabel.textContent = enabled ? onText : offText;
     statusLabel.classList.toggle("on", enabled);
     statusLabel.classList.toggle("off", !enabled);
+    
+    // Set preview length
+    previewLengthInput.value = previewLength.toString();
+    previewLengthValue.textContent = previewLength.toString();
     
     // Update extension icon based on enabled state
     updateExtensionIcon(enabled);
@@ -36,7 +40,14 @@
         "32": "icon-32.png"
       };
       
-      chrome.action.setIcon({ path: iconPath });
+      console.log("[MCT] Updating icon to:", enabled ? "active (blue)" : "inactive (gray)", iconPath);
+      chrome.action.setIcon({ path: iconPath }, () => {
+        if (chrome.runtime.lastError) {
+          console.error("[MCT] Icon update failed:", chrome.runtime.lastError);
+        } else {
+          console.log("[MCT] Icon updated successfully");
+        }
+      });
     } catch (error) {
       console.warn("[MCT] Failed to update extension icon", error);
     }
@@ -90,21 +101,35 @@
     setUi(false);
     // Load persisted state and reflect in UI, then sync to active tab
     try {
-      chrome.storage.sync.get({ mctEnabled: false }, ({ mctEnabled }: { mctEnabled: boolean }) => {
+      chrome.storage.sync.get({ mctEnabled: false, mctPreviewLength: 10 }, ({ mctEnabled, mctPreviewLength }: { mctEnabled: boolean; mctPreviewLength: number }) => {
         const enabled = !!mctEnabled;
-        setUi(enabled);
-        withActiveTab((tabId) => ensureTrackerAndPost(tabId, { type: "MCT:SET_ENABLED", enabled }));
+        const previewLength = mctPreviewLength || 10;
+        setUi(enabled, previewLength);
+        withActiveTab((tabId) => ensureTrackerAndPost(tabId, { type: "MCT:SET_ENABLED", enabled, previewLength }));
       });
     } catch {}
 
     enabledToggle.addEventListener("change", () => {
       const enabled = !!enabledToggle.checked;
-      setUi(enabled);
+      const previewLength = parseInt(previewLengthInput.value) || 10;
+      setUi(enabled, previewLength);
       try {
-        chrome.storage.sync.set({ mctEnabled: enabled });
+        chrome.storage.sync.set({ mctEnabled: enabled, mctPreviewLength: previewLength });
       } catch {}
       withActiveTab((tabId) =>
-        ensureTrackerAndPost(tabId, { type: "MCT:SET_ENABLED", enabled }),
+        ensureTrackerAndPost(tabId, { type: "MCT:SET_ENABLED", enabled, previewLength }),
+      );
+    });
+
+    previewLengthInput.addEventListener("input", () => {
+      const enabled = !!enabledToggle.checked;
+      const previewLength = parseInt(previewLengthInput.value) || 10;
+      previewLengthValue.textContent = previewLength.toString();
+      try {
+        chrome.storage.sync.set({ mctPreviewLength: previewLength });
+      } catch {}
+      withActiveTab((tabId) =>
+        ensureTrackerAndPost(tabId, { type: "MCT:SET_PREVIEW_LENGTH", previewLength }),
       );
     });
 
