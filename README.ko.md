@@ -5,6 +5,7 @@
 ## 링크
 - Docs: https://vreality64.github.io/message-channel-tracker/
 - Playground: https://vreality64.github.io/message-channel-tracker/playground/
+- [Changelog](CHANGELOG.md): 각 버전의 새로운 기능 확인
 
 ## 설명
 

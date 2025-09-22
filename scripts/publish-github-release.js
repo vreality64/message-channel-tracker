@@ -27,11 +27,23 @@ function getReleaseNotes(version) {
   const pattern = new RegExp(`(^|\n)##\\s+${version.replaceAll('.', '\\.')}(\n[\s\S]*?)(?=\n##\\s+|$)`, 'm');
   const match = changelog.match(pattern);
   if (match) {
-    // Trim leading newlines
-    return match[0].replace(/^\n+/, '').trim();
+    // Extract the content after the version header
+    const content = match[0].replace(/^#+\s+\d+\.\d+\.\d+\s*\n/, '').trim();
+    // Clean up the markdown formatting
+    const cleanedContent = content
+      .replace(/^### Minor Changes\n/, '')
+      .replace(/^### Major Changes\n/, '')
+      .replace(/^### Patch Changes\n/, '')
+      .replace(/^- ## New Features\n/, '## New Features')
+      .replace(/^- ## Bug Fixes\n/, '## Bug Fixes')
+      .replace(/^- ## Improvements\n/, '## Improvements')
+      .replace(/^- /gm, '- ')
+      .trim();
+    
+    return `# What's New in v${version}\n\n${cleanedContent}`;
   }
   // Fallback minimal notes
-  return `## ${version}\n\nAutomated release.`;
+  return `# What's New in v${version}\n\nAutomated release.`;
 }
 
 function ensureZipBuilt() {

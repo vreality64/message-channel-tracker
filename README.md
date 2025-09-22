@@ -5,6 +5,7 @@ English | [한국어](README.ko.md)
 ## Links
 - Docs: https://vreality64.github.io/message-channel-tracker/
 - Playground: https://vreality64.github.io/message-channel-tracker/playground/
+- [Changelog](CHANGELOG.md): See what's new in each version
 
 ## Descriptions
 
