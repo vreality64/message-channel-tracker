@@ -1,5 +1,18 @@
 # message-channel-tracker
 
+## 2.3.2
+
+### Patch Changes
+
+- ## Bug Fixes
+
+  ### Active Icon Background
+
+  - Fixed active icon showing white background that looked like a bug
+  - Changed active icon from blue background + white icon to transparent background + blue icon
+  - Now both inactive and active states have transparent backgrounds for better browser theme integration
+  - Consistent design across all icon sizes (16px, 32px, 48px, 128px)
+
 ## 2.3.1
 
 ### Patch Changes

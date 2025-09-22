@@ -5,8 +5,8 @@
       <stop offset="100%" stop-color="#22d3ee"/>
     </linearGradient>
     <style>
-      .bg{fill:url(#g-active)}
-      .fg{fill:#ffffff}
+      .bg{fill:transparent}
+      .fg{fill:url(#g-active)}
     </style>
   </defs>
   <rect x="0" y="0" width="36" height="36" rx="8" class="bg"/>
