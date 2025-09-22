@@ -14,7 +14,7 @@
     } catch {}
   }
 
-  const setUi = (enabled: boolean, previewLength: number = 10): void => {
+  const setUi = (enabled: boolean, previewLength = 10): void => {
     enabledToggle.checked = !!enabled;
     const onText = chrome?.i18n?.getMessage?.("statusOn") || "On";
     const offText = chrome?.i18n?.getMessage?.("statusOff") || "Off";
@@ -111,7 +111,7 @@
 
     enabledToggle.addEventListener("change", () => {
       const enabled = !!enabledToggle.checked;
-      const previewLength = parseInt(previewLengthInput.value) || 10;
+      const previewLength = Number.parseInt(previewLengthInput.value) || 10;
       setUi(enabled, previewLength);
       try {
         chrome.storage.sync.set({ mctEnabled: enabled, mctPreviewLength: previewLength });
@@ -123,7 +123,7 @@
 
     previewLengthInput.addEventListener("input", () => {
       const enabled = !!enabledToggle.checked;
-      const previewLength = parseInt(previewLengthInput.value) || 10;
+      const previewLength = Number.parseInt(previewLengthInput.value) || 10;
       previewLengthValue.textContent = previewLength.toString();
       try {
         chrome.storage.sync.set({ mctPreviewLength: previewLength });
