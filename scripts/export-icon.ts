@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import puppeteer, { type Browser, type Page } from 'puppeteer';
 import { existsSync, mkdirSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 
 async function main(): Promise<void> {
   const size = Number(process.argv[2] || '128');
@@ -21,11 +22,11 @@ async function main(): Promise<void> {
     <meta charset="utf-8" />
     <style>
       html, body { margin: 0; background: transparent; }
-      #wrap { width: ${size}px; height: ${size}px; display: grid; place-items: center; }
+      #wrap { width: ${size}px; height: ${size}px; display: grid; place-items: center; background: transparent; }
       svg { width: ${size}px; height: ${size}px; }
     </style>
   </head>
-  <body>
+  <body style="background: transparent;">
     <div id="wrap">${svg}</div>
   </body>
 </html>`;

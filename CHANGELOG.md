@@ -1,5 +1,16 @@
 # message-channel-tracker
 
+## 2.3.3
+
+### Patch Changes
+
+- ## Icon Updates
+
+  - Updated active icons with blue gradient background and white icon elements
+  - Removed rounded corners (rx) from active icons for cleaner appearance
+  - Fixed transparency issues in icon rendering
+  - Improved icon consistency across all sizes (16px, 32px, 48px, 128px)
+
 ## 2.3.2
 
 ### Patch Changes
